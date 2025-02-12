@@ -1,6 +1,7 @@
 import React from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 const Signin = () => {
     return (
@@ -47,7 +48,7 @@ const Signin = () => {
                         </form>
                         <p className="text-black-800 text-medium flex gap-1 pt-6">
                             Do not have an account?
-                            <a href="#" className="text-black-600 font-semibold underline">Sign up </a>
+                            <Link to="/signup"className="text-black-600 font-semibold underline">Sign up </Link>
                         </p>
                     </div>
                 </div>
