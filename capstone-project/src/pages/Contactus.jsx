@@ -17,7 +17,7 @@ const Contactus = () => {
                         <input
                             type="text"
                             placeholder="John Doe"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
+                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
                         />
                     </div>
                     <div>
@@ -25,7 +25,7 @@ const Contactus = () => {
                         <input
                             type="email"
                             placeholder="johndoe@example.com"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
+                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
                         />
                     </div>
                     <div>
@@ -33,7 +33,7 @@ const Contactus = () => {
                         <textarea
                             rows="3"
                             placeholder="Hello, I’d love to learn more about your platform. Looking forward to your response!"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
+                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
                         ></textarea>
                     </div>
                     <button className="w-full bg-blue-600 text-white py-3 rounded-lg text-center text-lg font-medium hover:bg-blue-700 transition hover:cursor-pointer">
