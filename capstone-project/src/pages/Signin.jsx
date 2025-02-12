@@ -4,61 +4,63 @@ import { FcGoogle } from "react-icons/fc";
 
 const Signin = () => {
     return (
-        <div className="bg-white rounded-lg overflow-hidden h-screen w-full flex font-poppins">
-            <div className="w-[50%] p-8">
-                <div>
-                    <h1 className="text-2xl font-bold ">DesignDeck</h1>
-                </div>
-                <div className="pl-10 pt-3">
-                    <h2 className="text-3xl font-semibold mt-4">Login to your Account</h2>
-                    <p className="text-gray-600  text-sm mt-4">
-                    Welcome Back to 
-                        <span className="font-bold"> DesignDeck </span> <br /> Sign in to Showcase, Inspire, and Elevate Your Creativity!
-                    </p>
-                    <form className="mt-8">
-                        <label className="block text-sm font-semibold mt-4 mb-4">E-Mail</label>
-                        <input
-                            type="email"
-                            placeholder="xyz@abc.com"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2]"
-                        />
+        <div className="rounded-lg w-full font-poppins">
+            <div className="w-[50%] h-screen float-left flex items-center justify-center ">
+                <div className="h-[90%] w-[90%] bg-green-500">
+                    <div>
+                        <h1 className="text-2xl font-bold ">DesignDeck</h1>
+                    </div>
+                    <div className="pr-12  pt-2 pl-8">
+                        <h2 className="text-3xl font-semibold pt-4">Login to your Account</h2>
+                        <p className="text-gray-600 text-sm pt-2">
+                            Welcome Back to
+                            <span className="font-bold"> DesignDeck </span> <br /> Sign in to Showcase, Inspire, and Elevate Your Creativity!
+                        </p>
+                        <form className="pt-8">
+                            <label className="block text-sm font-semibold pt-2">E-Mail</label>
+                            <input
+                                type="email"
+                                placeholder="xyz@abc.com"
+                                className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-4"
+                            />
 
-                        <label className="block text-sm font-semibold mt-4 mb-4">Password</label>
-                        <input
-                            type="password"
-                            placeholder="********************"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2]"
-                        />
-                        <div className="mt-2 flex items-center justify-end">
-                            <label htmlFor="terms" className="text-[12px] text-black-600">
-                                <a href="#" className="text-black-800 font-semibold underline"> Forgot Password? </a> 
-                            </label>
-                        </div>
-                        <div className="mt-8 flex space-x-4">
-                            <button type="submit" className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2">
-                            <span>Next Step</span> <FaArrowRightLong />
-                            </button>
-                            <button className="border py-3 px-6 rounded-full flex items-center gap-2 font-medium hover:cursor-pointer">
-                                <FcGoogle className="text-[20px]"/>
-                                <span>Continue with Google</span>
-                            </button>
-                        </div>
-                    </form>
-                    <p className="text-black-800 text-medium mt-6 gap-1 flex">
-                    Do not have an account? 
-                        <a href="#" className="text-black-600 font-semibold underline">Sign Up </a>
-                    </p>
+                            <label className="block text-sm font-semibold pt-4">Password</label>
+                            <input
+                                type="password"
+                                placeholder="********************"
+                                className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-4"
+                            />
+                            <div className="pt-4 flex items-center justify-end">
+                                <label htmlFor="terms" className="text-[12px] text-black-600">
+                                    <a href="#" className="text-black-800 font-semibold underline"> Forgot Password? </a>
+                                </label>
+                            </div>
+                            <div className="flex space-x-4 pt-5">
+                                <button type="submit" className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2">
+                                    <span>Next Step</span> <FaArrowRightLong />
+                                </button>
+                                <button className="border py-3 px-6 rounded-full flex items-center gap-2 font-medium hover:cursor-pointer">
+                                    <FcGoogle className="text-[20px]" />
+                                    <span>Continue with Google</span>
+                                </button>
+                            </div>
+                        </form>
+                        <p className="text-black-800 text-medium flex gap-1 pt-6">
+                            Do not have an account?
+                            <a href="#" className="text-black-600 font-semibold underline">Sign up </a>
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div className="w-[25%]">
 
             </div>
-            <div className="w-[45%] p-[30px]">
-                <img
-                    src="https://c1.wallpaperflare.com/preview/730/789/292/developer-programming-work-minimal.jpg"
-                    className="w-[100%] h-full object-cover border rounded-[10px] mx-[-10px]"
-                    alt="Signup"
-                />
+            <div className="w-[50%] h-screen float-right flex items-center justify-center ">
+                <div className="h-[90%] w-[80%] flex items-center justify-end bg-green-500">
+                    <img
+                        src="https://c1.wallpaperflare.com/preview/730/789/292/developer-programming-work-minimal.jpg"
+                        className="object-cover border rounded-[10px] h-[100%] w-[80%]"
+                        alt="Signup"
+                    />
+                </div>
             </div>
         </div>
     );
