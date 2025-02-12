@@ -6,7 +6,7 @@ const Signin = () => {
     return (
         <div className="rounded-lg w-full font-poppins">
             <div className="w-[50%] h-screen float-left flex items-center justify-center ">
-                <div className="h-[90%] w-[90%] bg-green-500">
+                <div className="h-[90%] w-[90%] flex flex-col justify-between">
                     <div>
                         <h1 className="text-2xl font-bold ">DesignDeck</h1>
                     </div>
@@ -54,7 +54,7 @@ const Signin = () => {
 
             </div>
             <div className="w-[50%] h-screen float-right flex items-center justify-center ">
-                <div className="h-[90%] w-[80%] flex items-center justify-end bg-green-500">
+                <div className="h-[90%] w-[80%] flex items-center justify-end">
                     <img
                         src="https://c1.wallpaperflare.com/preview/730/789/292/developer-programming-work-minimal.jpg"
                         className="object-cover border rounded-[10px] h-[100%] w-[80%]"

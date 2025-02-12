@@ -3,7 +3,7 @@ import React from "react";
 const Contactus = () => {
     return (
         <div className="flex items-center justify-center h-screen bg-gray-100 px-2">
-            <div className="bg-white shadow-lg rounded-lg p-6  w-[40%] h-[95%]">
+            <div className="bg-white shadow-lg rounded-lg p-6  w-[40%] h-[95%] flex flex-col justify-between">
                 <h3 className="text-gray-500 text-sm font-medium">Get in Touch</h3>
                 <h1 className="text-2xl font-bold leading-tight pt-2">
                     Connect, Collaborate, Create <br /> We're Here to Help!
@@ -36,7 +36,7 @@ const Contactus = () => {
                             className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
                         ></textarea>
                     </div>
-                    <button className="w-full bg-blue-600 text-white py-3 rounded-lg text-center text-lg font-medium hover:bg-blue-700 transition hover:cursor-pointer">
+                    <button className="w-full bg-[black] text-white py-3 rounded-lg text-center text-lg font-medium hover:bg-blue-700 transition hover:cursor-pointer">
                         Submit Message
                     </button>
                 </form>
