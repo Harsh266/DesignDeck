@@ -36,7 +36,7 @@ const Contactus = () => {
                             className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
                         ></textarea>
                     </div>
-                    <button className="w-full bg-[black] text-white py-3 rounded-lg text-center text-lg font-medium hover:bg-blue-700 transition hover:cursor-pointer">
+                    <button className="w-full bg-[black] text-white py-3 rounded-lg text-center text-lg font-medium hover:scale-105 transition hover:cursor-pointer">
                         Submit Message
                     </button>
                 </form>
