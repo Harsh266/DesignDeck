@@ -88,59 +88,61 @@ const Landingpage = () => {
                 </div>
             </section>
 
-            <section id="features" className="h-screen flex flex-col justify-center items-center text-center overflow-hidden">
-                {/* Heading */}
-                <h2 className="text-2xl font-semibold text-black">Explore the Power of DesignDeck</h2>
-                <p className="text-gray-600 text-lg mt-2 max-w-2xl">
-                    DesignDeck is a powerful platform to showcase your designs, upload code, share visuals,
-                    and connect with a vibrant creative community.
-                </p>
+            <div id="features" className="div h-screen w-full flex items-end justify-center   p-[15px]">
+                <section  className="h-fit flex w-fit flex-col justify-center items-center text-center overflow-hidden ">
+                    {/* Heading */}
+                    <h2 className="text-2xl font-semibold text-black">Explore the Power of DesignDeck</h2>
+                    <p className="text-gray-600 text-lg mt-2 max-w-2xl">
+                        DesignDeck is a powerful platform to showcase your designs, upload code, share visuals,
+                        and connect with a vibrant creative community.
+                    </p>
 
-                {/* Features Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-6xl">
-                    {/* Feature Card 1 */}
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-105">
-                        <div className="w-full h-50 bg-gray-300"></div> {/* Same height for all */}
-                        <div className="p-4 text-left flex-grow">
-                            <h3 className="text-lg font-semibold">Image & Video Upload</h3>
-                            <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
-                                <li>Upload high-quality images & videos easily.</li>
-                                <li>Supports multiple formats with fast loading.</li>
-                                <li>Embed images & videos directly in your projects.</li>
-                                <li>Secure cloud storage for safe keeping.</li>
-                            </ul>
+                    {/* Features Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-6xl">
+                        {/* Feature Card 1 */}
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
+                            <div className="w-full h-50 bg-gray-300"></div> {/* Same height for all */}
+                            <div className="p-4 text-left flex-grow">
+                                <h3 className="text-lg font-semibold">Image & Video Upload</h3>
+                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
+                                    <li>Upload high-quality images & videos easily.</li>
+                                    <li>Supports multiple formats with fast loading.</li>
+                                    <li>Embed images & videos directly in your projects.</li>
+                                    <li>Secure cloud storage for safe keeping.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Feature Card 2 */}
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
+                            <div className="w-full h-50 bg-gray-300"></div>
+                            <div className="px-4  text-left flex-grow">
+                                <h3 className="text-lg font-semibold pt-3.5">Live Preview</h3>
+                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
+                                    <li>Instantly preview HTML, CSS, and JS code in real time.</li>
+                                    <li>No need to refresh—changes update instantly.</li>
+                                    <li>Code collaboration with instant previews.</li>
+                                    <li>Test animations and interactions instantly.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Feature Card 3 */}
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
+                            <div className="w-full h-50 bg-gray-300"></div>
+                            <div className="px-4 text-left flex-grow">
+                                <h3 className="text-lg font-semibold pt-3.5">Future of DesignDeck</h3>
+                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
+                                    <li>AI-powered design insights for better creativity.</li>
+                                    <li>Smart suggestions for improving code & designs.</li>
+                                    <li>Advanced collaboration features for teams.</li>
+                                    <li>Continuous updates & feature expansions.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-
-                    {/* Feature Card 2 */}
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-105">
-                        <div className="w-full h-50 bg-gray-300"></div>
-                        <div className="px-4  text-left flex-grow">
-                            <h3 className="text-lg font-semibold pt-3.5">Live Preview</h3>
-                            <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
-                                <li>Instantly preview HTML, CSS, and JS code in real time.</li>
-                                <li>No need to refresh—changes update instantly.</li>
-                                <li>Code collaboration with instant previews.</li>
-                                <li>Test animations and interactions instantly.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    {/* Feature Card 3 */}
-                    <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-105">
-                        <div className="w-full h-50 bg-gray-300"></div>
-                        <div className="px-4 text-left flex-grow">
-                            <h3 className="text-lg font-semibold pt-3.5">Future of DesignDeck</h3>
-                            <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
-                                <li>AI-powered design insights for better creativity.</li>
-                                <li>Smart suggestions for improving code & designs.</li>
-                                <li>Advanced collaboration features for teams.</li>
-                                <li>Continuous updates & feature expansions.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             <section id="explore" className="h-screen flex flex-col md:flex-row items-center justify-center px-6 md:px-20 text-left">
                 {/* Left Content */}
