@@ -7,6 +7,7 @@ import api from './api'
 import Signin from './pages/Signin'
 import Signup from './pages/Signup'
 import Contactus from './pages/Contactus'
+import Landingpage from './pages/Landingpage';
 import './index.css'
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         {/* Default route redirects to Sign In */}
-        <Route path="*" element={<Signin />} />
+        <Route path="*" element={<Landingpage />} />
       </Routes>
     </Router>
   )
