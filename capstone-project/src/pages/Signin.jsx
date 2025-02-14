@@ -37,9 +37,9 @@ const Signin = () => {
                                 </label>
                             </div>
                             <div className="flex space-x-4 pt-5">
-                                <button type="submit" className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2">
+                            <Link to="/dashboard"> <button type="submit"  className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2">
                                     <span>Next Step</span> <FaArrowRightLong />
-                                </button>
+                                </button></Link>
                                 <button className="border py-3 px-6 rounded-full flex items-center gap-2 font-medium hover:cursor-pointer">
                                     <FcGoogle className="text-[20px]" />
                                     <span>Continue with Google</span>

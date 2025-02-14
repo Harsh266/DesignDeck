@@ -1,4 +1,8 @@
 import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa6";
+import { FaInstagram } from "react-icons/fa";
+import { FiGithub } from "react-icons/fi"
+import { FaBehance } from "react-icons/fa";
 
 
 const Landingpage = () => {
@@ -88,21 +92,21 @@ const Landingpage = () => {
                 </div>
             </section>
 
-            <div id="features" className="div h-screen w-full flex items-end justify-center   p-[15px]">
-                <section  className="h-fit flex w-fit flex-col justify-center items-center text-center overflow-hidden ">
+            <div id="features" className="div h-screen w-full flex items-end justify-center p-[15px]  ">
+                <section className="h-fit flex w-fit flex-col justify-center items-center text-center overflow-hidden ">
                     {/* Heading */}
                     <h2 className="text-2xl font-semibold text-black">Explore the Power of DesignDeck</h2>
-                    <p className="text-gray-600 text-lg mt-2 max-w-2xl">
+                    <p className="text-gray-600 text-md mt-0 max-w-2xl">
                         DesignDeck is a powerful platform to showcase your designs, upload code, share visuals,
                         and connect with a vibrant creative community.
                     </p>
 
                     {/* Features Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-6xl">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 max-w-6xl  p-2">
                         {/* Feature Card 1 */}
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
+                        <div className="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col h-95">
                             <div className="w-full h-50 bg-gray-300"></div> {/* Same height for all */}
-                            <div className="p-4 text-left flex-grow">
+                            <div className="p-4 text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold">Image & Video Upload</h3>
                                 <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
                                     <li>Upload high-quality images & videos easily.</li>
@@ -116,7 +120,7 @@ const Landingpage = () => {
                         {/* Feature Card 2 */}
                         <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
                             <div className="w-full h-50 bg-gray-300"></div>
-                            <div className="px-4  text-left flex-grow">
+                            <div className="px-4  text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold pt-3.5">Live Preview</h3>
                                 <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
                                     <li>Instantly preview HTML, CSS, and JS code in real time.</li>
@@ -130,7 +134,7 @@ const Landingpage = () => {
                         {/* Feature Card 3 */}
                         <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
                             <div className="w-full h-50 bg-gray-300"></div>
-                            <div className="px-4 text-left flex-grow">
+                            <div className="px-4 text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold pt-3.5">Future of DesignDeck</h3>
                                 <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
                                     <li>AI-powered design insights for better creativity.</li>
@@ -157,7 +161,7 @@ const Landingpage = () => {
                     <button className="bg-black text-white px-4 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 ease-in-out group w-68 hover:w-75 hover:cursor-pointer">
                         <span className="whitespace-nowrap">Learn more about DesignDeck</span>
                         <span className="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 ease-in-out">
-                            →
+                            <FaArrowRight />
                         </span>
                     </button>
                 </div>
@@ -238,7 +242,7 @@ const Landingpage = () => {
                             <li><a href="#" className="hover:text-black">Terms of Service</a></li>
                             <li><a href="#" className="hover:text-black">Privacy Policy</a></li>
                             <li><a href="#" className="hover:text-black">Cookies Policy</a></li>
-                            <li><a href="#" className="hover:text-black">Contact Us</a></li>
+                            <Link to="/contactus"><li><a href="#" className="hover:text-black">Contact Us</a></li></Link>
                         </ul>
                     </div>
 
@@ -246,14 +250,14 @@ const Landingpage = () => {
                     <div className="space-y-3">
                         <h3 className="text-lg font-semibold">Follow us</h3>
                         <div className="flex gap-4 mt-1">
-                            <a href="#" className="text-black hover:text-gray-700">
-                                <i className="fab fa-instagram text-xl"></i>
+                            <a href="#" className="text-black hover:text-gray-700 text-[23px]">
+                                <FaInstagram />
                             </a>
-                            <a href="#" className="text-black hover:text-gray-700">
-                                <i className="fab fa-github text-xl"></i>
+                            <a href="#" className="text-black hover:text-gray-700 text-[23px]">
+                                <FiGithub />
                             </a>
-                            <a href="#" className="text-black hover:text-gray-700">
-                                <i className="fab fa-behance text-xl"></i>
+                            <a href="#" className="text-black hover:text-gray-700 text-[23px]">
+                                <FaBehance />
                             </a>
                         </div>
                     </div>
@@ -264,8 +268,6 @@ const Landingpage = () => {
                     © 2025 DesignDeck. Your Designs, Your Code, Your Platform
                 </div>
             </footer>
-
-
         </>
     );
 };

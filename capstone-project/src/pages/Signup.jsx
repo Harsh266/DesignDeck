@@ -42,13 +42,13 @@ const Signup = () => {
                                 <input type="checkbox" id="terms" className="" />
                                 <label htmlFor="terms" className="text-sm text-black-600 flex gap-1 pl-2">
                                     I agree to all
-                                    <a href="#" className="text-black-800 font-semibold underline">Terms & Conditions</a> of <span className="text-black-800 font-semibold">DesignDeck</span>.
+                                    <a href="#" className="text-black-800 font-semibold underline">Terms & Conditions</a> of <span className="text-black-800 font-semibold">DesignDeck</span>
                                 </label>
                             </div>
                             <div className="flex space-x-4 pt-4">
-                                <button type="submit" className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2">
+                                <Link to="/signin"><button type="submit" className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2">
                                     <span>Next Step</span> <FaArrowRightLong />
-                                </button>
+                                </button></Link>
                                 <button className="border py-3 px-6 rounded-full flex items-center gap-2 font-medium hover:cursor-pointer">
                                     <FcGoogle className="text-[20px]" />
                                     <span>Continue with Google</span>

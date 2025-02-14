@@ -8,6 +8,7 @@ import Signin from './pages/Signin'
 import Signup from './pages/Signup'
 import Contactus from './pages/Contactus'
 import Landingpage from './pages/Landingpage';
+import Dashboard from './pages/Dashboard';
 import './index.css'
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
       <Routes>
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/contactus" element={<Contactus />} />
         {/* Default route redirects to Sign In */}
         <Route path="*" element={<Landingpage />} />
       </Routes>
