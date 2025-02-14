@@ -74,7 +74,7 @@ const Dashboard = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {projects.map((project) => (
-                        <div
+                        <Link to="/view"><div
                             key={project.id}
                             className="bg-white shadow-md rounded-lg p-4 relative"
                         >
@@ -97,7 +97,7 @@ const Dashboard = () => {
                                     <RiSaveFill className="cursor-pointer text-[20px] hover:text-blue-500" />
                                 </div>
                             </div>
-                        </div>
+                        </div></Link>
                     ))}
                 </div>
             </div>

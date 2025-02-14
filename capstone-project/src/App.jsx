@@ -10,6 +10,7 @@ import Contactus from './pages/Contactus'
 import Landingpage from './pages/Landingpage';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Projectview from './pages/Projectview';
 import './index.css'
 
 function App() {
@@ -22,10 +23,12 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/contactus" element={<Contactus />} />
         <Route path="/logout" element={<Landingpage />} />
+        <Route path="/view" element={<Projectview />} />
         {/* Default route redirects to Sign In */}
         <Route path="*" element={<Landingpage />} />
       </Routes>
     </Router>
+    
   )
 }
 
