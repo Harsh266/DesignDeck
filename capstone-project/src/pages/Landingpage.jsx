@@ -41,7 +41,7 @@ const Landingpage = () => {
                     </button>
                 </nav>
 
-                <div id="home" className="flex flex-col items-center justify-center flex-grow text-center px-4">
+                <div id="home" className="flex flex-col items-center justify-center flex-grow text-center px-4 mt-12">
                     <p className="text-gray-600 text-lg">
                         Your creativity deserves the perfect stage—welcome to DesignDeck
                     </p>
@@ -51,7 +51,7 @@ const Landingpage = () => {
                     <h3 className="text-2xl md:text-3xl font-semibold mt-2">
                         The Ultimate Creative Hub
                     </h3>
-                    <button className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-full text-lg hover:bg-blue-700 transition duration-300 hover:cursor-pointer">
+                    <button className="mt-6 px-6 py-3 bg-black text-white rounded-full text-lg hover:cursor-pointer">
                         <Link to="/signup">
                             Get started for free
                         </Link>
