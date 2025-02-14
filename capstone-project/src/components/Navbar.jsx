@@ -61,7 +61,7 @@ const Navbar = () => {
                             </div>
                             <hr className="my-3" />
                             <ul className="text-sm space-y-3">
-                                <Link to="/profile"><li className="cursor-pointer hover:bg-gray-100 p-2 rounded">
+                                <Link to="/profilepage"><li className="cursor-pointer hover:bg-gray-100 p-2 rounded">
                                     DesignDeck Profile
                                 </li></Link>
                                 <li className="cursor-pointer hover:bg-gray-100 p-2 rounded">
