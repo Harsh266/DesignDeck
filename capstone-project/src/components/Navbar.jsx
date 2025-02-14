@@ -26,7 +26,7 @@ const Navbar = () => {
 
     return (
         <nav className="w-full bg-gray-100 py-3 px-8 flex justify-between items-center shadow-md">
-            <h1 className="text-2xl font-semibold">DesignDeck</h1>
+            <Link to="/dashboard"><h1 className="text-2xl font-semibold">DesignDeck</h1></Link>
 
             <div className="flex items-center bg-gray-300 px-4 py-2 rounded-full w-2/4">
                 <IoSearch  className="text-gray-600 mr-2" />
