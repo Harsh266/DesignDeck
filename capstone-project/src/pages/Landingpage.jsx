@@ -9,12 +9,9 @@ const Landingpage = () => {
     return (
         <>
             <div className="min-h-screen flex flex-col">
-                {/* Navbar */}
                 <nav className="w-full bg-gray-100 shadow-md py-4 px-8 flex justify-between items-center fixed top-0 left-0 right-0 z-50">
-                    {/* Logo */}
                     <h1 className="text-2xl font-semibold">DesignDeck</h1>
 
-                    {/* Navigation Links */}
                     <div className="hidden md:flex space-x-8 text-lg font-medium">
                         <a href="#home" className="relative group transition-all duration-300">
                             Home
@@ -38,15 +35,12 @@ const Landingpage = () => {
                         </a>
                     </div>
 
-                    {/* Login Button */}
                     < button className="border border-black  border-2 rounded-md px-5 py-2 text-sm font-semibold transition duration-300 hover:bg-black hover:text-white hover:cursor-pointer"><Link to="/signin">
                         Login
                     </Link>
                     </button>
                 </nav>
 
-
-                {/* Hero Section */}
                 <div id="home" className="flex flex-col items-center justify-center flex-grow text-center px-4">
                     <p className="text-gray-600 text-lg">
                         Your creativity deserves the perfect stage—welcome to DesignDeck
@@ -66,7 +60,6 @@ const Landingpage = () => {
             </div>
 
             <section id="about" className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto px-6 py-16 h-screen">
-                {/* Left Content */}
                 <div className="md:w-1/2 text-left">
                     <h3 className="text-[20px] font-regular text-black">DesignDeck</h3>
                     <h1 className="text-3xl font-semibold text-black mt-2 leading-tight">
@@ -86,7 +79,6 @@ const Landingpage = () => {
                     </button>
                 </div>
 
-                {/* Right Image */}
                 <div className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
                     <div className="w-full max-w-lg h-80 bg-gray-300 rounded-xl shadow-lg"></div>
                 </div>
@@ -94,18 +86,15 @@ const Landingpage = () => {
 
             <div id="features" className="div h-screen w-full flex items-end justify-center p-[15px]  ">
                 <section className="h-fit flex w-fit flex-col justify-center items-center text-center overflow-hidden ">
-                    {/* Heading */}
                     <h2 className="text-2xl font-semibold text-black">Explore the Power of DesignDeck</h2>
                     <p className="text-gray-600 text-md mt-0 max-w-2xl">
                         DesignDeck is a powerful platform to showcase your designs, upload code, share visuals,
                         and connect with a vibrant creative community.
                     </p>
 
-                    {/* Features Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 max-w-6xl  p-2">
-                        {/* Feature Card 1 */}
                         <div className="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col h-95">
-                            <div className="w-full h-50 bg-gray-300"></div> {/* Same height for all */}
+                            <div className="w-full h-50 bg-gray-300"></div> 
                             <div className="p-4 text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold">Image & Video Upload</h3>
                                 <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
@@ -117,7 +106,6 @@ const Landingpage = () => {
                             </div>
                         </div>
 
-                        {/* Feature Card 2 */}
                         <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
                             <div className="w-full h-50 bg-gray-300"></div>
                             <div className="px-4  text-left flex-grow mb-2">
@@ -131,7 +119,6 @@ const Landingpage = () => {
                             </div>
                         </div>
 
-                        {/* Feature Card 3 */}
                         <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
                             <div className="w-full h-50 bg-gray-300"></div>
                             <div className="px-4 text-left flex-grow mb-2">
@@ -149,7 +136,6 @@ const Landingpage = () => {
             </div>
 
             <section id="explore" className="h-screen flex flex-col md:flex-row items-center justify-center px-6 md:px-20 text-left">
-                {/* Left Content */}
                 <div className="w-[55%] space-y-5">
                     <h2 className="text-3xl md:text-4xl font-semibold text-black">What is DesignDeck?</h2>
                     <p className="text-gray-600 text-[16px] leading-relaxed pr-[80px] text-justify">
@@ -165,18 +151,14 @@ const Landingpage = () => {
                         </span>
                     </button>
                 </div>
-
-                {/* Right Content (Blank Div for Image Placeholder) */}
                 <div className="w-[45%] flex justify-center mt-6 md:mt-0">
                     <div className="w-full md:w-[450px] h-[280px] bg-gray-200 rounded-lg"></div>
                 </div>
             </section>
 
             <section id="integration" className="h-screen flex justify-center items-center px-10">
-                {/* Left Side - Blank Div (Replaces Image) */}
                 <div className="w-[500px] h-[300px] bg-gray-200 rounded-lg"></div>
 
-                {/* Right Side - Content */}
                 <div className="max-w-lg ml-10">
                     <p className="text-lg font-semibold text-gray-700">
                         DesignDeck where you create
@@ -195,7 +177,6 @@ const Landingpage = () => {
 
             <section className="w-full min-h-screen flex justify-center items-center bg-white px-6">
                 <div className="w-full max-w-4xl flex items-center justify-between bg-gray-100 p-10 rounded-lg">
-                    {/* Left Side - Text Content */}
                     <div className="max-w-md text-left">
                         <h2 className="text-3xl font-semibold leading-tight">
                             Showcase and Preview <br /> Your Designs for Free
@@ -208,14 +189,12 @@ const Landingpage = () => {
                         </button>
                     </div>
 
-                    {/* Right Side - Placeholder (Replaceable with an image) */}
                     <div className="w-[300px] h-[200px] bg-gray-300 rounded-lg"></div>
                 </div>
             </section>
 
             <footer className="w-full bg-gray-100 py-10 px-6">
                 <div className="max-w-6xl mx-auto grid grid-cols-5 gap-10">
-                    {/* Left Section - About (Larger Size) */}
                     <div className="col-span-2 space-y-4">
                         <h3 className="text-2xl font-bold">DesignDeck</h3>
                         <p className="text-gray-600 text-lg leading-relaxed  pr-16">
@@ -224,7 +203,6 @@ const Landingpage = () => {
                         </p>
                     </div>
 
-                    {/* Explore Section */}
                     <div className="space-y-3">
                         <h3 className="text-lg font-semibold">Explore</h3>
                         <ul className="space-y-2 text-gray-600">
@@ -235,7 +213,6 @@ const Landingpage = () => {
                         </ul>
                     </div>
 
-                    {/* Legal Section */}
                     <div className="space-y-3">
                         <h3 className="text-lg font-semibold">Legal</h3>
                         <ul className="space-y-2 text-gray-600">
@@ -246,7 +223,6 @@ const Landingpage = () => {
                         </ul>
                     </div>
 
-                    {/* Follow Us Section */}
                     <div className="space-y-3">
                         <h3 className="text-lg font-semibold">Follow us</h3>
                         <div className="flex gap-4 mt-1">
@@ -263,7 +239,6 @@ const Landingpage = () => {
                     </div>
                 </div>
 
-                {/* Copyright Section */}
                 <div className="text-center text-gray-600 mt-10">
                     © 2025 DesignDeck. Your Designs, Your Code, Your Platform
                 </div>

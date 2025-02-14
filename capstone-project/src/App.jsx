@@ -19,6 +19,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/contactus" element={<Contactus />} />
+        <Route path="/logout" element={<Landingpage />} />
         {/* Default route redirects to Sign In */}
         <Route path="*" element={<Landingpage />} />
       </Routes>

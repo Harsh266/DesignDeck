@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Dashboard = () => {
     return (
         <>
-            <h1>Dashboard</h1>
+        <Navbar/>
+        <Footer/>
         </>
     );
 };
