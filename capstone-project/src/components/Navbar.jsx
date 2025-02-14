@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RiNotification4Fill } from "react-icons/ri";
+import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -26,6 +27,15 @@ const Navbar = () => {
     return (
         <nav className="w-full bg-gray-100 py-3 px-8 flex justify-between items-center shadow-md">
             <h1 className="text-2xl font-semibold">DesignDeck</h1>
+
+            <div className="flex items-center bg-gray-300 px-4 py-2 rounded-full w-2/4">
+                <IoSearch  className="text-gray-600 mr-2" />
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    className="bg-transparent focus:outline-none w-full placeholder-gray-500"
+                />
+            </div>
 
             <div className="flex items-center space-x-6 relative">
                 <RiNotification4Fill className="h-6 w-6 text-black cursor-pointer" />
