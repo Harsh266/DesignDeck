@@ -90,9 +90,9 @@ const Profile = () => {
                         ))}
 
                         <div className="bg-[#F0F4FF] p-6 text-center rounded-lg flex flex-col items-center justify-center">
-                            <div className="bg-blue-500 p-4 rounded-full text-white w-12 h-12 flex items-center hover:bg-blue-600 cursor-pointer">
+                            <Link to="/upload"><div className="bg-blue-500 p-4 rounded-full text-white w-12 h-12 flex items-center hover:bg-blue-600 cursor-pointer">
                                 <span className="text-2xl font-bold">+</span>
-                            </div>
+                            </div></Link>
                             <h3 className="mt-6 font-semibold text-lg">Create Project</h3>
                             <p className="text-gray-500 text-[10px]">
                                 Get feedback, views, and appreciations. Public projects can be featured by our curators.

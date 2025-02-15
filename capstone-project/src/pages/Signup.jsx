@@ -1,9 +1,20 @@
-import React from "react";
-import { FaArrowRightLong } from "react-icons/fa6";
+import React, { useState } from "react";
+import { FaArrowRightLong, FaPlus } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
+const avatars = [
+    "https://i.pravatar.cc/100?img=1",
+    "https://i.pravatar.cc/100?img=2",
+    "https://i.pravatar.cc/100?img=3",
+    "https://i.pravatar.cc/100?img=4",
+    "https://i.pravatar.cc/100?img=5",
+    "https://i.pravatar.cc/100?img=6",
+    "https://i.pravatar.cc/100?img=7",
+];
+
 const Signup = () => {
+    const [selectedAvatar, setSelectedAvatar] = useState(null);
     return (
         <div className="rounded-lg w-full font-poppins">
             <div className="w-[50%] h-screen float-left flex items-center justify-center ">
@@ -11,12 +22,31 @@ const Signup = () => {
                     <div>
                         <h1 className="text-2xl font-bold ">DesignDeck</h1>
                     </div>
-                    <div className="pr-12  pt-2 pl-8">
+                    <div className="pr-12 pt-2 pl-8">
                         <h2 className="text-3xl font-semibold pt-4">Create Your Account</h2>
                         <p className="text-gray-600 text-sm pt-2">
                             Let’s create an account & showcase your creativity with
                             <span className="font-bold"> DesignDeck </span> – Where ideas turn into stunning designs!
                         </p>
+                        <div className="pt-2">
+                            <label className="block text-sm font-semibold pb-2">Choose Your Avatar</label>
+                            <div className="flex items-center space-x-2">
+                                {avatars.map((avatar, index) => (
+                                    <img
+                                        key={index}
+                                        src={avatar}
+                                        alt={`Avatar ${index + 1}`}
+                                        className={`w-10 h-10 rounded-full cursor-pointer transition ${selectedAvatar === avatar ? "border-2 border-blue-500" : "border border-gray-300"
+                                            }`}
+                                        onClick={() => setSelectedAvatar(avatar)}
+                                    />
+                                ))}
+                                <label className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-400 cursor-pointer bg-gray-200 hover:bg-gray-300 transition">
+                                    <FaPlus className="text-gray-600" />
+                                    <input type="file" className="hidden" />
+                                </label>
+                            </div>
+                        </div>
                         <form className="pt-4">
                             <label className="block text-sm font-semibold">Name</label>
                             <input
@@ -57,7 +87,7 @@ const Signup = () => {
                         </form>
                         <p className="text-black-800 text-medium flex gap-1 pt-4">
                             Already have an account?
-                            <Link to="/signin"  className="text-black-600 font-semibold underline">Sign in </Link>
+                            <Link to="/signin" className="text-black-600 font-semibold underline">Sign in </Link>
                         </p>
                     </div>
                 </div>
@@ -77,3 +107,5 @@ const Signup = () => {
 };
 
 export default Signup;
+
+

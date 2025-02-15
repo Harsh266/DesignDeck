@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RiNotification4Fill } from "react-icons/ri";
-import { IoSearch } from "react-icons/io5";
+import { IoSearch, IoLogOutOutline } from "react-icons/io5";
+import { IoMdPerson } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -29,7 +30,7 @@ const Navbar = () => {
             <Link to="/dashboard"><h1 className="text-2xl font-semibold">DesignDeck</h1></Link>
 
             <div className="flex items-center bg-gray-300 px-4 py-2 rounded-full w-2/4">
-                <IoSearch  className="text-gray-600 mr-2" />
+                <IoSearch className="text-gray-600 mr-2" />
                 <input
                     type="text"
                     placeholder="Search..."
@@ -49,8 +50,8 @@ const Navbar = () => {
                     />
 
                     {isOpen && (
-                        <div className="absolute right-0 mt-6 w-64 bg-white shadow-lg rounded-lg p-4 z-50 transition-all duration-300 animate-fadeIn">
-                            <div className="flex flex-col items-center">
+                        <div className="absolute right-0 mt-6 w-64 h-72 bg-white shadow-lg rounded-lg p-4 z-50 transition-all duration-300 animate-fadeIn">
+                            <div className="flex flex-col items-center p-4">
                                 <img
                                     src="https://img.freepik.com/premium-vector/businessman-avatar-profile-picture-silhouette-vector-illustration_1276914-125.jpg"
                                     alt="Profile"
@@ -60,17 +61,20 @@ const Navbar = () => {
                                 <p className="text-gray-500 text-sm">johndoe123@gmail.com</p>
                             </div>
                             <hr className="my-3" />
-                            <ul className="text-sm space-y-3">
-                                <Link to="/profilepage"><li className="cursor-pointer hover:bg-gray-100 p-2 rounded">
-                                    DesignDeck Profile
-                                </li></Link>
-                                <li className="cursor-pointer hover:bg-gray-100 p-2 rounded">
-                                    Settings
-                                </li>
-                                <hr />
-                                <Link to="/logout"><li className="cursor-pointer hover:bg-gray-100 p-2 rounded text-red-500 font-semibold">
-                                    Sign out
-                                </li></Link>
+                            <ul className="text-sm gap-1 flex flex-col">
+                                <div className="flex flex-row items-center gap-0 hover:bg-gray-100">
+                                    <IoMdPerson className="text-[20px]" />
+                                    <Link to="/profilepage"><li className="cursor-pointer  p-2 rounded font-semibold text-[15px]">
+                                        My Profile
+                                    </li></Link>
+                                </div>
+                                <div className="flex flex-row items-center gap-0 hover:bg-gray-100">
+                                <IoLogOutOutline className="text-[20px] text-red-500" />
+                                    <Link to="/logout"><li className="cursor-pointer  p-2 rounded text-red-500 font-semibold">
+                                        Sign out
+                                    </li></Link>
+                                </div>
+
                             </ul>
                         </div>
                     )}

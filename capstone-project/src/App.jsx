@@ -11,6 +11,7 @@ import Landingpage from './pages/Landingpage';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Projectview from './pages/Projectview';
+import Uploadprojectpage from './pages/Uploadprojectpage';
 import './index.css'
 
 function App() {
@@ -24,12 +25,12 @@ function App() {
         <Route path="/contactus" element={<Contactus />} />
         <Route path="/logout" element={<Landingpage />} />
         <Route path="/view" element={<Projectview />} />
+        <Route path="/upload" element={<Uploadprojectpage />} />
         {/* Default route redirects to Sign In */}
         <Route path="*" element={<Landingpage />} />
       </Routes>
     </Router>
-    
+    // <Uploadprojectpage />
   )
 }
-
-export default App
+export default App;
