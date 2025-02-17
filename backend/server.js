@@ -1,5 +1,3 @@
-//Main backend entry point
-
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -27,4 +25,3 @@ mongoose
         app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
     })
     .catch((err) => console.error("❌ MongoDB Connection Error:", err));
-
