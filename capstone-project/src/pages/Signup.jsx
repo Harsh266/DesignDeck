@@ -21,8 +21,8 @@ const Signup = () => {
       {/* Left Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 lg:px-16 py-8">
         <div className="w-full max-w-lg">
-          <h1 className="text-xl font-bold">DesignDeck</h1>
-          <h2 className="text-3xl font-semibold pt-4">Create Your Account</h2>
+          <h1 className="text-md font-bold">DesignDeck</h1>
+          <h2 className="text-2xl font-semibold pt-4">Create Your Account</h2>
           <p className="text-gray-600 text-sm pt-2">
             Let’s create an account & showcase your creativity with
             <span className="font-bold"> DesignDeck </span> – Where ideas turn
@@ -61,21 +61,21 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Bruce Wayne"
-              className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              className="w-full border rounded-full px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
             />
 
             <label className="block text-sm font-semibold pt-2">E-Mail</label>
             <input
               type="email"
               placeholder="xyz@abc.com"
-              className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              className="w-full border rounded-full px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
             />
 
             <label className="block text-sm font-semibold pt-2">Password</label>
             <input
               type="password"
-              placeholder="********************"
-              className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              placeholder="••••••••••••••••••"
+              className="w-full border rounded-full px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
             />
 
             <div className="flex items-center pt-4">
