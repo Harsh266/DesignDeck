@@ -18,10 +18,10 @@ const Signup = () => {
 
   return (
     <div className="flex flex-col lg:flex-row w-full h-screen font-poppins">
+      <h1 className="text-lg font-bold absolute ml-15 mt-8">DesignDeck</h1>
       {/* Left Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 lg:px-16 py-8">
         <div className="w-full max-w-lg">
-          <h1 className="text-md font-bold">DesignDeck</h1>
           <h2 className="text-2xl font-semibold pt-4">Create Your Account</h2>
           <p className="text-gray-600 text-sm pt-2">
             Let’s create an account & showcase your creativity with
