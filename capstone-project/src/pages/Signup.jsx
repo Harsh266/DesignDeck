@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaArrowRightLong, FaPlus } from "react-icons/fa6";
+import { FaArrowRight, FaPlus } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
@@ -40,11 +40,10 @@ const Signup = () => {
                   key={index}
                   src={avatar}
                   alt={`Avatar ${index + 1}`}
-                  className={`w-10 h-10 rounded-full cursor-pointer transition ${
-                    selectedAvatar === avatar
+                  className={`w-10 h-10 rounded-full cursor-pointer transition ${selectedAvatar === avatar
                       ? "border-2 border-blue-500"
                       : "border border-gray-300"
-                  }`}
+                    }`}
                   onClick={() => setSelectedAvatar(avatar)}
                 />
               ))}
@@ -61,21 +60,21 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Bruce Wayne"
-              className="w-full border rounded-full px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              className="w-full border rounded-[10px] px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
             />
 
             <label className="block text-sm font-semibold pt-2">E-Mail</label>
             <input
               type="email"
               placeholder="xyz@abc.com"
-              className="w-full border rounded-full px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              className="w-full border rounded-[10px] px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
             />
 
             <label className="block text-sm font-semibold pt-2">Password</label>
             <input
               type="password"
               placeholder="••••••••••••••••••"
-              className="w-full border rounded-full px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              className="w-full border rounded-[10px] px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
             />
 
             <div className="flex items-center pt-4">
@@ -98,9 +97,12 @@ const Signup = () => {
               <Link to="/signin">
                 <button
                   type="submit"
-                  className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2 w-full lg:w-auto justify-center"
+                  className="bg-black text-white px-4 py-3 font-medium rounded-full flex items-center gap-2 transition-all duration-300 ease-in-out group w-28 hover:w-35 hover:cursor-pointer"
                 >
-                  <span>Next Step</span> <FaArrowRightLong />
+                  <span className="whitespace-nowrap">Next Step</span>
+                  <span className="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 ease-in-out">
+                    <FaArrowRight />
+                  </span>
                 </button>
               </Link>
               <button className="border py-3 px-6 rounded-full flex items-center gap-2 font-medium hover:cursor-pointer w-full lg:w-auto justify-center mt-3 lg:mt-0">

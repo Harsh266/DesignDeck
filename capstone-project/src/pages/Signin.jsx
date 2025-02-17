@@ -1,5 +1,5 @@
 import React from "react";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { FaArrowRight } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
@@ -37,8 +37,14 @@ const Signin = () => {
                                 </label>
                             </div>
                             <div className="flex space-x-4 pt-5">
-                            <Link to="/dashboard"> <button type="submit"  className="bg-black text-white py-3 px-6 rounded-full flex items-center font-medium hover:cursor-pointer gap-2">
-                                    <span>Next Step</span> <FaArrowRightLong />
+                                <Link to="/dashboard"> <button
+                                    type="submit"
+                                    className="bg-black text-white px-4 py-3 font-medium rounded-full flex items-center gap-2 transition-all duration-300 ease-in-out group w-28 hover:w-35 hover:cursor-pointer"
+                                >
+                                    <span className="whitespace-nowrap">Next Step</span>
+                                    <span className="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 ease-in-out">
+                                        <FaArrowRight />
+                                    </span>
                                 </button></Link>
                                 <button className="border py-3 px-6 rounded-full flex items-center gap-2 font-medium hover:cursor-pointer">
                                     <FcGoogle className="text-[20px]" />
@@ -48,7 +54,7 @@ const Signin = () => {
                         </form>
                         <p className="text-black-800 text-medium flex gap-1 pt-6">
                             Do not have an account?
-                            <Link to="/signup"className="text-black-600 font-semibold underline">Sign up </Link>
+                            <Link to="/signup" className="text-black-600 font-semibold underline">Sign up </Link>
                         </p>
                     </div>
                 </div>
