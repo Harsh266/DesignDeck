@@ -35,8 +35,13 @@ const Landingpage = () => {
                         </a>
                     </div>
 
-                    < button className="border border-black  border-2 rounded-md px-5 py-2 text-sm font-semibold transition duration-300 hover:bg-black hover:text-white hover:cursor-pointer"><Link to="/signin">
-                        Login
+                    < button class="relative px-6 py-2 overflow-hidden font-semibold text-black bg-white border border-black border-2 rounded-lg shadow-inner group"><Link to="/signin">
+                        <span class="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-black group-hover:w-full ease"></span>
+                        <span class="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-black group-hover:w-full ease"></span>
+                        <span class="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-black group-hover:h-full ease"></span>
+                        <span class="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-black group-hover:h-full ease"></span>
+                        <span class="absolute inset-0 w-full h-full duration-300 delay-300 bg-black opacity-0 group-hover:opacity-100"></span>
+                        <span class="relative transition-colors duration-300 delay-200 group-hover:text-white ease">Login</span>
                     </Link>
                     </button>
                 </nav>
@@ -51,15 +56,17 @@ const Landingpage = () => {
                     <h3 className="text-2xl md:text-3xl font-semibold mt-2">
                         The Ultimate Creative Hub
                     </h3>
-                    <button className="mt-6 px-6 py-3 bg-black text-white rounded-full text-lg hover:cursor-pointer">
-                        <Link to="/signup">
-                            Get started for free
-                        </Link>
+                    <button className="relative inline-flex items-center mt-6 px-12 py-3 overflow-hidden text-lg font-medium text-black border-2 border-black rounded-full hover:text-white group">
+                        <span class="absolute left-0 block w-full h-0 transition-all bg-black opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+                        <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                        <Link to="/signup"><span class="relative">Get started for free</span></Link>
                     </button>
                 </div>
             </div>
 
-            <section id="about" className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto px-6 py-16 h-screen">
+            <div id="about" className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto px-6 py-16 h-screen mt-16">
                 <div className="md:w-1/2 text-left">
                     <h3 className="text-[20px] font-regular text-black">DesignDeck</h3>
                     <h1 className="text-3xl font-semibold text-black mt-2 leading-tight">
@@ -68,24 +75,25 @@ const Landingpage = () => {
                     <p className="text-lg font-semibold text-black mt-4">
                         Don’t just create, elevate your creativity!
                     </p>
-                    <p className="text-gray-600 text-lg mt-4">
+                    <p className="text-gray-600 text-lg my-4 ">
                         DesignDeck is a cutting-edge design and development showcase platform
                         where creators, developers, and designers can upload, preview, and
                         share their work seamlessly. With real-time code previews, media
                         uploads, and an interactive community.
                     </p>
-                    <button className="mt-6 px-6 py-3 bg-gray-200 text-black font-semibold rounded-lg hover:bg-gray-300 transition hover:cursor-pointer">
-                        Try it free
+                    <button className="relative inline-flex items-center justify-start px-6 py-3 overflow-hidden font-medium transition-all bg-white rounded-[10px] border-2 border-black  hover:bg-white group hover:cursor-pointer ">
+                        <span class="w-48 h-48 rounded rotate-[-40deg] bg-black absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+                        <span class="relative w-full text-left text-black transition-colors duration-300 ease-in-out group-hover:text-white">Try for free</span>
                     </button>
                 </div>
 
                 <div className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
-                    <div className="w-full max-w-lg h-80 bg-gray-300 rounded-xl shadow-lg"></div>
+                    <img src="1.png" alt="" />
                 </div>
-            </section>
+            </div>
 
             <div id="features" className="div h-screen w-full flex items-end justify-center p-[15px]  ">
-                <section className="h-fit flex w-fit flex-col justify-center items-center text-center overflow-hidden ">
+                <section className="h-fit flex w-fit flex-col justify-center items-center text-center overflow-hidden">
                     <h2 className="text-2xl font-semibold text-black">Explore the Power of DesignDeck</h2>
                     <p className="text-gray-600 text-md mt-0 max-w-2xl">
                         DesignDeck is a powerful platform to showcase your designs, upload code, share visuals,
@@ -93,8 +101,8 @@ const Landingpage = () => {
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 max-w-6xl  p-2">
-                        <div className="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col h-95">
-                            <div className="w-full h-50 bg-gray-300"></div> 
+                        <div className="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col h-100 hover:cursor-pointer hover:scale-102 transition duration-300">
+                            <img src="2.png" alt="" className="w-full h-50 object-fit" />
                             <div className="p-4 text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold">Image & Video Upload</h3>
                                 <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
@@ -106,7 +114,7 @@ const Landingpage = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-100 hover:cursor-pointer hover:scale-102 transition duration-300">
                             <div className="w-full h-50 bg-gray-300"></div>
                             <div className="px-4  text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold pt-3.5">Live Preview</h3>
@@ -119,7 +127,7 @@ const Landingpage = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-95">
+                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-100 hover:cursor-pointer hover:scale-102 transition duration-300">
                             <div className="w-full h-50 bg-gray-300"></div>
                             <div className="px-4 text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold pt-3.5">Future of DesignDeck</h3>
@@ -135,7 +143,7 @@ const Landingpage = () => {
                 </section>
             </div>
 
-            <section id="explore" className="h-screen flex flex-col md:flex-row items-center justify-center px-6 md:px-20 text-left">
+            <div id="explore" className="h-screen flex flex-col md:flex-row items-center justify-center px-6 md:px-20 text-left">
                 <div className="w-[55%] space-y-5">
                     <h2 className="text-3xl md:text-4xl font-semibold text-black">What is DesignDeck?</h2>
                     <p className="text-gray-600 text-[16px] leading-relaxed pr-[80px] text-justify">
@@ -144,19 +152,19 @@ const Landingpage = () => {
                         It provides a powerful and intuitive space where users can upload, edit,
                         and preview their HTML, CSS, and JavaScript code in real-time.
                     </p>
-                    <button className="bg-black text-white px-4 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 ease-in-out group w-68 hover:w-75 hover:cursor-pointer">
+                    <Link to="/signin"><button className="bg-black text-white px-4 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 ease-in-out group w-68 hover:w-75 hover:cursor-pointer">
                         <span className="whitespace-nowrap">Learn more about DesignDeck</span>
                         <span className="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 ease-in-out">
                             <FaArrowRight />
                         </span>
-                    </button>
+                    </button></Link>
                 </div>
                 <div className="w-[45%] flex justify-center mt-6 md:mt-0">
                     <div className="w-full md:w-[450px] h-[280px] bg-gray-200 rounded-lg"></div>
                 </div>
-            </section>
+            </div>
 
-            <section id="integration" className="h-screen flex justify-center items-center px-10">
+            <div id="integration" className="h-screen flex justify-center items-center px-10">
                 <div className="w-[500px] h-[300px] bg-gray-200 rounded-lg"></div>
 
                 <div className="max-w-lg ml-10">
@@ -173,9 +181,9 @@ const Landingpage = () => {
                         manage, and enhance your projects effortlessly.
                     </p>
                 </div>
-            </section>
+            </div>
 
-            <section className="w-full min-h-screen flex justify-center items-center bg-white px-6">
+            <div className="w-full min-h-screen flex justify-center items-center bg-white px-6">
                 <div className="w-full max-w-4xl flex items-center justify-between bg-gray-100 p-10 rounded-lg">
                     <div className="max-w-md text-left">
                         <h2 className="text-3xl font-semibold leading-tight">
@@ -184,14 +192,19 @@ const Landingpage = () => {
                         <p className="text-gray-700 mt-2">
                             Showcase your creativity with DesignDeck – <br /> code, share, and preview instantly!
                         </p>
-                        <button className="mt-4 bg-black text-white py-2 px-4 rounded-md text-sm hover:bg-gray-900 cursor-pointer">
-                            Get Started
-                        </button>
+                        <Link to="signup"><button className="mt-4 text-white text-sm cursor-pointer relative inline-block text-lg group">
+                        <span class="relative z-10 block px-4 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
+                                <span class="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
+                                <span class="absolute left-0 w-48 h-48 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
+                                <span class="relative">Get Started</span>
+                            </span>
+                            <span class="absolute bottom-0 right-0 w-full h-12 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0" data-rounded="rounded-lg"></span>
+                        </button></Link>
                     </div>
 
                     <div className="w-[300px] h-[200px] bg-gray-300 rounded-lg"></div>
                 </div>
-            </section>
+            </div>
 
             <footer className="w-full bg-gray-100 py-10 px-6">
                 <div className="max-w-6xl mx-auto grid grid-cols-5 gap-10">
