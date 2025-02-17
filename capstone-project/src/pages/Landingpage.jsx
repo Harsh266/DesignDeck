@@ -88,7 +88,7 @@ const Landingpage = () => {
                 </div>
 
                 <div className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
-                    <img src="1.png" alt="" />
+                    <div className="w-full max-w-lg h-80 bg-gray-300 rounded-xl shadow-lg"></div>
                 </div>
             </div>
 
@@ -102,7 +102,7 @@ const Landingpage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 max-w-6xl  p-2">
                         <div className="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col h-100 hover:cursor-pointer hover:scale-102 transition duration-300">
-                            <img src="2.png" alt="" className="w-full h-50 object-fit" />
+                        <div className="w-full h-50 bg-gray-300"></div>
                             <div className="p-4 text-left flex-grow mb-2">
                                 <h3 className="text-lg font-semibold">Image & Video Upload</h3>
                                 <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
