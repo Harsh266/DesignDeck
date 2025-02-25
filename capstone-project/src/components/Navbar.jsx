@@ -19,7 +19,7 @@ const Navbar = () => {
           onClick={() => setShowPopup(!showPopup)}
         >
           <img
-            src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="https://images.pexels.com/photos/17980568/pexels-photo-17980568.png?cs=srgb&dl=pexels-ojhonferreira-17980568.jpg&fm=jpg"
             alt="User"
             className="object-cover object-top w-10 h-10 rounded-full"
           />
@@ -50,7 +50,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4">
             {/* Profile Image */}
             <img
-              src="https://plus.unsplash.com/premium_photo-1690407617542-2f210cf20d7e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.pexels.com/photos/17980568/pexels-photo-17980568.png?cs=srgb&dl=pexels-ojhonferreira-17980568.jpg&fm=jpg"
               alt="User"
               className="w-20 h-20 rounded-full object-cover object-top"
             />
