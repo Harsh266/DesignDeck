@@ -108,7 +108,7 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
 
                 {/* Popup Modal */}
                 {showImagePopup && (
-                    <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex justify-center items-center mt-10">
+                    <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex justify-center items-center mt-12">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative h-[95%] flex flex-col">
 
                             {/* Close Button */}
@@ -179,7 +179,7 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
                     </div>
                 )}
                 {showVideoPopup && (
-                    <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex justify-center items-center mt-10">
+                    <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex justify-center items-center mt-12">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative h-[95%] flex flex-col">
 
                             {/* Close Button */}
@@ -250,7 +250,7 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
                     </div>
                 )}
                 {showCodePopup && (
-                    <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex justify-center items-center mt-10">
+                    <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex justify-center items-center mt-12">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative h-[95%] flex flex-col">
 
                             {/* Close Button */}
