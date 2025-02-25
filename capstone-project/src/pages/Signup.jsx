@@ -1,141 +1,82 @@
-import React, { useState } from "react";
-import { FaArrowRight, FaPlus } from "react-icons/fa6";
-import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
-
-const avatars = [
-  "https://i.pravatar.cc/100?img=1",
-  "https://i.pravatar.cc/100?img=2",
-  "https://i.pravatar.cc/100?img=3",
-  "https://i.pravatar.cc/100?img=4",
-  "https://i.pravatar.cc/100?img=5",
-  "https://i.pravatar.cc/100?img=6",
-  "https://i.pravatar.cc/100?img=7",
-];
+import { FcGoogle } from "react-icons/fc";
 
 const Signup = () => {
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
-
   return (
-    <div className="flex flex-col lg:flex-row w-full h-screen font-poppins">
-      <h1 className="text-lg font-bold absolute mt-8 ml-15">DesignDeck</h1>
-      {/* Left Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 lg:px-16 py-8">
-        <div className="w-full max-w-lg">
-          <h2 className="text-2xl font-semibold pt-4">Create Your Account</h2>
-          <p className="text-gray-600 text-sm pt-2">
-            Let’s create an account & showcase your creativity with
-            <span className="font-bold"> DesignDeck </span> – Where ideas turn
-            into stunning designs!
+    <div className="flex items-center justify-between min-h-screen bg-white p-6 h-screen">
+      {/* Left Section */}
+      <div className="w-1/2 h-screen p-6">
+        {/* Logo */}
+        <h1 className="text-xl font-semibold mb-3">DesignDeck</h1>
+        {/* Form */}
+        <div className="px-16 py-6 flex flex-col justify-center w-[90%]">
+          <h2 className="text-2xl font-semibold">Create Your Account</h2>
+          <p className="text-gray-500 mt-1 text-[12px]">
+            Let's Create an Account & Showcase Your Creativity with <span className="font-semibold">DesignDeck</span>
           </p>
 
-          {/* Avatar Selection */}
-          <div className="pt-4">
-            <label className="block text-sm font-semibold pb-2">
-              Choose Your Avatar
-            </label>
-            <div className="flex items-center space-x-2">
-              {avatars.map((avatar, index) => (
-                <img
-                  key={index}
-                  src={avatar}
-                  alt={`Avatar ${index + 1}`}
-                  className={`w-10 h-10 rounded-full cursor-pointer transition ${selectedAvatar === avatar
-                      ? "border-2 border-blue-500"
-                      : "border border-gray-300"
-                    }`}
-                  onClick={() => setSelectedAvatar(avatar)}
-                />
-              ))}
-              <label className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-400 cursor-pointer bg-gray-200 hover:bg-gray-300 transition">
-                <FaPlus className="text-gray-600" />
-                <input type="file" className="hidden" />
-              </label>
-            </div>
-          </div>
-
-          {/* Signup Form */}
-          <form className="pt-4">
-            <label className="block text-sm font-semibold">Name</label>
+          <div className="mt-5">
             <input
               type="text"
-              placeholder="Bruce Wayne"
-              className="w-full border rounded-[10px] px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              placeholder="John Due"
+              className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
 
-            <label className="block text-sm font-semibold pt-2">E-Mail</label>
+          <div className="mt-3">
             <input
               type="email"
               placeholder="xyz@abc.com"
-              className="w-full border rounded-[10px] px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
 
-            <label className="block text-sm font-semibold pt-2">Password</label>
+          <div className="mt-3">
             <input
               type="password"
-              placeholder="••••••••••••••••••"
-              className="w-full border rounded-[10px] px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#F2F2F2] mt-2"
+              placeholder="XXXXXXXXXXXXXXXXXX"
+              className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
 
-            <div className="flex items-center pt-4">
-              <input type="checkbox" id="terms" className="" />
-              <label
-                htmlFor="terms"
-                className="text-sm text-black-600 flex gap-1 pl-2"
-              >
-                I agree to all
-                <a href="#" className="text-black-800 font-semibold underline">
-                  Terms & Conditions
-                </a>
-                of{" "}
-                <span className="text-black-800 font-semibold">DesignDeck</span>
-              </label>
-            </div>
+          <div className="flex items-center mt-3">
+            <input type="checkbox" className="mr-2" />
+            <span className="text-[12px] text-gray-600">
+              I agree to all Terms & Conditions of <span className="font-semibold">DesignDeck</span>
+            </span>
+          </div>
 
-            {/* Buttons */}
-            <div className="flex flex-col lg:flex-row lg:space-x-4 pt-4">
-              <Link to="/signin">
-                <button
-                  type="submit"
-                  className="bg-black text-white px-4 py-3 font-medium rounded-full flex items-center gap-2 transition-all duration-300 ease-in-out group w-28 hover:w-35 hover:cursor-pointer"
-                >
-                  <span className="whitespace-nowrap">Next Step</span>
-                  <span className="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 ease-in-out">
-                    <FaArrowRight />
-                  </span>
-                </button>
-              </Link>
-              <button className="border py-3 px-6 rounded-full flex items-center gap-2 font-medium hover:cursor-pointer w-full lg:w-auto justify-center mt-3 lg:mt-0">
-                <FcGoogle className="text-[20px]" />
-                <span>Continue with Google</span>
-              </button>
-            </div>
-          </form>
+          <Link to="/signin"><button className="w-full bg-[#376CFF] text-white p-3 mt-4 rounded-md hover:bg-blue-700 transition hover:cursor-pointer">
+          Create Account
+          </button></Link>
 
-          <p className="text-black-800 text-medium flex gap-1 pt-4">
-            Already have an account?
-            <Link
-              to="/signin"
-              className="text-black-600 font-semibold underline"
-            >
-              Sign in
-            </Link>
-          </p>
+          <div className="flex items-center my-2">
+            <hr className="w-full border-gray-300" />
+            <span className="mx-2 text-gray-500">or</span>
+            <hr className="w-full border-gray-300" />
+          </div>
+
+          <button className="w-full flex items-center justify-center p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition hover:cursor-pointer ">
+            <FcGoogle className="mr-2 text-[20px]" />
+            Sign in with Google
+          </button>
+
+          <Link to="/signin"><p className="text-sm text-gray-600 mt-4 text-center">
+          Already have an account? <span className="text-[#376CFF] cursor-pointer hover:underline">Sign In</span>
+          </p></Link>
         </div>
       </div>
 
-      {/* Right Side - Image */}
-      <div className="w-full lg:w-1/2 items-center justify-center hidden lg:flex">
-        <div className="h-[90%] w-[80%] flex items-center justify-start">
-          <img
-            src="https://c1.wallpaperflare.com/preview/730/789/292/developer-programming-work-minimal.jpg"
-            className="object-cover border rounded-[10px] h-[100%] w-[80%]"
-            alt="Signup"
-          />
-        </div>
+      {/* Right Section */}
+      <div className="w-1/2 h-screen flex items-center justify-end p-8">
+        <img
+          src="./public/Signup.png" // Ensure image is in the 'public' folder
+          alt="Sign in"
+          className="w-[75%] h-[100%] rounded-lg"
+        />
       </div>
     </div>
   );
-};
+}
 
 export default Signup;

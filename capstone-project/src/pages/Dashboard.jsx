@@ -1,107 +1,118 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { IoMdHeart } from "react-icons/io";
-import { RiSaveFill } from "react-icons/ri";
-import { GrProjects } from "react-icons/gr";
-
-const projects = [
-    {
-        id: 1,
-        image: "https://cdn.dribbble.com/userupload/18320878/file/original-c2e0bc809ba4caa0c7ffefa9a81f30b6.png?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 2,
-        image: "https://cdn.dribbble.com/userupload/18340660/file/original-53e097b6707bf8dc0f4232df7dd20808.png?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 3,
-        image: "https://cdn.dribbble.com/userupload/26161848/file/original-c3e2491e8c5155829ff44a41d814ecf7.png?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 4,
-        image: "https://cdn.dribbble.com/userupload/26242668/file/original-185a5cab278f2078a11c30dbae1c319a.jpg?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 5,
-        image: "https://cdn.dribbble.com/userupload/26039594/file/original-f134bb0db38577e9d8a79d632a28026b.png?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 6,
-        image: "https://cdn.dribbble.com/userupload/26243163/file/original-b3922b51eacc31d20160536aea278cd7.png?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 7,
-        image: "https://cdn.dribbble.com/userupload/17999471/file/original-6d0d79c8f477824bbd121e8bb8b00a8d.png?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 8,
-        image: "https://cdn.dribbble.com/userupload/26080916/file/original-48dabccb29b43e4397dcccebdc525f9b.jpg?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-    {
-        id: 9,
-        image: "https://cdn.dribbble.com/userupload/22771706/file/original-39e8894cba34142c0ff2eeac97be0888.png?format=webp&resize=640x480&vertical=center",
-        profile: "https://www.shutterstock.com/image-vector/businessman-icon-600nw-564112600.jpg",
-        name: "Project name",
-    },
-];
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
+    const categories = ["Explore", "UI/UX", "Poster", "Logo Design", "App Design"];
+    const [activeCategory, setActiveCategory] = useState("Explore");
+
+    const cards = [
+        { title: "Portfolio / Animation", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/14090638/file/original-8bb2193fbab4f9b1cac096f86b611e99.mp4", type: "video", thumbnail: "https://cdn.dribbble.com/userupload/14090637/file/still-f1c0df70f1c15486b88334c0bda65b61.png?format=webp&resize=450x338&vertical=center", userImage: "https://randomuser.me/api/portraits/men/3.jpg" },
+        { title: "Tecnology Mobile App UI Design", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36060013/file/original-2aa7a89ad7453a979c3e096fb73a9be7.jpeg?resize=1200x900&vertical=center", type: "image", userImage: "https://randomuser.me/api/portraits/women/2.jpg" },
+        { title: "AIR1-07", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36368152/file/original-f2d9372b4ed87813ef10eea93953b31d.mp4", type: "video", thumbnail: "https://cdn.dribbble.com/userupload/36368151/file/still-0ae21d5de367235c8618fb3acfa5c2cc.png?format=webp&resize=450x338&vertical=center", userImage: "https://randomuser.me/api/portraits/men/3.jpg" },
+        { title: "Perchi Logo Design", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36162633/file/original-e8e53f0e5656a06b27050423d21ffaee.jpg?resize=1200x900&vertical=center", type: "image", userImage: "https://randomuser.me/api/portraits/women/4.jpg" },
+        { title: "CGPT Tap Game — Explainer Video", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/16763108/file/original-4c38aa030b4337fbb5d1114efa245e34.mp4", type: "video", thumbnail: "https://cdn.dribbble.com/userupload/16763107/file/still-3de5994da3cac2d4170eb51b7c0bb6b1.png?format=webp&resize=450x338&vertical=center", userImage: "https://randomuser.me/api/portraits/men/3.jpg" },
+        { title: "Music Festival", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36238146/file/original-00f3a3bb4248a233f7c5b9ac092f4d2c.jpg?resize=1200x1434&vertical=center", type: "image", userImage: "https://randomuser.me/api/portraits/women/6.jpg" }
+    ];
+
     return (
         <>
             <Navbar />
-            <div className="p-6">
-                <div className="flex flex-row gap-2 items-center mb-4">
-                <GrProjects className="text-[18px]"/><p className="text-2xl font-semibold"> Projects</p>
-                </div>
-            
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {projects.map((project) => (
-                        <Link to="/view"><div
-                            key={project.id}
-                            className="bg-white shadow-md rounded-lg p-4 relative"
-                        >
-                            <img
-                                src={project.image}
-                                alt={project.name}
-                                className="w-full rounded-lg"
+            <div className="p-6 max-w-6xl mx-auto">
+                {/* Header Section */}
+                <div className="relative text-center py-16">
+                    <h1 className="text-4xl font-semibold">
+                        Discover the world’s <br /> <span className="text-black">top designers</span>
+                    </h1>
+                    <p className="font-regular mt-6">
+                        Explore work from the most talented and accomplished designers <br /> ready to take on your next project
+                    </p>
+                    <div className="mt-6 flex items-center justify-center">
+                        <div className="flex items-center bg-[#DCE6FF] px-4 py-2 rounded-full w-150">
+                            <input
+                                type="text"
+                                placeholder="Find your inspiration"
+                                className="w-full bg-transparent outline-none text-gray-700 px-2"
                             />
-                            <div className="flex items-center justify-between mt-4">
-                                <div className="flex items-center space-x-2">
-                                    <img
-                                        src={project.profile}
-                                        alt="Profile"
-                                        className="w-8 h-8 rounded-full"
-                                    />
-                                    <span className="font-semibold">{project.name}</span>
-                                </div>
-                                <div className="flex space-x-3 text-gray-500">
-                                    <IoMdHeart className="cursor-pointer text-[20px] hover:text-red-500" />
-                                    <RiSaveFill className="cursor-pointer text-[20px] hover:text-blue-500" />
-                                </div>
-                            </div>
-                        </div></Link>
+                            <button className="bg-[#9091FF] rounded-full px-3 py-2">
+                                <i className="ri-search-line text-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {/* Categories */}
+                <div className="flex justify-center mt-6 gap-4">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setActiveCategory(cat)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? "bg-purple-200 text-purple-600" : "text-gray-600"
+                                }`}
+                        >
+                            {cat}
+                        </button>
                     ))}
                 </div>
+
+                {/* Image & Video Grid */}
+                <Link to="/view"><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                    {cards.map((card, index) => (
+                        <div 
+                            key={index} 
+                            className="bg-white rounded-xl overflow-hidden group cursor-pointer transition-all "
+                        >
+                            {/* Media Handling */}
+                            <div className="relative w-full h-60 rounded-xl overflow-hidden">
+                                {card.type === "video" ? (
+                                    <>
+                                        {/* Show Image by Default */}
+                                        <img 
+                                            src={card.thumbnail || "/default-thumbnail.jpg"} 
+                                            alt={card.title} 
+                                            className="w-full h-full object-cover rounded-xl group-hover:hidden"
+                                        />
+                                        {/* Show Video on Hover */}
+                                        <video 
+                                            className="w-full h-full object-cover rounded-xl hidden group-hover:block"
+                                            autoPlay 
+                                            loop 
+                                            muted 
+                                            playsInline
+                                        >
+                                            <source src={card.media} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </>
+                                ) : (
+                                    <img 
+                                        src={card.media} 
+                                        alt={card.title} 
+                                        className="w-full h-full object-cover rounded-xl" 
+                                    />
+                                )}
+                            </div>
+
+                            {/* User Info at Bottom */}
+                            <div className="py-2 flex items-center gap-3">
+                                <img
+                                    src={card.userImage}  
+                                    alt={card.user}
+                                    className="w-10 h-10 rounded-full object-cover"
+                                />
+                                <div className="flex flex-col">
+                                    <h2 className="font-semibold text-base">{card.title}</h2>
+                                    <p className="text-gray-500 text-sm">{card.user}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div></Link>
+
+                {/* Load More Button */}
+                <div className="flex justify-center mt-6">
+                    <button className="px-6 py-2 bg-purple-200 text-purple-600 rounded-full font-medium cursor-pointer">Load More</button>
+                </div>
             </div>
-            <Footer />
         </>
     );
 };

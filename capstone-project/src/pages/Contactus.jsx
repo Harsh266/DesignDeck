@@ -1,54 +1,51 @@
 import React from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 const Contactus = () => {
     return (
         <>
-        <Navbar/>
-        <div className="flex items-center justify-center h-screen bg-gray-100 px-2">
-            <div className="bg-white shadow-lg rounded-lg p-6  w-[90%] h-[95%] flex flex-col justify-between">
-                <h3 className="text-gray-500 text-sm font-medium">Get in Touch</h3>
-                <h1 className="text-2xl font-bold leading-tight pt-2">
-                    Connect, Collaborate, Create We're Here to Help!
-                </h1>
-                <p className="text-gray-600 text-sm pt-2">
-                    Have a Question? <br /> We're here to help! Feel free to reach out anytime.
-                </p>
-                <br />
-                <hr />
-                <form className="space-y-2 pt-4">
-                    <div>
-                        <label className="block text-sm font-semibold pb-2">Full Name</label>
-                        <input
-                            type="text"
-                            placeholder="John Doe"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
-                        />
+            <div className="flex items-center justify-between min-h-screen bg-gray-100 p-6 h-screen ">
+                {/* Left Side - Logo + Form */}
+                <div className="w-1/2 h-screen p-10 ">
+                    {/* Logo */}
+                    <Link to="/logout"><h1 className="text-3xl font-semibold mb-10">DesignDeck</h1></Link>
+                    <div className="px-16 py-6 flex flex-col justify-center">
+                        {/* Form */}
+                        <h2 className="texzt-3xl font-semibold mb-3">Get in Touch</h2>
+                        <p className="text-gray-500 text-sm mb-6">
+                            We will get back to you as soon as possible
+                        </p>
+                        <form className="space-y-4">
+                            <input
+                                type="text"
+                                placeholder="Your Name"
+                                className="w-full border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="email"
+                                placeholder="Your E-Mail ID"
+                                className="w-full border border-gray-300 rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <textarea
+                                placeholder="Message"
+                                rows="5"
+                                className="w-full border border-gray-300 rounded-[20px] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            ></textarea>
+                            <button className="w-full bg-[#376CFF] text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition hover:cursor-pointer">
+                                Send
+                            </button>
+                        </form>
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold py-2">E-mail</label>
-                        <input
-                            type="email"
-                            placeholder="johndoe@example.com"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-semibold py-2">Message</label>
-                        <textarea
-                            rows="3"
-                            placeholder="Hello, I’d love to learn more about your platform. Looking forward to your response!"
-                            className="w-full border rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[white]"
-                        ></textarea>
-                    </div>
-                    <button className="w-full bg-[black] text-white py-3 rounded-lg text-center text-lg font-medium hover:scale-102 transition hover:cursor-pointer">
-                        Submit Message
-                    </button>
-                </form>
+                </div>
+                {/* Right Side - Image */}
+                <div className="w-1/2 h-screen flex items-center justify-end p-8">
+                    <img
+                        src="./public/Contactus.png" // Ensure image is in the 'public' folder
+                        alt="Contact Us"
+                        className="w-[75%] h-[100%] rounded-lg"
+                    />
+                </div>
             </div>
-        </div>
-        <Footer/>
         </>
     );
 };

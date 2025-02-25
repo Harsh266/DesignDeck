@@ -1,261 +1,175 @@
 import { Link } from "react-router-dom";
-import { FaArrowRight } from "react-icons/fa6";
-import { FaInstagram } from "react-icons/fa";
-import { FiGithub } from "react-icons/fi"
-import { FaBehance } from "react-icons/fa";
+import 'remixicon/fonts/remixicon.css'
 
 
 const Landingpage = () => {
     return (
         <>
-            <div className="min-h-screen flex flex-col">
-                <nav className="w-full bg-gray-100 shadow-md py-4 px-8 flex justify-between items-center fixed top-0 left-0 right-0 z-50">
-                    <h1 className="text-2xl font-semibold">DesignDeck</h1>
+            <div>
+                <div>
+                    <nav className="fixed top-0 left-0 w-full bg-[#ffffffc3] backdrop-blur-2xl z-50 px-10 py-3 flex justify-between items-center">
+                        {/* Logo */}
+                        <div className="text-2xl font-semibold">DesignDeck</div>
 
-                    <div className="hidden md:flex space-x-8 text-lg font-medium">
-                        <a href="#home" className="relative group transition-all duration-300">
-                            Home
-                            <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#about" className="relative group transition-all duration-300">
-                            About
-                            <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#features" className="relative group transition-all duration-300">
-                            Features
-                            <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#explore" className="relative group transition-all duration-300">
-                            Explore
-                            <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                        <a href="#integration" className="relative group transition-all duration-300">
-                            Integration
-                            <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
-                        </a>
-                    </div>
+                        {/* Menu */}
+                        <div className="flex space-x-6 text-lg">
+                            <a href="#home" className="text-gray-700 cursor-pointer">Home</a>
+                            <span>|</span>
+                            <a href="#features" className="text-gray-700 cursor-pointer">Features</a>
+                            <span>|</span>
+                            <a href="#about" className="text-gray-700 cursor-pointer">About us</a>
+                            <span>|</span>
+                            <a href="#explore" className="text-gray-700 cursor-pointer">Explore</a>
+                        </div>
 
-                    < button class="relative px-6 py-2 overflow-hidden font-semibold text-black bg-white border border-black border-2 rounded-lg shadow-inner group"><Link to="/signin">
-                        <span class="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-black group-hover:w-full ease"></span>
-                        <span class="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-black group-hover:w-full ease"></span>
-                        <span class="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-black group-hover:h-full ease"></span>
-                        <span class="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-black group-hover:h-full ease"></span>
-                        <span class="absolute inset-0 w-full h-full duration-300 delay-300 bg-black opacity-0 group-hover:opacity-100"></span>
-                        <span class="relative transition-colors duration-300 delay-200 group-hover:text-white ease">Login</span>
-                    </Link>
-                    </button>
-                </nav>
 
-                <div id="home" className="flex flex-col items-center justify-center flex-grow text-center px-4 mt-12">
-                    <p className="text-gray-600 text-lg">
+                        {/* Login Button */}
+                        <Link to="/signin"><button className="px-6 py-2 bg-purple-400 text-white rounded-full border-5 shadow-md border border-white/50 backdrop-blur-md cursor-pointer">
+                            Login
+                        </button></Link>
+                    </nav>
+                </div>
+
+                {/* Home Section */}
+                <div id="home" className="text-black py-50 px-6 md:px-16 flex flex-col items-center text-center">
+                    <h1 className="text-4xl md:text-4xl font-extrabold leading-tight max-w-2xl">
+                        Your Designs, Your Code, Your Platform
+                        The Ultimate Creative Hub
+                    </h1>
+                    <p className="text-gray-400 mt-4 max-w-xl">
                         Your creativity deserves the perfect stage—welcome to DesignDeck
                     </p>
-                    <h2 className="text-4xl font-bold mt-4 leading-tight">
-                        Your Designs, Your Code, Your Platform
-                    </h2>
-                    <h3 className="text-2xl md:text-3xl font-semibold mt-2">
-                        The Ultimate Creative Hub
-                    </h3>
-                    <button className="relative inline-flex items-center mt-6 px-12 py-3 overflow-hidden text-lg font-medium text-black border-2 border-black rounded-full hover:text-white group">
-                        <span class="absolute left-0 block w-full h-0 transition-all bg-black opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
-                        <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                        </span>
-                        <Link to="/signup"><span class="relative">Get started for free</span></Link>
-                    </button>
-                </div>
-            </div>
-
-            <div id="about" className="flex flex-col md:flex-row items-center justify-between max-w-6xl mx-auto px-6 py-16 h-screen mt-16">
-                <div className="md:w-1/2 text-left">
-                    <h3 className="text-[20px] font-regular text-black">DesignDeck</h3>
-                    <h1 className="text-3xl font-semibold text-black mt-2 leading-tight">
-                        Next-Generation Design <br /> & Code Showcase
-                    </h1>
-                    <p className="text-lg font-semibold text-black mt-4">
-                        Don’t just create, elevate your creativity!
-                    </p>
-                    <p className="text-gray-600 text-lg my-4 ">
-                        DesignDeck is a cutting-edge design and development showcase platform
-                        where creators, developers, and designers can upload, preview, and
-                        share their work seamlessly. With real-time code previews, media
-                        uploads, and an interactive community.
-                    </p>
-                    <button className="relative inline-flex items-center justify-start px-6 py-3 overflow-hidden font-medium transition-all bg-white rounded-[10px] border-2 border-black  hover:bg-white group hover:cursor-pointer ">
-                        <span class="w-48 h-48 rounded rotate-[-40deg] bg-black absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
-                        <span class="relative w-full text-left text-black transition-colors duration-300 ease-in-out group-hover:text-white">Try for free</span>
-                    </button>
-                </div>
-
-                <div className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
-                    <div className="w-full max-w-lg h-80 bg-gray-300 rounded-xl shadow-lg"></div>
-                </div>
-            </div>
-
-            <div id="features" className="div h-screen w-full flex items-end justify-center p-[15px]  ">
-                <section className="h-fit flex w-fit flex-col justify-center items-center text-center overflow-hidden">
-                    <h2 className="text-2xl font-semibold text-black">Explore the Power of DesignDeck</h2>
-                    <p className="text-gray-600 text-md mt-0 max-w-2xl">
-                        DesignDeck is a powerful platform to showcase your designs, upload code, share visuals,
-                        and connect with a vibrant creative community.
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 max-w-6xl  p-2">
-                        <div className="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col h-100 hover:cursor-pointer hover:scale-102 transition duration-300">
-                        <div className="w-full h-50 bg-gray-300"></div>
-                            <div className="p-4 text-left flex-grow mb-2">
-                                <h3 className="text-lg font-semibold">Image & Video Upload</h3>
-                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
-                                    <li>Upload high-quality images & videos easily.</li>
-                                    <li>Supports multiple formats with fast loading.</li>
-                                    <li>Embed images & videos directly in your projects.</li>
-                                    <li>Secure cloud storage for safe keeping.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-100 hover:cursor-pointer hover:scale-102 transition duration-300">
-                            <div className="w-full h-50 bg-gray-300"></div>
-                            <div className="px-4  text-left flex-grow mb-2">
-                                <h3 className="text-lg font-semibold pt-3.5">Live Preview</h3>
-                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
-                                    <li>Instantly preview HTML, CSS, and JS code in real time.</li>
-                                    <li>No need to refresh—changes update instantly.</li>
-                                    <li>Code collaboration with instant previews.</li>
-                                    <li>Test animations and interactions instantly.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-100 hover:cursor-pointer hover:scale-102 transition duration-300">
-                            <div className="w-full h-50 bg-gray-300"></div>
-                            <div className="px-4 text-left flex-grow mb-2">
-                                <h3 className="text-lg font-semibold pt-3.5">Future of DesignDeck</h3>
-                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-2 text-sm">
-                                    <li>AI-powered design insights for better creativity.</li>
-                                    <li>Smart suggestions for improving code & designs.</li>
-                                    <li>Advanced collaboration features for teams.</li>
-                                    <li>Continuous updates & feature expansions.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <div id="explore" className="h-screen flex flex-col md:flex-row items-center justify-center px-6 md:px-20 text-left">
-                <div className="w-[55%] space-y-5">
-                    <h2 className="text-3xl md:text-4xl font-semibold text-black">What is DesignDeck?</h2>
-                    <p className="text-gray-600 text-[16px] leading-relaxed pr-[80px] text-justify">
-                        DesignDeck is a next-generation creative platform designed for designers,
-                        developers, and creative professionals to showcase, code, and share their work seamlessly.
-                        It provides a powerful and intuitive space where users can upload, edit,
-                        and preview their HTML, CSS, and JavaScript code in real-time.
-                    </p>
-                    <Link to="/signin"><button className="bg-black text-white px-4 py-3 rounded-lg flex items-center gap-2 transition-all duration-300 ease-in-out group w-68 hover:w-75 hover:cursor-pointer">
-                        <span className="whitespace-nowrap">Learn more about DesignDeck</span>
-                        <span className="opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300 ease-in-out">
-                            <FaArrowRight />
-                        </span>
+                    <Link to="/signup"><button className="mt-6 px-10 py-3 text-lg font-semibold bg-[#376CFF] text-white rounded-full border-5 shadow-md border border-white/50 backdrop-blur-md cursor-pointer">
+                        Get Started
                     </button></Link>
-                </div>
-                <div className="w-[45%] flex justify-center mt-6 md:mt-0">
-                    <div className="w-full md:w-[450px] h-[280px] bg-gray-200 rounded-lg"></div>
-                </div>
-            </div>
 
-            <div id="integration" className="h-screen flex justify-center items-center px-10">
-                <div className="w-[500px] h-[300px] bg-gray-200 rounded-lg"></div>
-
-                <div className="max-w-lg ml-10">
-                    <p className="text-lg font-semibold text-gray-700">
-                        DesignDeck where you create
-                    </p>
-                    <h2 className="text-3xl font-bold mt-2 leading-snug">
-                        Seamless Integration with <br /> Your Design Workflow
-                    </h2>
-                    <p className="text-gray-600 mt-4">
-                        DesignDeck connects with popular design and development tools, making it
-                        easy to streamline your creative process. Whether you're a designer,
-                        developer, or content creator, our integrations help you collaborate,
-                        manage, and enhance your projects effortlessly.
-                    </p>
-                </div>
-            </div>
-
-            <div className="w-full min-h-screen flex justify-center items-center bg-white px-6">
-                <div className="w-full max-w-4xl flex items-center justify-between bg-gray-100 p-10 rounded-lg">
-                    <div className="max-w-md text-left">
-                        <h2 className="text-3xl font-semibold leading-tight">
-                            Showcase and Preview <br /> Your Designs for Free
-                        </h2>
-                        <p className="text-gray-700 mt-2">
-                            Showcase your creativity with DesignDeck – <br /> code, share, and preview instantly!
-                        </p>
-                        <Link to="signup"><button className="mt-4 text-white text-sm cursor-pointer relative inline-block text-lg group">
-                        <span class="relative z-10 block px-4 py-3 overflow-hidden font-medium leading-tight text-gray-800 transition-colors duration-300 ease-out border-2 border-gray-900 rounded-lg group-hover:text-white">
-                                <span class="absolute inset-0 w-full h-full px-5 py-3 rounded-lg bg-gray-50"></span>
-                                <span class="absolute left-0 w-48 h-48 -ml-2 transition-all duration-300 origin-top-right -rotate-90 -translate-x-full translate-y-12 bg-gray-900 group-hover:-rotate-180 ease"></span>
-                                <span class="relative">Get Started</span>
-                            </span>
-                            <span class="absolute bottom-0 right-0 w-full h-12 -mb-1 -mr-1 transition-all duration-200 ease-linear bg-gray-900 rounded-lg group-hover:mb-0 group-hover:mr-0" data-rounded="rounded-lg"></span>
-                        </button></Link>
-                    </div>
-
-                    <div className="w-[300px] h-[200px] bg-gray-300 rounded-lg"></div>
-                </div>
-            </div>
-
-            <footer className="w-full bg-gray-100 py-10 px-6">
-                <div className="max-w-6xl mx-auto grid grid-cols-5 gap-10">
-                    <div className="col-span-2 space-y-4">
-                        <h3 className="text-2xl font-bold">DesignDeck</h3>
-                        <p className="text-gray-600 text-lg leading-relaxed  pr-16">
-                            DesignDeck allows users to create profiles and upload HTML, CSS, and JS code separately,
-                            while also supporting image and video uploads.
-                        </p>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Explore</h3>
-                        <ul className="space-y-2 text-gray-600">
-                            <li><a href="#" className="hover:text-black">Home</a></li>
-                            <li><a href="#" className="hover:text-black">Profile</a></li>
-                            <li><a href="#" className="hover:text-black">Dashboard</a></li>
-                            <li><a href="#" className="hover:text-black">Projects</a></li>
-                        </ul>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Legal</h3>
-                        <ul className="space-y-2 text-gray-600">
-                            <li><a href="#" className="hover:text-black">Terms of Service</a></li>
-                            <li><a href="#" className="hover:text-black">Privacy Policy</a></li>
-                            <li><a href="#" className="hover:text-black">Cookies Policy</a></li>
-                            <Link to="/contactus"><li><a href="#" className="hover:text-black">Contact Us</a></li></Link>
-                        </ul>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h3 className="text-lg font-semibold">Follow us</h3>
-                        <div className="flex gap-4 mt-1">
-                            <a href="#" className="text-black hover:text-gray-700 text-[23px]">
-                                <FaInstagram />
-                            </a>
-                            <a href="#" className="text-black hover:text-gray-700 text-[23px]">
-                                <FiGithub />
-                            </a>
-                            <a href="#" className="text-black hover:text-gray-700 text-[23px]">
-                                <FaBehance />
-                            </a>
+                    <div className="mt-12 flex flex-col md:flex-row gap-6 max-w-5xl">
+                        <div>
+                            <img
+                                src="./public/image.jpg"
+                                alt="Creative Design Showcase"
+                                className="w-full rounded-lg shadow-lg"
+                            />
+                        </div>
+                        <div>
+                            <img
+                                src="./public/image-1.jpg"
+                                alt="Growth Stats"
+                                className="w-full rounded-lg shadow-lg"
+                            />
                         </div>
                     </div>
                 </div>
 
-                <div className="text-center text-gray-600 mt-10">
-                    © 2025 DesignDeck. Your Designs, Your Code, Your Platform
+                {/* Features Section */}
+                <div id="features" className="py-16 bg-white text-center pt-30">
+                    <div className="max-w-4xl mx-auto">
+                        <h2 className="text-3xl font-bold text-gray-900">
+                            Explore the Power of <span className="text-black">DesignDeck</span>
+                        </h2>
+                        <p className="text-gray-500 mt-2">
+                            DesignDeck is a powerful platform to showcase your designs, upload code, share visuals, and connect with a vibrant creative community.
+                        </p>
+                    </div>
+
+                    {/* Feature Cards */}
+                    <div className="mt-12 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
+                        {/* Card 1 */}
+                        <div className="bg-white border-3 border-[#FDE8CB] rounded-xl flex flex-col gap-2 p-6 hover:shadow-lg transition-all hover:border-[#fff]">
+                            <div className="flex items-center justify-center bg-[#FDE8CB] rounded-[10px] w-12 h-12 mx-auto">
+                                <i class="ri-gallery-line text-[#ED9E29] text-[28px]"></i>
+                            </div>
+                            <h3 className="font-semibold text-lg text-gray-900 mt-4">Image & Video Upload</h3>
+                            <p className="text-gray-500 text-sm mt-2 text-justify">
+                                DesignDeck empowers creators with Image & Video Upload for seamless media sharing, portfolio building, and high-quality project showcasing.
+                            </p>
+                        </div>
+
+                        {/* Card 2 */}
+                        <div className="bg-white border-3 border-[#DCE6FF] rounded-xl flex flex-col gap-2 p-6 hover:shadow-lg transition-all hover:border-[#fff]">
+                            <div className="flex items-center justify-center bg-[#DCE6FF] rounded-[10px] w-12 h-12 mx-auto">
+                                <i class="ri-live-line text-[#9091FF] text-[28px]"></i>
+                            </div>
+                            <h3 className="font-semibold text-lg text-gray-900 mt-4">Live Preview</h3>
+                            <p className="text-gray-500 text-sm mt-2 text-justify">
+                                DesignDeck empowers creators with Live Preview for real-time coding, instant feedback, interactive design testing, and enhanced development efficiency.
+                            </p>
+                        </div>
+
+                        {/* Card 3 */}
+                        <div className="bg-white border-3 border-[#F4D9FF] rounded-xl p-6 flex flex-col gap-2 hover:shadow-lg transition-all hover:border-[#fff]">
+                            <div className="flex items-center justify-center bg-[#F4D9FF] rounded-[10px] w-12 h-12 mx-auto">
+                                <i class="ri-bard-line text-[#D87EF5] text-[28px]"></i>
+                            </div>
+                            <h3 className="font-semibold text-lg text-gray-900 mt-4">Future of Design Deck</h3>
+                            <p className="text-gray-500 text-sm mt-2 text-justify">
+                                Future of DesignDeck to revolutionize creative possibilities, streamline workflows, boost collaboration, and unlock limitless innovation for designers and developers.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </footer>
+
+                {/* About us Section */}
+                <div id="about" class="bg-white py-16 pt-25">
+                    <div class="max-w-6xl mx-auto px-6 md:px-12 xl:px-6 flex flex-wrap items-center">
+                        <div class="w-full md:w-1/2 ">
+                            <img src="/public/About.jpg" alt="Analytics Graph" class="rounded-lg shadow-lg" />
+                        </div>
+                        <div class="w-full md:w-1/2 mt-8 md:mt-0 md:pl-10">
+                            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+                                Next-Generation Design & Code Showcase
+                            </h2>
+                            <p class="text-gray-600 mt-4 text-lg">
+                                DesignDeck is a cutting-edge design and development showcase platform where creators, developers,
+                                and designers can upload, preview, and share their work seamlessly. With real-time code previews,
+                                media uploads, and an interactive community, it brings innovation to the forefront.
+                            </p>
+                            <div class="mt-6 flex flex-wrap gap-4">
+                                <div class="border-4 border-[#FDE8CB] rounded-xl px-8 py-4 text-center">
+                                    <span class="text-xl font-semibold text-[#ED9E29]">7000+</span>
+                                    <p class="text-[#ED9E29] text-sm opacity-70">Designs</p>
+                                </div>
+                                <div class="border-4 border-[#DCE6FF] rounded-xl px-8 py-4 text-center">
+                                    <span class="text-xl font-semibold text-[#9091FF]">10,000+</span>
+                                    <p class="text-[#9091FF] text-sm opacity-70">Creators</p>
+                                </div>
+                                <div class="border-4 border-[#F4D9FF] rounded-xl px-6 py-4 text-center">
+                                    <span class="text-xl font-semibold text-[#D87EF5]">50+</span>
+                                    <p class="text-[#D87EF5] text-sm opacity-70">Design Styles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Explore Section */}
+                <div id="explore" className="bg-white py-4 px-6 md:px-4 lg:px-24">
+                    <div className="relative w-full">
+                        {/* Full-Width Image */}
+                        <img
+                            src="/public/Contact.jpg"
+                            alt="Contact Us"
+                            className="w-full h-auto rounded-2xl"
+                        />
+                        {/* Overlay Content */}
+                        <div className="absolute inset-0 flex items-center px-10 md:px-20">
+                            {/* Left Side - Title & Description */}
+                            <div className="text-white max-w-lg pl-15">
+                                <h2 className="text-4xl font-bold mb-4">Get in Touch</h2>
+                                <p className="text-md">
+                                    Have questions or need assistance? We're here to help! Reach out to us for inquiries about admissions, courses, or any other details. Our team is just a call or email away!.
+                                </p>
+                            </div>
+                            {/* Right Side - Button */}
+                            <div className="ml-auto pr-15">
+                                <Link to="/contactus"><button className="bg-white text-[#013C82] text-lg font-semibold py-4 px-8 rounded-lg cursor-pointer">
+                                    Contact Us
+                                </button></Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

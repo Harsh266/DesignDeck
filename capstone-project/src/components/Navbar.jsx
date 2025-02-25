@@ -1,85 +1,73 @@
-import React, { useState, useRef, useEffect } from "react";
-import { RiNotification4Fill } from "react-icons/ri";
-import { IoSearch, IoLogOutOutline } from "react-icons/io5";
-import { IoMdPerson } from "react-icons/io";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef(null);
-
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-            setIsOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+    const [showPopup, setShowPopup] = useState(false);
 
     return (
-        <nav className="w-full bg-gray-100 py-3 px-8 flex justify-between items-center shadow-md">
-            <Link to="/dashboard"><h1 className="text-2xl font-semibold">DesignDeck</h1></Link>
+        <nav className="flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 bg-[#ffffffc3] backdrop-blur-md z-50">
 
-            <div className="flex items-center bg-gray-300 px-4 py-2 rounded-full w-2/4">
-                <IoSearch className="text-gray-600 mr-2" />
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    className="bg-transparent focus:outline-none w-full placeholder-gray-500"
-                />
-            </div>
+            {/* Logo */}
+            <Link to="/dashboard"><h1 className="text-lg font-semibold">Design Deck</h1></Link>
 
-            <div className="flex items-center space-x-6 relative">
-                <RiNotification4Fill className="h-6 w-6 text-black cursor-pointer" />
-
-                <div ref={dropdownRef} className="relative">
+            {/* User Profile & Notification */}
+            <div className="flex items-center gap-4 relative">
+                {/* User Info */}
+                <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowPopup(!showPopup)}>
                     <img
                         src="https://img.freepik.com/premium-vector/businessman-avatar-profile-picture-silhouette-vector-illustration_1276914-125.jpg"
-                        alt="User Profile"
-                        className="h-12 w-12 rounded-full border border-gray-300 cursor-pointer"
-                        onClick={toggleDropdown}
+                        alt="User"
+                        className="w-10 h-10 rounded-full"
                     />
-
-                    {isOpen && (
-                        <div className="absolute right-0 mt-6 w-64 h-72 bg-white shadow-lg rounded-lg p-4 z-50 transition-all duration-300 animate-fadeIn">
-                            <div className="flex flex-col items-center p-4">
-                                <img
-                                    src="https://img.freepik.com/premium-vector/businessman-avatar-profile-picture-silhouette-vector-illustration_1276914-125.jpg"
-                                    alt="Profile"
-                                    className="h-16 w-16 rounded-full border mb-2"
-                                />
-                                <h2 className="text-lg font-semibold">John Doe</h2>
-                                <p className="text-gray-500 text-sm">johndoe123@gmail.com</p>
-                            </div>
-                            <hr className="my-3" />
-                            <ul className="text-sm gap-1 flex flex-col">
-                                <div className="flex flex-row items-center gap-0 hover:bg-gray-100">
-                                    <IoMdPerson className="text-[20px]" />
-                                    <Link to="/profilepage"><li className="cursor-pointer  p-2 rounded font-semibold text-[15px]">
-                                        My Profile
-                                    </li></Link>
-                                </div>
-                                <div className="flex flex-row items-center gap-0 hover:bg-gray-100">
-                                <IoLogOutOutline className="text-[20px] text-red-500" />
-                                    <Link to="/logout"><li className="cursor-pointer  p-2 rounded text-red-500 font-semibold">
-                                        Sign out
-                                    </li></Link>
-                                </div>
-
-                            </ul>
-                        </div>
-                    )}
+                    <div>
+                        <p className="text-sm font-medium">UserName</p>
+                        <p className="text-xs text-gray-500">useremail@xyz.com</p>
+                    </div>
                 </div>
+
+                {/* Notification Icon */}
+                <button className="p-2 rounded-full bg-[#DCE6FF] h-10 w-10 flex items-center justify-center">
+                    <i className="ri-notification-2-line text-[20px] text-[#9091FF]"></i>
+                </button>
             </div>
+
+            {/* Profile Popup */}
+            {showPopup && (
+                <div className="fixed top-16 right-5 w-80 bg-white shadow-xl rounded-2xl p-5 transition-all duration-200 ease-in-out z-50">
+                    {/* Close Button */}
+                    <button className="absolute top-3 right-3 text-gray-500 cursor-pointer" onClick={() => setShowPopup(false)}>
+                        <i className="ri-close-line text-lg"></i>
+                    </button>
+
+                    {/* Profile Section - Left Image & Right Details */}
+                    <div className="flex items-center gap-4">
+                        {/* Profile Image */}
+                        <img src="https://img.freepik.com/premium-vector/businessman-avatar-profile-picture-silhouette-vector-illustration_1276914-125.jpg" alt="User" className="w-20 h-20 rounded-full" />
+
+                        {/* User Details */}
+                        <div>
+                            <h2 className="font-semibold text-lg">UserName</h2>
+                            <p className="text-sm mt-1 font-semibold">usermail@gmail.com</p>
+
+                            {/* Social Media Links */}
+                            <div className="flex flex-col mt-2 text-gray-600 text-sm">
+                                <div className="flex items-center gap-2">
+                                    <i className="ri-instagram-fill text-lg"></i> @instaacc
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <i className="ri-behance-fill text-lg"></i> @Behanceacc
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="flex justify-between items-center mt-4 border-t pt-3 text-sm">
+                        <Link to="/profilepage"><button className="text-blue-600 font-medium cursor-pointer">View Profile</button></Link>
+                        <Link to="/logout"><button className="text-red-500 font-medium cursor-pointer">Logout</button></Link>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };

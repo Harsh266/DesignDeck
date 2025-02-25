@@ -5,7 +5,6 @@ import { FaLocationDot } from "react-icons/fa6";
 import { TbWorld } from "react-icons/tb";
 import { MdEdit } from "react-icons/md";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 const projects = [
     {
@@ -101,7 +100,6 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 };
