@@ -31,7 +31,7 @@ const Landingpage = () => {
                 </div>
 
                 {/* Home Section */}
-                <div id="home" className="text-black py-50 px-6 md:px-16 flex flex-col items-center text-center">
+                <div id="home" className="text-black py-40 px-6 md:px-16 flex flex-col items-center text-center">
                     <h1 className="text-4xl md:text-4xl font-extrabold leading-tight max-w-2xl">
                         Your Designs, Your Code, Your Platform
                         The Ultimate Creative Hub
@@ -110,7 +110,7 @@ const Landingpage = () => {
                 </div>
 
                 {/* About us Section */}
-                <div id="about" class="bg-white py-16 pt-25">
+                <div id="about" class="bg-white py-16 pt-20">
                     <div class="max-w-6xl mx-auto px-6 md:px-12 xl:px-6 flex flex-wrap items-center">
                         <div class="w-full md:w-1/2 ">
                             <img src="/public/About.jpg" alt="Analytics Graph" class="rounded-lg shadow-lg" />
