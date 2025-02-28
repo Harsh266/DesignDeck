@@ -1,13 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/users";
+const API_URL = "http://localhost:5000";
 
-export const registerUser = async (userData) => {
+export const getMessage = async () => {
     try {
-        const response = await axios.post(`${API_URL}/register`, userData);
+        const response = await axios.get(`${API_URL}/`);
         return response.data;
     } catch (error) {
-        console.error("Registration Error:", error);
-        return { error: error.response.data.message };
+        console.error("Error fetching message", error);
     }
 };

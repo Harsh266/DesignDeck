@@ -1,8 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
+const API_URL = "http://localhost:5000/auth/user"; // Backend API to fetch user data
 
 const Navbar = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // ✅ Fetch User Data when Navbar loads
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await axios.get(API_URL, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUser(res.data);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <nav className="flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 bg-[#ffffffc3] backdrop-blur-md z-50">
@@ -13,21 +36,28 @@ const Navbar = () => {
 
       {/* User Profile & Notification */}
       <div className="flex items-center gap-4 relative">
-        {/* User Info */}
-        <div
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => setShowPopup(!showPopup)}
-        >
-          <img
-            src="https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg"
-            alt="User"
-            className="object-cover object-top w-10 h-10 rounded-full"
-          />
-          <div>
-            <p className="text-sm font-medium">UserName</p>
-            <p className="text-xs text-gray-500">useremail@xyz.com</p>
+        {user ? (
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => setShowPopup(!showPopup)}
+          >
+            {/* ✅ Dynamic User Avatar */}
+            <img
+              src={user.avatar || "https://via.placeholder.com/100"} 
+              alt="User"
+              className="object-cover object-top w-10 h-10 rounded-full"
+            />
+            <div>
+              {/* ✅ Dynamic Username & Email */}
+              <p className="text-sm font-medium">{user.name}</p>
+              <p className="text-xs text-gray-500">{user.email}</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <Link to="/signin">
+            <button className="text-blue-500 font-medium">Login</button>
+          </Link>
+        )}
 
         {/* Notification Icon */}
         <button className="p-2 rounded-full bg-[#DCE6FF] h-10 w-10 flex items-center justify-center">
@@ -36,7 +66,7 @@ const Navbar = () => {
       </div>
 
       {/* Profile Popup */}
-      {showPopup && (
+      {showPopup && user && (
         <div className="fixed top-16 right-5 w-80 bg-white shadow-xl rounded-2xl p-5 transition-all duration-200 ease-in-out z-50">
           {/* Close Button */}
           <button
@@ -46,29 +76,19 @@ const Navbar = () => {
             <i className="ri-close-line text-lg"></i>
           </button>
 
-          {/* Profile Section - Left Image & Right Details */}
+          {/* Profile Section */}
           <div className="flex items-center gap-4">
-            {/* Profile Image */}
+            {/* ✅ Dynamic Profile Image */}
             <img
-              src="https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg"
+              src={user.avatar || "https://via.placeholder.com/100"}
               alt="User"
               className="w-20 h-20 rounded-full object-cover object-top"
             />
 
-            {/* User Details */}
+            {/* ✅ Dynamic User Details */}
             <div>
-              <h2 className="font-semibold text-lg">UserName</h2>
-              <p className="text-sm mt-1 font-semibold">usermail@gmail.com</p>
-
-              {/* Social Media Links */}
-              <div className="flex flex-col mt-2 text-gray-600 text-sm">
-                <div className="flex items-center gap-2">
-                  <i className="ri-instagram-fill text-lg"></i> @instaacc
-                </div>
-                <div className="flex items-center gap-2">
-                  <i className="ri-behance-fill text-lg"></i> @Behanceacc
-                </div>
-              </div>
+              <h2 className="font-semibold text-lg">{user.name}</h2>
+              <p className="text-sm mt-1 font-semibold">{user.email}</p>
             </div>
           </div>
 
@@ -79,11 +99,15 @@ const Navbar = () => {
                 View Profile
               </button>
             </Link>
-            <Link to="/logout">
-              <button className="text-red-500 font-medium cursor-pointer">
-                Logout
-              </button>
-            </Link>
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                window.location.href = "/signin";
+              }}
+              className="text-red-500 font-medium cursor-pointer"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}

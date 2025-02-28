@@ -1,27 +1,52 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config(); // Load environment variables
 
-dotenv.config();
+
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-// Middleware
+// ✅ MongoDB Connection URI (from .env or local fallback)
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://harshvekriya441:Harsh123@capstone-project.mfd59.mongodb.net";
+
+// ✅ Connect to MongoDB
+mongoose
+    .connect(MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5137"];
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true, // Allow cookies & auth headers
+    })
+);
+
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
-// ✅ Add a simple route for the root URL
+// ✅ Test Route
 app.get("/", (req, res) => {
-    res.send("DesignDeck Backend is Running! 🚀");
+    res.send("✅ Backend server is running... MongoDB is connected!");
 });
 
-// Connect to MongoDB
-mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("✅ Connected to MongoDB");
-        app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-    })
-    .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+// ✅ Example API Route
+app.get("/api/test", (req, res) => {
+    res.json({ message: "✅ API is working!" });
+});
+
+// ✅ Start the Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
