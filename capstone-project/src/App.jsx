@@ -13,12 +13,15 @@ import { useState, useEffect } from "react";
 import { getMessage } from "./services/api";
 import "./App.css";
 import "./index.css";
+import axios from "axios";
 
 function App() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    getMessage().then((data) => setMessage(data));
+    axios.get("http://localhost:5000")
+      .then((res) => setMessage(res.data))
+      .catch((err) => console.log(err));
   }, []);
 
   return (

@@ -77,7 +77,7 @@ const Landingpage = () => {
                         {/* Card 1 */}
                         <div className="bg-white border-3 border-[#FDE8CB] rounded-xl flex flex-col gap-2 p-6 hover:shadow-lg transition-all hover:border-[#fff]">
                             <div className="flex items-center justify-center bg-[#FDE8CB] rounded-[10px] w-12 h-12 mx-auto">
-                                <i class="ri-gallery-line text-[#ED9E29] text-[28px]"></i>
+                                <i className="ri-gallery-line text-[#ED9E29] text-[28px]"></i>
                             </div>
                             <h3 className="font-semibold text-lg text-gray-900 mt-4">Image & Video Upload</h3>
                             <p className="text-gray-500 text-sm mt-2 text-justify">
@@ -88,7 +88,7 @@ const Landingpage = () => {
                         {/* Card 2 */}
                         <div className="bg-white border-3 border-[#DCE6FF] rounded-xl flex flex-col gap-2 p-6 hover:shadow-lg transition-all hover:border-[#fff]">
                             <div className="flex items-center justify-center bg-[#DCE6FF] rounded-[10px] w-12 h-12 mx-auto">
-                                <i class="ri-live-line text-[#9091FF] text-[28px]"></i>
+                                <i className="ri-live-line text-[#9091FF] text-[28px]"></i>
                             </div>
                             <h3 className="font-semibold text-lg text-gray-900 mt-4">Live Preview</h3>
                             <p className="text-gray-500 text-sm mt-2 text-justify">
@@ -99,7 +99,7 @@ const Landingpage = () => {
                         {/* Card 3 */}
                         <div className="bg-white border-3 border-[#F4D9FF] rounded-xl p-6 flex flex-col gap-2 hover:shadow-lg transition-all hover:border-[#fff]">
                             <div className="flex items-center justify-center bg-[#F4D9FF] rounded-[10px] w-12 h-12 mx-auto">
-                                <i class="ri-bard-line text-[#D87EF5] text-[28px]"></i>
+                                <i className="ri-bard-line text-[#D87EF5] text-[28px]"></i>
                             </div>
                             <h3 className="font-semibold text-lg text-gray-900 mt-4">Future of Design Deck</h3>
                             <p className="text-gray-500 text-sm mt-2 text-justify">
@@ -110,32 +110,32 @@ const Landingpage = () => {
                 </div>
 
                 {/* About us Section */}
-                <div id="about" class="bg-white py-16 pt-20">
-                    <div class="max-w-6xl mx-auto px-6 md:px-12 xl:px-6 flex flex-wrap items-center">
-                        <div class="w-full md:w-1/2 ">
-                            <img src="/public/About.jpg" alt="Analytics Graph" class="rounded-lg shadow-lg" />
+                <div id="about" className="bg-white py-16 pt-20">
+                    <div className="max-w-6xl mx-auto px-6 md:px-12 xl:px-6 flex flex-wrap items-center">
+                        <div className="w-full md:w-1/2 ">
+                            <img src="/public/About.jpg" alt="Analytics Graph" className="rounded-lg shadow-lg" />
                         </div>
-                        <div class="w-full md:w-1/2 mt-8 md:mt-0 md:pl-10">
-                            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+                        <div className="w-full md:w-1/2 mt-8 md:mt-0 md:pl-10">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
                                 Next-Generation Design & Code Showcase
                             </h2>
-                            <p class="text-gray-600 mt-4 text-lg">
+                            <p className="text-gray-600 mt-4 text-lg">
                                 DesignDeck is a cutting-edge design and development showcase platform where creators, developers,
                                 and designers can upload, preview, and share their work seamlessly. With real-time code previews,
                                 media uploads, and an interactive community, it brings innovation to the forefront.
                             </p>
-                            <div class="mt-6 flex flex-wrap gap-4">
-                                <div class="border-4 border-[#FDE8CB] rounded-xl px-8 py-4 text-center">
-                                    <span class="text-xl font-semibold text-[#ED9E29]">7000+</span>
-                                    <p class="text-[#ED9E29] text-sm opacity-70">Designs</p>
+                            <div className="mt-6 flex flex-wrap gap-4">
+                                <div className="border-4 border-[#FDE8CB] rounded-xl px-8 py-4 text-center">
+                                    <span className="text-xl font-semibold text-[#ED9E29]">7000+</span>
+                                    <p className="text-[#ED9E29] text-sm opacity-70">Designs</p>
                                 </div>
-                                <div class="border-4 border-[#DCE6FF] rounded-xl px-8 py-4 text-center">
-                                    <span class="text-xl font-semibold text-[#9091FF]">10,000+</span>
-                                    <p class="text-[#9091FF] text-sm opacity-70">Creators</p>
+                                <div className="border-4 border-[#DCE6FF] rounded-xl px-8 py-4 text-center">
+                                    <span className="text-xl font-semibold text-[#9091FF]">10,000+</span>
+                                    <p className="text-[#9091FF] text-sm opacity-70">Creators</p>
                                 </div>
-                                <div class="border-4 border-[#F4D9FF] rounded-xl px-6 py-4 text-center">
-                                    <span class="text-xl font-semibold text-[#D87EF5]">50+</span>
-                                    <p class="text-[#D87EF5] text-sm opacity-70">Design Styles</p>
+                                <div className="border-4 border-[#F4D9FF] rounded-xl px-6 py-4 text-center">
+                                    <span Name="text-xl font-semibold text-[#D87EF5]">50+</span>
+                                    <p className="text-[#D87EF5] text-sm opacity-70">Design Styles</p>
                                 </div>
                             </div>
                         </div>
