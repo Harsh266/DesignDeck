@@ -2,13 +2,18 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const router = express.Router();
 
+const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
-// Register Route
+// ✅ Register Route
 router.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
     try {
         let user = await User.findOne({ email });
         if (user) return res.status(400).json({ message: "User already exists" });
@@ -17,13 +22,13 @@ router.post("/register", async (req, res) => {
         user = new User({ name, email, password: hashedPassword });
         await user.save();
 
-        res.json({ message: "User registered successfully" });
+        res.status(201).json({ message: "User registered successfully" });
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
 
-// Login Route
+// ✅ Login Route
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -41,32 +46,33 @@ router.post("/login", async (req, res) => {
             sameSite: "strict",
         });
 
+        console.log("Login Successful. Token set in cookies.");
         res.json({ message: "Login successful" });
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
 
-// Logout Route
+// ✅ Logout Route
 router.post("/logout", (req, res) => {
     res.clearCookie("token");
     res.json({ message: "Logged out successfully" });
 });
 
-// Get User Info (Protected Route)
+// ✅ Get User Info (Protected Route)
 router.get("/me", async (req, res) => {
     try {
-        const token = req.cookies.token;
+        const token = req.cookies.token; // Get token from cookies
         if (!token) return res.status(401).json({ message: "Unauthorized" });
 
         const decoded = jwt.verify(token, JWT_SECRET);
-        const user = await User.findById(decoded.id).select("-password");
+        const user = await User.findById(decoded.id).select("name email profileImage"); 
+        
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        res.json(user);
+        res.json(user);  // ✅ Return user data properly
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
-
 module.exports = router;

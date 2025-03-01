@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ CORS Configuration
+// ✅ CORS Configuration (Ensure frontend can send cookies)
 app.use(cors({
   origin: "http://localhost:5173", // Update based on your frontend URL
   credentials: true
@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", UserSchema);
 
-// ✅ Root Route (for checking if backend is running)
+// ✅ Root Route
 app.get("/", (req, res) => {
   res.send("🚀 Backend is running!");
 });
@@ -70,17 +70,11 @@ app.post("/auth/login", async (req, res) => {
 
     // Check if user exists
     const user = await User.findOne({ email });
-    if (!user) {
-      console.error("User not found:", email);
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
+    if (!user) return res.status(400).json({ message: "Invalid email or password" });
 
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      console.error("Incorrect password for:", email);
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
+    if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
 
     // Generate JWT Token
     if (!process.env.JWT_SECRET) {
@@ -123,7 +117,7 @@ app.get("/auth/me", verifyToken, async (req, res) => {
     const user = await User.findById(req.user.userId).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.status(200).json({ user });
+    res.status(200).json(user); // ✅ Return only user object
   } catch (error) {
     console.error("Fetch User Error:", error);
     res.status(500).json({ message: "Server error" });
@@ -132,7 +126,7 @@ app.get("/auth/me", verifyToken, async (req, res) => {
 
 // ✅ Logout Route
 app.post("/auth/logout", (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", { httpOnly: true, sameSite: "lax" });
   res.status(200).json({ message: "Logged out successfully" });
 });
 
