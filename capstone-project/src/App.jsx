@@ -40,10 +40,6 @@ function App() {
           <Route path="*" element={<Landingpage />} />
         </Routes>
       </Router>
-      <div>
-        <h1>React + Node + MongoDB</h1>
-        <p>{message}</p>
-      </div>
     </GoogleOAuthProvider>
   );
 }
