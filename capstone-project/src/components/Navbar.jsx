@@ -72,7 +72,7 @@ const Navbar = () => {
               onClick={() => setShowPopup(!showPopup)}
             >
               <img
-                src="https://static.thenounproject.com/png/642902-200.png"
+                img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
                 alt="User"
                 className="object-cover object-top w-10 h-10 rounded-full"
               />
@@ -102,7 +102,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-4">
                   {/* Profile Image */}
                   <img
-                    src="https://static.thenounproject.com/png/642902-200.png"
+                    img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
                     alt="User"
                     className="w-20 h-20 rounded-full object-cover object-top"
                   />

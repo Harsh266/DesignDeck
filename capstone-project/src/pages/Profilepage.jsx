@@ -1,8 +1,42 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaUserEdit } from "react-icons/fa";
 
 const Profilepage = () => {
+
+    const [user, setUser] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await axios.get("http://localhost:5000/auth/me", {
+                    withCredentials: true,
+                });
+
+                if (res.data && res.data._id) {
+                    setUser(res.data);
+                } else {
+                    navigate("/signin"); // Redirect to login if no user found
+                }
+            } catch (error) {
+                console.error("❌ Error fetching user:", error.response?.data?.message || error.message);
+                navigate("/signin"); // Redirect if not authenticated
+            }
+        };
+
+        fetchUser();
+    }, [navigate]);
+
+    if (!user) {
+        return <h1 className="text-center mt-10 text-lg">Loading...</h1>;
+    }
+
     return (
         <>
             <Navbar />
@@ -28,7 +62,7 @@ const Profilepage = () => {
                             {/* Profile Image Container */}
                             <div className="w-40 h-40 bg-white rounded-2xl p-1 relative border-4 border-transparent">
                                 <img
-                                    src="https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg"
+                                    img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
                                     alt="User"
                                     className="w-full h-full object-cover rounded-2xl"
                                 />
@@ -37,7 +71,7 @@ const Profilepage = () => {
 
                         {/* User Details */}
                         <div className="pl-48">
-                            <h2 className="text-2xl font-semibold">User Name</h2>
+                            <h2 className="text-2xl font-semibold">{user.name}</h2>
                             <p className="text-gray-600 text-sm max-w-xs">
                                 A user biodata is a collection of personal details about an individual. It can be used for job applications.
                             </p>
@@ -45,12 +79,12 @@ const Profilepage = () => {
 
                         {/* Social Icons */}
                         <div className="ml-auto flex gap-3">
-                            <div className="bg-purple-100 w-10 h-10 text-purple-500 p-2 rounded-full flex items-center justify-center">
-                                <i className="ri-dribbble-line text-xl"></i>
-                            </div>
-                            <div className="bg-blue-100 w-10 h-10  text-blue-500 p-2 rounded-full flex items-center justify-center">
-                                <i className="ri-behance-line text-xl"></i>
-                            </div>
+                            <button
+                                onClick={() => setIsPopupOpen(true)}
+                                className="bg-[#C3D7FF] text-[#0057FF] px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-[#A9C4FF] transition cursor-pointer"
+                            >
+                                <FaUserEdit className="text-lg" /> Edit Profile
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -93,6 +127,82 @@ const Profilepage = () => {
 
                     </div>
                 </div>
+                {isPopupOpen && (
+                    <div
+                        className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+                        onClick={() => setIsPopupOpen(false)}
+                    >
+                        <div
+                            className="bg-white rounded-xl p-6 w-[90%] max-w-md shadow-lg relative h-[90%]"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setIsPopupOpen(false)}
+                                className="absolute top-3 right-4 text-gray-500 hover:text-black text-2xl cursor-pointer"
+                            >
+                                &times;
+                            </button>
+
+                            {/* Profile Section */}
+                            <div className="flex items-center gap-3">
+                                <img
+                                    img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
+                                    alt="User"
+                                    className="w-15 h-15 rounded-full"
+                                />
+                                <div>
+                                    <h3 className="font-semibold">{user.name}</h3>
+                                    <p className="text-gray-500 text-sm">{user.email}</p>
+                                </div>
+                            </div>
+
+                            {/* Title */}
+                            <h2 className="mt-4 font-medium">Update Your Profile</h2>
+                            <hr className="border-t-2 w-39 mt-1" />
+
+                            {/* Form */}
+                            <div className="mt-4">
+                                {/* Profile Image Upload */}
+                                <label className="font-medium text-sm block">Profile Image</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
+                                />
+
+                                {/* Bio */}
+                                <label className="font-medium text-sm mt-2 block">Bio</label>
+                                <textarea
+                                    className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
+                                    placeholder="Tell something about yourself"
+                                    rows="2"
+                                ></textarea>
+
+                                {/* Instagram Link */}
+                                <label className="font-medium text-sm mt-1 block">Instagram Profile</label>
+                                <input
+                                    type="url"
+                                    className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
+                                    placeholder="Enter your Instagram link"
+                                />
+
+                                {/* Behance Link */}
+                                <label className="font-medium text-sm mt-2 block">Behance Profile</label>
+                                <input
+                                    type="url"
+                                    className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
+                                    placeholder="Enter your Behance link"
+                                />
+                            </div>
+
+                            {/* Save Changes Button */}
+                            <button className="bg-[#376CFF] text-white text-md font-medium w-full py-3 mt-4 rounded-full cursor-pointer">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
