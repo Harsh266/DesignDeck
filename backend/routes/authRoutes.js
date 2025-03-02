@@ -74,5 +74,5 @@ router.get("/me", async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }
-});zz
+});
 module.exports = router;

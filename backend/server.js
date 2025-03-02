@@ -39,7 +39,7 @@ const User = mongoose.model("User", UserSchema);
 
 // ✅ Root Route
 app.get("/", (req, res) => {
-  res.send("🚀 Backend is running!");
+  res.send("🚀 Backend is running! & MongoDB connected");
 });
 
 // ✅ Register Route
@@ -132,4 +132,4 @@ app.post("/auth/logout", (req, res) => {
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port${PORT}`));
