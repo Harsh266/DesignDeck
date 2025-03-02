@@ -49,7 +49,7 @@ const Navbar = () => {
 
       setUser(null);
       setShowPopup(false);
-      navigate("/signin");
+      navigate("/landingpage");
     } catch (error) {
       console.error("❌ Logout failed:", error);
     }

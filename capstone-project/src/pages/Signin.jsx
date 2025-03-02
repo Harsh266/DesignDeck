@@ -6,12 +6,13 @@ import axios from "axios";
 const Signin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(""); // ✅ State for error messages
+    const [message, setMessage] = useState(""); // ✅ Success/Error Message
+    const [messageType, setMessageType] = useState(""); // ✅ "success" or "error"
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError(""); // Reset error before making a new request
+        setMessage(""); // Reset message before new request
 
         try {
             const res = await axios.post(
@@ -19,28 +20,29 @@ const Signin = () => {
                 { email, password },
                 { withCredentials: true }
             );
-            navigate("/dashboard"); // ✅ Redirect to dashboard after successful login
+
+            setMessage(res.data.message);
+            setMessageType("success");
+
+            // ✅ Redirect after 2 seconds
+            setTimeout(() => navigate("/dashboard"), 2000);
         } catch (error) {
-            console.error("Login Error:", error.response?.data?.message || error.message);
-            setError(error.response?.data?.message || "Incorrect email or password. Please try again.");
+            setMessage(error.response?.data?.message || "Login failed. Please try again.");
+            setMessageType("error");
         }
     };
 
     const handleGoogleLogin = () => {
-        window.open("http://localhost:5000/auth/google", "_self"); // Update with backend Google OAuth URL
+        window.open("http://localhost:5000/auth/google", "_self"); // Update with your backend Google OAuth URL
     };
 
     return (
         <div className="flex items-center justify-between min-h-screen bg-white p-6 h-screen">
-            {/* Left Section */}
-            <div className="w-1/2 h-screen p-6">
-                {/* Logo */}
-                <h1 className="text-xl font-semibold mb-5">DesignDeck</h1>
-
-                {/* Form */}
+            <div className="w-1/2 h-screen p-6 flex flex-col justify-center">
+                <h1 className="text-xl font-semibold mb-10">DesignDeck</h1>
                 <form onSubmit={handleLogin} className="px-16 py-6 flex flex-col justify-center w-[90%]">
-                    <h2 className="text-2xl font-bold">Welcome Back</h2>
-                    <p className="text-gray-500 mt-1 text-sm">
+                    <h2 className="text-2xl font-semibold">Welcome Back</h2>
+                    <p className="text-gray-500 mt-1">
                         Sign in to Showcase, Inspire, and Elevate Your Creativity!
                     </p>
 
@@ -58,7 +60,7 @@ const Signin = () => {
                     <div className="mt-3">
                         <input
                             type="password"
-                            placeholder="Enter Your Password"
+                            placeholder="Enter your password"
                             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -77,14 +79,14 @@ const Signin = () => {
                         Sign In
                     </button>
 
-                    {/* ✅ Error Message Below Sign-In Button */}
-                    {error && (
-                        <p className="text-red-600 text-sm mt-4 text-left font-regular">
-                            {error}
+                    {/* ✅ Show Message Below the Button */}
+                    {message && (
+                        <p className={`mt-3 text-sm ${messageType === "success" ? "text-green-600" : "text-red-500"}`}>
+                            {message}
                         </p>
                     )}
 
-                    <div className="flex items-center my-3">
+                    <div className="flex items-center my-2">
                         <hr className="w-full border-gray-300" />
                         <span className="mx-2 text-gray-500">or</span>
                         <hr className="w-full border-gray-300" />
@@ -113,7 +115,7 @@ const Signin = () => {
                 <img
                     src="/Signin.png" // Ensure the image is placed inside the 'public' folder
                     alt="Sign in"
-                    className="w-[75%] h-[100%] rounded-lg"
+                    className="w-[85%] h-[100%] rounded-lg"
                 />
             </div>
         </div>

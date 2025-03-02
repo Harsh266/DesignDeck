@@ -73,7 +73,7 @@ const Profilepage = () => {
                         <div className="pl-48">
                             <h2 className="text-2xl font-semibold">{user.name}</h2>
                             <p className="text-gray-600 text-sm max-w-xs">
-                                A user biodata is a collection of personal details about an individual. It can be used for job applications.
+                                {user.bio || "No Bio     "}
                             </p>
                         </div>
 
@@ -133,7 +133,7 @@ const Profilepage = () => {
                         onClick={() => setIsPopupOpen(false)}
                     >
                         <div
-                            className="bg-white rounded-xl p-6 w-[90%] max-w-md shadow-lg relative h-[90%]"
+                            className="bg-white rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Close Button */}

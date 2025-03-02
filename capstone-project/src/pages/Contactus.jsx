@@ -6,12 +6,12 @@ const Contactus = () => {
         <>
             <div className="flex items-center justify-between min-h-screen bg-gray-100 p-6 h-screen ">
                 {/* Left Side - Logo + Form */}
-                <div className="w-1/2 h-screen p-10 ">
+                <div className="w-1/2 h-screen p-10 flex flex-col justify-center">
                     {/* Logo */}
-                    <Link to="/logout"><h1 className="text-3xl font-semibold mb-10">DesignDeck</h1></Link>
-                    <div className="px-16 py-6 flex flex-col justify-center">
+                    <Link to="/logout"><h1 className="text-xl font-semibold mb-10">DesignDeck</h1></Link>
+                    <div className="px-16 flex flex-col justify-center ">
                         {/* Form */}
-                        <h2 className="texzt-3xl font-semibold mb-3">Get in Touch</h2>
+                        <h2 className="text-3xl font-semibold mb-3">Get in Touch</h2>
                         <p className="text-gray-500 text-sm mb-6">
                             We will get back to you as soon as possible
                         </p>
