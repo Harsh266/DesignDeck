@@ -6,26 +6,28 @@ import axios from "axios";
 const Signin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(""); // ✅ State for error messages
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError(""); // Reset error before making a new request
+
         try {
             const res = await axios.post(
                 "http://localhost:5000/auth/login",
                 { email, password },
                 { withCredentials: true }
             );
-            alert(res.data.message);
-            navigate("/dashboard"); // Redirect to dashboard
+            navigate("/dashboard"); // ✅ Redirect to dashboard after successful login
         } catch (error) {
             console.error("Login Error:", error.response?.data?.message || error.message);
-            alert(error.response?.data?.message || "Login failed. Please try again.");
+            setError(error.response?.data?.message || "Incorrect email or password. Please try again.");
         }
     };
 
     const handleGoogleLogin = () => {
-        window.open("http://localhost:5000/auth/google", "_self"); // Update with your backend Google OAuth URL
+        window.open("http://localhost:5000/auth/google", "_self"); // Update with backend Google OAuth URL
     };
 
     return (
@@ -33,12 +35,12 @@ const Signin = () => {
             {/* Left Section */}
             <div className="w-1/2 h-screen p-6">
                 {/* Logo */}
-                <h1 className="text-xl font-semibold mb-10">DesignDeck</h1>
+                <h1 className="text-xl font-semibold mb-5">DesignDeck</h1>
 
                 {/* Form */}
                 <form onSubmit={handleLogin} className="px-16 py-6 flex flex-col justify-center w-[90%]">
                     <h2 className="text-2xl font-bold">Welcome Back</h2>
-                    <p className="text-gray-500 mt-1">
+                    <p className="text-gray-500 mt-1 text-sm">
                         Sign in to Showcase, Inspire, and Elevate Your Creativity!
                     </p>
 
@@ -56,8 +58,8 @@ const Signin = () => {
                     <div className="mt-3">
                         <input
                             type="password"
-                            placeholder="XXXXXXXXXXXXXXXXXX"
-                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none"
+                            placeholder="Enter Your Password"
+                            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -75,7 +77,14 @@ const Signin = () => {
                         Sign In
                     </button>
 
-                    <div className="flex items-center my-4">
+                    {/* ✅ Error Message Below Sign-In Button */}
+                    {error && (
+                        <p className="text-red-600 text-sm mt-4 text-left font-regular">
+                            {error}
+                        </p>
+                    )}
+
+                    <div className="flex items-center my-3">
                         <hr className="w-full border-gray-300" />
                         <span className="mx-2 text-gray-500">or</span>
                         <hr className="w-full border-gray-300" />
@@ -84,7 +93,6 @@ const Signin = () => {
                     {/* Google Sign In */}
                     <button
                         type="button"
-                        onClick={handleGoogleLogin}
                         className="w-full flex items-center justify-center p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition hover:cursor-pointer"
                     >
                         <FcGoogle className="mr-2 text-[20px]" />
