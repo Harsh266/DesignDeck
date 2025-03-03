@@ -1,9 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Contactus = () => {
     return (
         <>
+            <Helmet>
+                <title>DesignDeck - Contactis Page</title>
+            </Helmet>
             <div className="flex items-center justify-between min-h-screen bg-gray-100 p-6 h-screen ">
                 {/* Left Side - Logo + Form */}
                 <div className="w-1/2 h-screen p-10 flex flex-col justify-center">

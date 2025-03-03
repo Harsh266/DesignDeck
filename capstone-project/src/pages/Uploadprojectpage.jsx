@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-
+import { Helmet } from "react-helmet";
 
 const Uploadprojectpage = () => {
 
@@ -10,7 +10,7 @@ const Uploadprojectpage = () => {
     const [showVideoPopup, setShowVideoPopup] = useState(false);
     const [selectedVideoFiles, setSelectedVideoFiles] = useState([]);
     const [showCodePopup, setShowCodePopup] = useState(false);
-const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
+    const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
 
     const handleImageFileChange = (event) => {
         const files = Array.from(event.target.files);
@@ -42,11 +42,11 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
         const files = Array.from(event.target.files);
         const validTypes = ["text/html", "text/css", "application/javascript"];
         const validFiles = files.filter(file => validTypes.includes(file.type));
-    
+
         if (validFiles.length !== files.length) {
             alert("Only .html, .css, and .js files are allowed.");
         }
-    
+
         setSelectedCodeFiles(prevFiles => [...prevFiles, ...validFiles]);
     };
 
@@ -64,7 +64,10 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
 
     return (
         <>
-        <Navbar />
+            <Helmet>
+                <title>DesignDeck - Uploadproject Page</title>
+            </Helmet>
+            <Navbar />
             <div className="min-h-fit bg-white flex flex-col px-6 md:px-20 w-full mt-12">
                 {/* Upload Section */}
                 <div className="mt-10 text-left">
@@ -118,8 +121,8 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
 
                             {/* Title */}
                             <h2 className="text-[20px] flex items-center gap-2">
-                            <i className="ri-file-upload-line"></i>
-                            <p className="font-semibold">Upload Images</p>
+                                <i className="ri-file-upload-line"></i>
+                                <p className="font-semibold">Upload Images</p>
                             </h2>
                             <p className="text-gray-500 text-[12px]">Add your images here</p>
 
@@ -171,7 +174,7 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
                             <div className="mt-3 flex justify-end gap-4">
                                 <button className="border border-[#ED9E29] px-4 py-2 rounded-lg text-[#ED9E29] cursor-pointer" onClick={() => setImageShowPopup(false)}>Cancel</button>
                                 <button className="bg-[#ED9E29] text-white px-4 py-2 rounded-lg cursor-pointer" disabled={selectedImageFiles.length === 0}>
-                                <Link to="/profilepage">Upload</Link>
+                                    <Link to="/profilepage">Upload</Link>
                                 </button>
                             </div>
 
@@ -188,7 +191,7 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
                             </button>
 
                             {/* Title */}
-                            <h2 className="text-[20px] flex items-center gap-2"> 
+                            <h2 className="text-[20px] flex items-center gap-2">
                                 <i className="ri-file-upload-line"></i>
                                 <p className="font-semibold">Upload Code Files</p>
                             </h2>
@@ -242,7 +245,7 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
                             <div className="mt-3 flex justify-end gap-4">
                                 <button className="border border-[#376CFF] px-4 py-2 rounded-lg text-[#376CFF] cursor-pointer" onClick={() => setShowCodePopup(false)}>Cancel</button>
                                 <button className="bg-[#376CFF] text-white px-4 py-2 rounded-lg cursor-pointer" disabled={selectedCodeFiles.length === 0}>
-                                <Link to="/profilepage">Upload</Link>
+                                    <Link to="/profilepage">Upload</Link>
                                 </button>
                             </div>
 
@@ -313,7 +316,7 @@ const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
                             <div className="mt-3 flex justify-end gap-4">
                                 <button className="border border-[#C684E0] px-4 py-2 rounded-lg text-[#C684E0] cursor-pointer" onClick={() => setShowVideoPopup(false)}>Cancel</button>
                                 <button className="bg-[#C684E0] text-white px-4 py-2 rounded-lg cursor-pointer" disabled={selectedVideoFiles.length === 0}>
-                                <Link to="/profilepage">Upload</Link>
+                                    <Link to="/profilepage">Upload</Link>
                                 </button>
                             </div>
 

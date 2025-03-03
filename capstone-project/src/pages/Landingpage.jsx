@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import 'remixicon/fonts/remixicon.css'
-
+import { Helmet } from "react-helmet";
 
 const Landingpage = () => {
     return (
         <>
+            <Helmet>
+                <title>DesignDeck - Landing Page</title>
+            </Helmet>
             <div>
                 <div>
                     <nav className="fixed top-0 left-0 w-full bg-[#ffffffc3] backdrop-blur-2xl z-50 px-10 py-3 flex justify-between items-center">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const mediaItems = [
     {
@@ -41,6 +42,9 @@ const Projectview = () => {
 
     return (
         <>
+            <Helmet>
+                <title>DesignDeck - ProjectView Page</title>
+            </Helmet>
             <Navbar />
             <div className="container mx-auto p-4 mt-12">
                 <div className="grid gap-4">

@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Profilepageothers = () => {
 
@@ -9,6 +10,9 @@ const Profilepageothers = () => {
 
     return (
         <>
+            <Helmet>
+                <title>DesignDeck - Profile Page </title>
+            </Helmet>
             <Navbar />
             <div className="min-h-screen bg-white mt-16">
                 {/* Profile Section */}

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUserEdit } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 const Profilepage = () => {
 
@@ -39,6 +40,9 @@ const Profilepage = () => {
 
     return (
         <>
+            <Helmet>
+                <title>DesignDeck - Profile Page {user.name}</title>
+            </Helmet>
             <Navbar />
             <div className="min-h-screen bg-gray-100 mt-16">
                 {/* Profile Section */}

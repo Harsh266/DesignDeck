@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Dashboard = () => {
     const categories = ["Explore", "UI/UX", "Poster", "Logo Design", "App Design"];
@@ -17,6 +18,9 @@ const Dashboard = () => {
 
     return (
         <>
+            <Helmet>
+                <title>DesignDeck - Dashboard</title>
+            </Helmet>
             <Navbar />
             <div className="p-6 max-w-6xl mx-auto">
                 {/* Header Section */}
@@ -57,8 +61,8 @@ const Dashboard = () => {
                 {/* Image & Video Grid */}
                 <Link to="/view"><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                     {cards.map((card, index) => (
-                        <div 
-                            key={index} 
+                        <div
+                            key={index}
                             className="bg-white rounded-xl overflow-hidden group cursor-pointer transition-all "
                         >
                             {/* Media Handling */}
@@ -66,17 +70,17 @@ const Dashboard = () => {
                                 {card.type === "video" ? (
                                     <>
                                         {/* Show Image by Default */}
-                                        <img 
-                                            src={card.thumbnail || "/default-thumbnail.jpg"} 
-                                            alt={card.title} 
+                                        <img
+                                            src={card.thumbnail || "/default-thumbnail.jpg"}
+                                            alt={card.title}
                                             className="w-full h-full object-cover rounded-xl group-hover:hidden"
                                         />
                                         {/* Show Video on Hover */}
-                                        <video 
+                                        <video
                                             className="w-full h-full object-cover rounded-xl hidden group-hover:block"
-                                            autoPlay 
-                                            loop 
-                                            muted 
+                                            autoPlay
+                                            loop
+                                            muted
                                             playsInline
                                         >
                                             <source src={card.media} type="video/mp4" />
@@ -84,10 +88,10 @@ const Dashboard = () => {
                                         </video>
                                     </>
                                 ) : (
-                                    <img 
-                                        src={card.media} 
-                                        alt={card.title} 
-                                        className="w-full h-full object-cover rounded-xl" 
+                                    <img
+                                        src={card.media}
+                                        alt={card.title}
+                                        className="w-full h-full object-cover rounded-xl"
                                     />
                                 )}
                             </div>
@@ -95,7 +99,7 @@ const Dashboard = () => {
                             {/* User Info at Bottom */}
                             <div className="py-2 flex items-center gap-3">
                                 <img
-                                    src={card.userImage}  
+                                    src={card.userImage}
                                     alt={card.user}
                                     className="w-10 h-10 rounded-full object-cover"
                                 />
