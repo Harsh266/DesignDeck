@@ -72,7 +72,7 @@ const Navbar = () => {
               onClick={() => setShowPopup(!showPopup)}
             >
               <img
-                img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
+                img src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
                 alt="User"
                 className="object-cover object-top w-10 h-10 rounded-full"
               />
@@ -89,7 +89,7 @@ const Navbar = () => {
 
             {/* ✅ Profile Popup */}
             {showPopup && (
-              <div className="fixed top-16 right-5 w-80 bg-white shadow-xl rounded-2xl p-5 transition-all duration-200 ease-in-out z-50">
+              <div className="fixed top-16 right-5 w-90 bg-white shadow-xl rounded-2xl p-5 transition-all duration-200 ease-in-out z-50">
                 {/* Close Button */}
                 <button
                   className="absolute top-3 right-3 text-gray-500 cursor-pointer"
@@ -102,7 +102,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-4">
                   {/* Profile Image */}
                   <img
-                    img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
+                    img src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
                     alt="User"
                     className="w-20 h-20 rounded-full object-cover object-top"
                   />

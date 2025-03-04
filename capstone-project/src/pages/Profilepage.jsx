@@ -50,7 +50,7 @@ const Profilepage = () => {
                     {/* Banner Section */}
                     <div className="w-[100%] max-w-full h-60">
                         <img
-                            src="/public/image.png"
+                            img src={user.bannerPicture || "/public/image.png"}
                             alt="Gradient Banner"
                             className="w-full h-full object-cover"
                         />
@@ -66,7 +66,7 @@ const Profilepage = () => {
                             {/* Profile Image Container */}
                             <div className="w-40 h-40 bg-white rounded-2xl p-1 relative border-4 border-transparent">
                                 <img
-                                    img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
+                                    img src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
                                     alt="User"
                                     className="w-full h-full object-cover rounded-2xl"
                                 />
@@ -151,7 +151,7 @@ const Profilepage = () => {
                             {/* Profile Section */}
                             <div className="flex items-center gap-3">
                                 <img
-                                    img src={user.image || "https://static.thenounproject.com/png/642902-200.png"}
+                                    img src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
                                     alt="User"
                                     className="w-15 h-15 rounded-full"
                                 />
@@ -167,8 +167,16 @@ const Profilepage = () => {
 
                             {/* Form */}
                             <div className="mt-4">
+                                {/* Banner Image Upload */}
+                                <label className="font-medium text-sm block">Banner Image</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
+                                />
+
                                 {/* Profile Image Upload */}
-                                <label className="font-medium text-sm block">Profile Image</label>
+                                <label className="font-medium text-sm block mt-2">Profile Image</label>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -184,21 +192,14 @@ const Profilepage = () => {
                                 ></textarea>
 
                                 {/* Instagram Link */}
-                                <label className="font-medium text-sm mt-1 block">Instagram Profile</label>
+                                <label className="font-medium text-sm mt-1 block">Social Media</label>
                                 <input
                                     type="url"
                                     className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
-                                    placeholder="Enter your Instagram link"
-                                />
-
-                                {/* Behance Link */}
-                                <label className="font-medium text-sm mt-2 block">Behance Profile</label>
-                                <input
-                                    type="url"
-                                    className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
-                                    placeholder="Enter your Behance link"
+                                    placeholder="Enter your Social Media link"
                                 />
                             </div>
+
 
                             {/* Save Changes Button */}
                             <button className="bg-[#376CFF] text-white text-md font-medium w-full py-3 mt-4 rounded-full cursor-pointer">

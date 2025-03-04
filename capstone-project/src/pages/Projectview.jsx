@@ -43,7 +43,7 @@ const Projectview = () => {
     return (
         <>
             <Helmet>
-                <title>DesignDeck - ProjectView Page</title>
+                <title>DesignDeck - ProfileView Page</title>
             </Helmet>
             <Navbar />
             <div className="container mx-auto p-4 mt-12">

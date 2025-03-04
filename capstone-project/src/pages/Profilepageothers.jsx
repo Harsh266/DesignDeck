@@ -11,7 +11,7 @@ const Profilepageothers = () => {
     return (
         <>
             <Helmet>
-                <title>DesignDeck - Profile Page </title>
+                <title>DesignDeck - Profile Page</title>
             </Helmet>
             <Navbar />
             <div className="min-h-screen bg-white mt-16">

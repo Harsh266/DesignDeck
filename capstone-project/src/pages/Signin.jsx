@@ -1,20 +1,21 @@
 import { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 
-
-const Signin = () => {
+const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState(""); // ✅ Success/Error Message
-    const [messageType, setMessageType] = useState(""); // ✅ "success" or "error"
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
     const navigate = useNavigate();
 
+    // ✅ Handle Email/Password Login
     const handleLogin = async (e) => {
         e.preventDefault();
-        setMessage(""); // Reset message before new request
+        setMessage("");
 
         try {
             const res = await axios.post(
@@ -26,12 +27,39 @@ const Signin = () => {
             setMessage(res.data.message);
             setMessageType("success");
 
-            // ✅ Redirect after 2 seconds
             setTimeout(() => navigate("/dashboard"), 2000);
         } catch (error) {
             setMessage(error.response?.data?.message || "Login failed. Please try again.");
             setMessageType("error");
         }
+    };
+
+    // ✅ Handle Google Login
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            const decoded = jwtDecode(credentialResponse.credential);
+            console.log("User Info:", decoded);
+
+            const res = await axios.post(
+                "http://localhost:5000/auth/google",
+                {
+                    name: decoded.name,
+                    email: decoded.email,
+                    profilePicture: decoded.picture,
+                    googleId: decoded.sub,
+                },
+                { withCredentials: true }
+            );
+
+            console.log("Backend Response:", res.data);
+            navigate("/dashboard");
+        } catch (error) {
+            console.error("Google Login Error:", error.response?.data || error.message);
+        }
+    };
+
+    const handleGoogleError = () => {
+        console.error("Google Login Failed");
     };
 
     return (
@@ -40,6 +68,7 @@ const Signin = () => {
                 <title>DesignDeck - Signin Page</title>
             </Helmet>
             <div className="flex items-center justify-between min-h-screen bg-white p-6 h-screen">
+                {/* Left Section */}
                 <div className="w-1/2 h-screen p-6 flex flex-col justify-center">
                     <h1 className="text-xl font-semibold mb-10">DesignDeck</h1>
                     <form onSubmit={handleLogin} className="px-16 py-6 flex flex-col justify-center w-[90%]">
@@ -81,7 +110,7 @@ const Signin = () => {
                             Sign In
                         </button>
 
-                        {/* ✅ Show Message Below the Button */}
+                        {/* ✅ Show Message */}
                         {message && (
                             <p className={`mt-3 text-sm ${messageType === "success" ? "text-green-600" : "text-red-500"}`}>
                                 {message}
@@ -94,14 +123,8 @@ const Signin = () => {
                             <hr className="w-full border-gray-300" />
                         </div>
 
-                        {/* Google Sign In */}
-                        <button
-                            type="button"
-                            className="w-full flex items-center justify-center p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition hover:cursor-pointer"
-                        >
-                            <FcGoogle className="mr-2 text-[20px]" />
-                            Sign in with Google
-                        </button>
+                        {/* ✅ Google Sign In */}
+                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
 
                         <p className="text-sm text-gray-600 mt-4 text-center">
                             Are you new?{" "}
@@ -115,7 +138,7 @@ const Signin = () => {
                 {/* Right Section */}
                 <div className="w-1/2 h-screen flex items-center justify-end p-8">
                     <img
-                        src="/Signin.png" // Ensure the image is placed inside the 'public' folder
+                        src="/Signin.png"
                         alt="Sign in"
                         className="w-[85%] h-[100%] rounded-lg"
                     />
@@ -125,4 +148,4 @@ const Signin = () => {
     );
 };
 
-export default Signin;
+export default SignIn;

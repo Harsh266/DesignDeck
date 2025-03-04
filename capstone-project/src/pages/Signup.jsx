@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { IoClose } from "react-icons/io5";
 import axios from "axios";
+import { GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
+import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 
 const Signup = () => {
@@ -34,6 +35,34 @@ const Signup = () => {
             setMessage(error.response?.data?.message || "Registration failed. Please try again.");
             setMessageType("error");
         }
+    };
+
+    // ✅ Handle Google Login
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            const decoded = jwtDecode(credentialResponse.credential);
+            console.log("User Info:", decoded);
+
+            const res = await axios.post(
+                "http://localhost:5000/auth/google",
+                {
+                    name: decoded.name,
+                    email: decoded.email,
+                    profilePicture: decoded.picture,
+                    googleId: decoded.sub,
+                },
+                { withCredentials: true }
+            );
+
+            console.log("Backend Response:", res.data);
+            navigate("/dashboard");
+        } catch (error) {
+            console.error("Google Login Error:", error.response?.data || error.message);
+        }
+    };
+
+    const handleGoogleError = () => {
+        console.error("Google Login Failed");
     };
 
     return (
@@ -116,13 +145,8 @@ const Signup = () => {
                             <hr className="w-full border-gray-300" />
                         </div>
 
-                        <button
-                            type="button"
-                            className="w-full flex items-center justify-center p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition hover:cursor-pointer"
-                        >
-                            <FcGoogle className="mr-2 text-[20px]" />
-                            Sign up with Google
-                        </button>
+                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} className="w-full flex items-center justify-center p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition hover:cursor-pointer" />
+
 
                         <p className="text-sm text-gray-600 mt-4 text-center">
                             Already have an account?{" "}

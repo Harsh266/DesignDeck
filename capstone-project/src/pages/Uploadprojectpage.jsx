@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
+
 const Uploadprojectpage = () => {
 
     const [showImagePopup, setShowImagePopup] = useState(false);
@@ -65,7 +66,7 @@ const Uploadprojectpage = () => {
     return (
         <>
             <Helmet>
-                <title>DesignDeck - Uploadproject Page</title>
+                <title>DesignDeck - Upload Page</title>
             </Helmet>
             <Navbar />
             <div className="min-h-fit bg-white flex flex-col px-6 md:px-20 w-full mt-12">

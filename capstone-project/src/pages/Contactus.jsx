@@ -6,7 +6,7 @@ const Contactus = () => {
     return (
         <>
             <Helmet>
-                <title>DesignDeck - Contactis Page</title>
+                <title>DesignDeck - Contactus Page</title>
             </Helmet>
             <div className="flex items-center justify-between min-h-screen bg-gray-100 p-6 h-screen ">
                 {/* Left Side - Logo + Form */}
