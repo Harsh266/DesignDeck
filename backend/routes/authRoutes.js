@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const verifyToken = require("../middleware/authMiddleware");
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
@@ -60,14 +61,9 @@ router.post("/logout", (req, res) => {
 });
 
 // ✅ Get User Info (Protected Route)
-router.get("/me", async (req, res) => {
+router.get("/me", verifyToken, async (req, res) => {
     try {
-        const token = req.cookies.token; // Get token from cookies
-        if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const user = await User.findById(decoded.id).select("name email profileImage"); 
-        
+        const user = await User.findById(req.user.id).select("name email profilePicture");
         if (!user) return res.status(404).json({ message: "User not found" });
 
         res.json(user);  // ✅ Return user data properly
@@ -75,4 +71,5 @@ router.get("/me", async (req, res) => {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
+
 module.exports = router;
