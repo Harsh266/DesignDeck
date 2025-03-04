@@ -149,17 +149,6 @@ const Profilepage = () => {
                             </button>
 
                             {/* Profile Section */}
-                            <div className="flex items-center gap-3">
-                                <img
-                                    img src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
-                                    alt="User"
-                                    className="w-15 h-15 rounded-full"
-                                />
-                                <div>
-                                    <h3 className="font-semibold">{user.name}</h3>
-                                    <p className="text-gray-500 text-sm">{user.email}</p>
-                                </div>
-                            </div>
 
                             {/* Title */}
                             <h2 className="mt-4 font-medium">Update Your Profile</h2>
@@ -192,7 +181,15 @@ const Profilepage = () => {
                                 ></textarea>
 
                                 {/* Instagram Link */}
-                                <label className="font-medium text-sm mt-1 block">Social Media</label>
+                                <label className="font-medium text-sm mt-1 block">Instagram Profile</label>
+                                <input
+                                    type="url"
+                                    className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
+                                    placeholder="Enter your Social Media link"
+                                />
+
+                                {/* Behance Link */}
+                                <label className="font-medium text-sm mt-1 block">Behance Profile</label>
                                 <input
                                     type="url"
                                     className="w-full p-2 border border-[#B7B7B7] rounded-lg mt-2 text-sm"
