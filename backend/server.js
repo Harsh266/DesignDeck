@@ -15,7 +15,18 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ CORS Configuration
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+const allowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:3000"
+];
+
+app.use(
+    cors({
+        origin: allowedOrigins,
+        credentials: true,
+    })
+);
 
 // ✅ MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -28,10 +39,10 @@ mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => console.log("✅ MongoDB Connected"))
-.catch(err => {
-    console.error("❌ MongoDB Connection Error:", err);
-    process.exit(1);
-});
+    .catch(err => {
+        console.error("❌ MongoDB Connection Error:", err);
+        process.exit(1);
+    });
 
 // ✅ Session Configuration (For Google OAuth)
 app.use(
@@ -52,7 +63,7 @@ app.post("/auth/register", async (req, res) => {
         const { name, email, password } = req.body;
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ message: "User already exists" });
-        
+
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ name, email, password: hashedPassword });
         await newUser.save();
@@ -71,7 +82,7 @@ app.post("/auth/login", async (req, res) => {
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
-        
+
         const token = jwt.sign({ userId: user._id, name: user.name, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1d" });
         res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
         res.status(200).json({ message: "Login successful", user: { name: user.name, email: user.email } });
