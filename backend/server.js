@@ -94,7 +94,20 @@ app.post("/auth/login", async (req, res) => {
 
 // ✅ Google OAuth Routes
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "http://localhost:5173/login", successRedirect: "http://localhost:5173/dashboard" }));
+app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/" }), (req, res) => {
+    const allowedPorts = [5173, 5174, 3000];
+    const referer = req.headers.referer || ""; // Get the request origin
+
+    // Extract port from referer (if available)
+    const refererPort = new URL(referer)?.port || "5173"; // Default to 5173 if not found
+
+    // Ensure port is allowed
+    const redirectPort = allowedPorts.includes(Number(refererPort)) ? refererPort : "5173";
+
+    // Redirect dynamically based on the frontend's port
+    res.redirect(`http://localhost:${redirectPort}/dashboard`);
+});
+
 app.post("/auth/google", async (req, res) => {
     try {
         const { name, email, profilePicture, googleId } = req.body;
