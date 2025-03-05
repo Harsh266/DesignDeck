@@ -4,10 +4,12 @@ import jwtDecode from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
+import { FiEye, FiEyeOff } from "react-icons/fi"; // Eye Icons
 
 const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // State for password visibility
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
     const navigate = useNavigate();
@@ -88,18 +90,34 @@ const SignIn = () => {
                             />
                         </div>
 
-                        <div className="mt-3">
+                        {/* ✅ Password Input with Eye Icon */}
+                        <div className="mt-3 relative">
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
-                                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                ref={(input) => (input && showPassword ? input.setSelectionRange(input.value.length, input.value.length) : null)}
                                 required
                             />
+                            {/* Eye Icon Button */}
+                            <button
+                                type="button"
+                                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 focus:outline-none"
+                                onClick={(e) => {
+                                    e.preventDefault(); // Prevents focus shift
+                                    const input = e.currentTarget.previousSibling; // Get the input element
+                                    const cursorPosition = input.selectionStart; // Store cursor position
+                                    setShowPassword(!showPassword); // Toggle password visibility
+                                    setTimeout(() => input.setSelectionRange(cursorPosition, cursorPosition), 0); // Restore cursor position
+                                }}
+                            >
+                                {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                            </button>
                         </div>
 
-                        <div className="text-right text-black text-sm mt-2 cursor-pointer underline">
+                        <div className="text-right text-black text-sm mt-4 cursor-pointer underline">
                             Forgot Password?
                         </div>
 

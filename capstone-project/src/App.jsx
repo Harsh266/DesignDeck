@@ -1,5 +1,6 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Contactus from "./pages/Contactus";
@@ -26,6 +27,7 @@ function App() {
 
   return (
     <GoogleOAuthProvider clientId="924609528520-c0ge88n8hh7lsgaqei01ro17d75jqk19.apps.googleusercontent.com">
+      <HelmetProvider>
       <Router>
         <Routes>
           <Route path="/signin" element={<Signin />} />
@@ -40,6 +42,7 @@ function App() {
           <Route path="*" element={<Landingpage />} />
         </Routes>
       </Router>
+      </HelmetProvider>
     </GoogleOAuthProvider>
   );
 }
