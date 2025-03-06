@@ -117,9 +117,9 @@ const SignIn = () => {
                             </button>
                         </div>
 
-                        <div className="text-right text-black text-sm mt-4 cursor-pointer underline">
+                        <Link to="/resetpassword"><div className="text-right text-black text-sm mt-4 cursor-pointer underline">
                             Forgot Password?
-                        </div>
+                        </div></Link>
 
                         <button
                             type="submit"

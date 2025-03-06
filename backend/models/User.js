@@ -10,6 +10,8 @@ const UserSchema = new mongoose.Schema({
     bio: { type: String, maxlength: 500 }, // User bio with a max length
     instagramProfile: { type: String }, // Instagram profile link
     behanceProfile: { type: String }, // Behance profile link
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", UserSchema);
