@@ -74,9 +74,9 @@ const Signup = () => {
             </Helmet>
             <div className="flex items-center justify-between min-h-screen bg-white p-6 h-screen">
                 <div className="w-1/2 h-screen flex flex-col justify-center p-6">
-                    <h1 className="text-xl font-semibold mb-10">DesignDeck</h1>
+                    <h1 className="text-xl font-semibold absolute top-7 left-10">DesignDeck</h1>
 
-                    <form onSubmit={handleRegister} className="px-16 py-2 flex flex-col justify-center w-[90%]">
+                    <form onSubmit={handleRegister} className="px-16 py-2 flex flex-col justify-center w-[90%] pt-10">
                         <h2 className="text-2xl font-semibold">Create an Account</h2>
                         <p className="text-gray-500 mt-1 text-sm">
                             Let's Create an Account & Showcase Your Creativity

@@ -72,8 +72,8 @@ const SignIn = () => {
             <div className="flex items-center justify-between min-h-screen bg-white p-6 h-screen">
                 {/* Left Section */}
                 <div className="w-1/2 h-screen p-6 flex flex-col justify-center">
-                    <h1 className="text-xl font-semibold mb-10">DesignDeck</h1>
-                    <form onSubmit={handleLogin} className="px-16 py-6 flex flex-col justify-center w-[90%]">
+                    <h1 className="text-xl font-semibold absolute top-7 left-10">DesignDeck</h1>
+                    <form onSubmit={handleLogin} className="px-16 flex flex-col justify-center w-[90%] pt-10">
                         <h2 className="text-2xl font-semibold">Welcome Back</h2>
                         <p className="text-gray-500 mt-1">
                             Sign in to Showcase, Inspire, and Elevate Your Creativity!
