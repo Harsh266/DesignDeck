@@ -153,6 +153,7 @@ app.get("/", (req, res) => {
     res.send("🚀 Backend is running & MongoDB connected!");
 });
 
+// ✅ Sent link Route
 app.post('/resetpassword', async (req, res) => {
     const { email } = req.body;
     console.log(req.body);
@@ -170,13 +171,12 @@ app.post('/resetpassword', async (req, res) => {
     // ✅ Generate JWT Token (expires in 1 hour)
     const resetToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
     await user.save();
 
-    // Create password reset URL
-    const resetUrl = `http://localhost:5173/changepasswordwithtoken/${resetToken}`;
+    // **Force the server to always use port 5173**
+    const resetUrl = `http://${req.hostname}:5173/changepasswordwithtoken/${resetToken}`;
 
     // Send email
     try {
@@ -188,6 +188,7 @@ app.post('/resetpassword', async (req, res) => {
     }
 });
 
+// ✅ Change Password Route
 app.post('/changepasswordwithtoken', async (req, res) => {
     const { password, token } = req.body;
 
