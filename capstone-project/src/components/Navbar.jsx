@@ -1,12 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
+import { Sun, Moon } from "lucide-react";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
-  const fetchUserRan = useRef(false); // ✅ Prevents double fetch in Strict Mode
+  const fetchUserRan = useRef(false);
+  const { theme, toggleTheme } = useContext(ThemeContext);// ✅ Prevents double fetch in Strict Mode
 
   // ✅ Fetch user data
   const fetchUser = async () => {
@@ -56,64 +60,86 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 bg-[#ffffffc3] backdrop-blur-md z-50">
+    <nav
+      className={`flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 backdrop-blur-md z-50 transition-all duration-300 ${theme === "dark" ? "bg-[#000000c3] text-white" : "bg-[#ffffffc3] text-black"}`}
+    >
       {/* Logo */}
       <Link to="/dashboard">
         <h1 className="text-lg font-semibold">Design Deck</h1>
       </Link>
 
-      {/* User Profile */}
       <div className="flex items-center gap-4 relative">
         {user ? (
           <>
-            {/* ✅ Show User's Name Instead of "Sign In" */}
+            {/* User Profile Section */}
             <div
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setShowPopup(!showPopup)}
             >
               <img
-                img src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
+                src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
                 alt="User"
                 className="object-cover object-top w-10 h-10 rounded-full"
               />
               <div>
-                <p className="text-sm font-medium">{user.name}</p>
-                <p className="text-xs text-gray-500">{user.email}</p>
+                <p className={`text-sm font-medium ${theme === "dark" ? "text-white" : "text-black"}`}>
+                  {user.name}
+                </p>
+                <p className={`text-xs ${theme === "dark" ? "text-gray-300" : "text-gray-500"}`}>
+                  {user.email}
+                </p>
+
               </div>
             </div>
 
             {/* Notification Icon */}
-            <button className="p-2 rounded-full bg-[#DCE6FF] h-10 w-10 flex items-center justify-center">
-              <i className="ri-notification-2-line text-[20px] text-[#9091FF]"></i>
+            <button
+              className={`p-2 rounded-full cursor-pointer h-10 w-10 flex items-center justify-center ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
+                }`}
+            >
+              <i className="ri-notification-2-line text-[20px]"></i>
             </button>
 
-            {/* ✅ Profile Popup */}
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className={`p-2 cursor-pointer rounded-full h-10 w-10 flex items-center justify-center transition-all duration-300 ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
+                }`}
+            >
+              {theme === "dark" ? (
+                <Sun className="text-2xl" />
+              ) : (
+                <Moon className="text-2xl" />
+              )}
+            </button>
+
+            {/* Profile Popup */}
             {showPopup && (
-              <div className="fixed top-16 right-5 w-90 bg-white shadow-xl rounded-2xl p-5 transition-all duration-200 ease-in-out z-50">
+              <div
+                className={`fixed top-16 right-5 w-90 shadow-xl rounded-2xl p-5 transition-all duration-200 ease-in-out z-50 ${theme === "dark" ? "bg-[#222] text-white" : "bg-white text-black"
+                  }`}
+              >
                 {/* Close Button */}
                 <button
-                  className="absolute top-3 right-3 text-gray-500 cursor-pointer"
+                  className="absolute top-3 right-3 cursor-pointer"
                   onClick={() => setShowPopup(false)}
                 >
                   <i className="ri-close-line text-lg"></i>
                 </button>
 
-                {/* Profile Section - Left Image & Right Details */}
+                {/* Profile Section */}
                 <div className="flex items-center gap-4">
-                  {/* Profile Image */}
                   <img
-                    img src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
+                    src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
                     alt="User"
                     className="w-20 h-20 rounded-full object-cover object-top"
                   />
-
-                  {/* User Details */}
                   <div>
                     <h2 className="font-semibold text-lg">{user.name}</h2>
                     <p className="text-sm mt-1 font-semibold">{user.email}</p>
 
                     {/* Social Media Links */}
-                    <div className="flex flex-col mt-2 text-gray-600 text-sm">
+                    <div className="flex flex-col mt-2 text-sm">
                       <div className="flex items-center gap-2">
                         <i className="ri-instagram-fill text-lg"></i> @instaacc
                       </div>
@@ -125,16 +151,27 @@ const Navbar = () => {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex justify-between items-center mt-4 border-t pt-3 text-sm">
+                <div
+                  className={`flex justify-between items-center mt-4 border-t pt-3 text-sm ${theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                >
                   <Link to="/profilepage">
-                    <button className="text-blue-600 font-medium cursor-pointer">
+                    <button
+                      className={`font-medium cursor-pointer ${theme === "dark" ? "text-white" : "text-blue-600"
+                        }`}
+                    >
                       View Profile
                     </button>
                   </Link>
-                  <button className="text-red-500 font-medium cursor-pointer" onClick={handleLogout}>
+                  <button
+                    className={`font-medium cursor-pointer ${theme === "dark" ? "text-white" : "text-red-500"
+                      }`}
+                    onClick={handleLogout}
+                  >
                     Logout
                   </button>
                 </div>
+
               </div>
             )}
           </>
@@ -144,7 +181,7 @@ const Navbar = () => {
           </Link>
         )}
       </div>
-    </nav >
+    </nav>
   );
 };
 

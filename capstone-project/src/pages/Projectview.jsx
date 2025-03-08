@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 const mediaItems = [
     {
@@ -39,6 +41,7 @@ const mediaItems = [
 const Projectview = () => {
     const [expanded, setExpanded] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const { theme } = useContext(ThemeContext);
 
     return (
         <>
@@ -46,15 +49,21 @@ const Projectview = () => {
                 <title>DesignDeck - ProfileView Page</title>
             </Helmet>
             <Navbar />
-            <div className="container mx-auto p-4 mt-12">
-                <div className="grid gap-4">
+            <div
+                className={`container mx-auto p-4 mt-12 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                    }`}
+            >
+
+                <div className={`grid gap-4 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
                     {mediaItems.map((item, index) => (
                         <div key={index} className="w-full max-w-2xl mx-auto relative">
                             {/* Profile Card only on first media */}
                             {index === 0 && (
                                 <div
-                                    className={`fixed z-[2] bottom-10 left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg p-4  
-                                    ${isCollapsed ? "w-32" : "w-[80%] max-w-md"}`}
+                                    className={`fixed z-[2] bottom-10 left-1/2 transform -translate-x-1/2 shadow-lg rounded-lg p-4 ${theme === "dark"
+                                        ? "bg-black text-white"
+                                        : "bg-white text-black"
+                                        } ${isCollapsed ? "w-32" : "w-[80%] max-w-md"}`}
                                 >
                                     {/* Profile Section */}
                                     <div className="flex items-center justify-center">
@@ -69,42 +78,76 @@ const Projectview = () => {
                                                     <h3 className="text-sm font-semibold">
                                                         Event Management Web App
                                                     </h3>
-                                                    <p className="text-gray-500 text-xs">unknownuser</p>
+                                                    <p
+                                                        className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                                                            }`}
+                                                    >
+                                                        unknownuser
+                                                    </p>
                                                 </div>
                                             </div>
                                         )}
                                         <div className="flex gap-2">
                                             {/* Profile Button */}
                                             <Link to="/otheruser">
-                                                <button className="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-300 transition cursor-pointer">
-                                                    <i className="ri-user-fill text-gray-600 text-lg"></i>
+                                                <button
+                                                    className={`rounded-full w-8 h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
+                                                        ? "bg-gray-700 hover:bg-gray-600"
+                                                        : "bg-gray-200 hover:bg-gray-300"
+                                                        }`}
+                                                >
+                                                    <i
+                                                        className={`ri-user-fill text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                                                            }`}
+                                                    ></i>
                                                 </button>
                                             </Link>
 
                                             {/* Three-dot Button (Reopen Profile Section) */}
                                             {isCollapsed ? (
                                                 <button
-                                                    className="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-300 transition cursor-pointer"
+                                                    className={`rounded-full w-8 h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
+                                                        ? "bg-gray-700 hover:bg-gray-600"
+                                                        : "bg-gray-200 hover:bg-gray-300"
+                                                        }`}
                                                     onClick={() => setIsCollapsed(false)}
                                                 >
-                                                    <i className="ri-more-2-fill text-gray-600 text-lg"></i>
+                                                    <i
+                                                        className={`ri-more-2-fill text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                                                            }`}
+                                                    ></i>
                                                 </button>
                                             ) : (
                                                 <>
                                                     {/* Expand/Collapse Button */}
                                                     <button
-                                                        className="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-300 transition cursor-pointer"
+                                                        className={`rounded-full w-8 h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
+                                                            ? "bg-gray-700 hover:bg-gray-600"
+                                                            : "bg-gray-200 hover:bg-gray-300"
+                                                            }`}
                                                         onClick={() => setExpanded(!expanded)}
                                                     >
-                                                        <i className={expanded ? "ri-collapse-diagonal-line text-gray-600 text-lg" : "ri-expand-diagonal-fill text-gray-600 text-lg"}></i>
+                                                        <i
+                                                            className={`${expanded
+                                                                ? "ri-collapse-diagonal-line"
+                                                                : "ri-expand-diagonal-fill"
+                                                                } text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                                                                }`}
+                                                        ></i>
                                                     </button>
 
                                                     {/* Close Button */}
                                                     <button
-                                                        className="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-300 transition cursor-pointer"
+                                                        className={`rounded-full w-8 h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
+                                                            ? "bg-gray-700 hover:bg-gray-600"
+                                                            : "bg-gray-200 hover:bg-gray-300"
+                                                            }`}
                                                         onClick={() => setIsCollapsed(true)}
                                                     >
-                                                        <i className="ri-close-line text-gray-600 text-lg"></i>
+                                                        <i
+                                                            className={`ri-close-line text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                                                                }`}
+                                                        ></i>
                                                     </button>
                                                 </>
                                             )}
@@ -113,12 +156,21 @@ const Projectview = () => {
 
                                     {/* Expanded Description Section (Smooth Transition) */}
                                     <div
-                                        className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded ? "max-h-40 mt-4" : "max-h-0"}`}
+                                        className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded ? "max-h-40 mt-4" : "max-h-0"
+                                            }`}
                                     >
-                                        <div className="p-0 shadow-md rounded-lg">
-                                            <p className="text-gray-700 text-sm mt-2">
-                                                This innovative Event Management Software is revolutionizing the planning and execution of events.
-                                                It features a user-friendly dashboard, real-time analytics, and seamless ticketing integration.
+                                        <div
+                                            className={`p-0 shadow-md rounded-lg ${theme === "dark" ? "bg-black" : "bg-gray-100"
+                                                }`}
+                                        >
+                                            <p
+                                                className={`text-sm mt-2 ${theme === "dark" ? "text-gray-300" : "text-gray-700"
+                                                    }`}
+                                            >
+                                                This innovative Event Management Software is revolutionizing
+                                                the planning and execution of events. It features a
+                                                user-friendly dashboard, real-time analytics, and seamless
+                                                ticketing integration.
                                             </p>
                                         </div>
                                     </div>
@@ -145,6 +197,7 @@ const Projectview = () => {
                     ))}
                 </div>
             </div>
+
         </>
     );
 };

@@ -2,10 +2,13 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Dashboard = () => {
     const categories = ["Explore", "UI/UX", "Poster", "Logo Design", "App Design"];
     const [activeCategory, setActiveCategory] = useState("Explore");
+    const { theme } = useContext(ThemeContext);
 
     const cards = [
         { title: "Portfolio / Animation", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/14090638/file/original-8bb2193fbab4f9b1cac096f86b611e99.mp4", type: "video", thumbnail: "https://cdn.dribbble.com/userupload/14090637/file/still-f1c0df70f1c15486b88334c0bda65b61.png?format=webp&resize=450x338&vertical=center", userImage: "https://randomuser.me/api/portraits/men/3.jpg" },
@@ -22,35 +25,54 @@ const Dashboard = () => {
                 <title>DesignDeck - Dashboard</title>
             </Helmet>
             <Navbar />
-            <div className="p-6 max-w-6xl mx-auto">
+            <div className={`p-6  ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
                 {/* Header Section */}
                 <div className="relative text-center py-16">
                     <h1 className="text-4xl font-semibold">
-                        Discover the world’s <br /> <span className="text-black">top designers</span>
+                        Discover the world’s <br />{" "}
+                        <span className={`${theme === "dark" ? "text-gray-300" : "text-black"}`}>
+                            top designers
+                        </span>
                     </h1>
-                    <p className="font-regular mt-6">
-                        Explore work from the most talented and accomplished designers <br /> ready to take on your next project
+                    <p className={`font-regular mt-6 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                        Explore work from the most talented and accomplished designers <br />
+                        ready to take on your next project
                     </p>
                     <div className="mt-6 flex items-center justify-center">
-                        <div className="flex items-center bg-[#DCE6FF] px-4 py-2 rounded-full w-150">
+                        <div className={`flex items-center px-4 py-2 rounded-full w-150 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-[#DCE6FF] text-gray-700"
+                            }`}>
                             <input
                                 type="text"
                                 placeholder="Find your inspiration"
-                                className="w-full bg-transparent outline-none text-gray-700 px-2"
+                                className={`w-full bg-transparent outline-none px-2 ${theme === "dark" ? "text-white" : "text-gray-700"
+                                    }`}
                             />
-                            <button className="bg-[#9091FF] rounded-full px-3 py-2">
-                                <i className="ri-search-line text-white"></i>
+                            <button
+                                className={`rounded-full px-3 py-2 ${theme === "dark" ? "bg-gray-600" : "bg-[#9091FF]"
+                                    }`}
+                            >
+                                <i
+                                    className={`ri-search-line ${theme === "dark" ? "text-gray-300" : "text-white"
+                                        }`}
+                                ></i>
                             </button>
                         </div>
                     </div>
                 </div>
+
                 {/* Categories */}
                 <div className="flex justify-center mt-6 gap-4">
                     {categories.map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? "bg-purple-200 text-purple-600" : "text-gray-600"
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat
+                                ? theme === "dark"
+                                    ? "bg-purple-600 text-white"
+                                    : "bg-purple-200 text-purple-600"
+                                : theme === "dark"
+                                    ? "text-gray-400"
+                                    : "text-gray-600"
                                 }`}
                         >
                             {cat}
@@ -59,64 +81,83 @@ const Dashboard = () => {
                 </div>
 
                 {/* Image & Video Grid */}
-                <Link to="/view"><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                    {cards.map((card, index) => (
-                        <div
-                            key={index}
-                            className="bg-white rounded-xl overflow-hidden group cursor-pointer transition-all "
-                        >
-                            {/* Media Handling */}
-                            <div className="relative w-full h-60 rounded-xl overflow-hidden">
-                                {card.type === "video" ? (
-                                    <>
-                                        {/* Show Image by Default */}
+                <Link to="/view">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                        {cards.map((card, index) => (
+                            <div
+                                key={index}
+                                className={`rounded-xl overflow-hidden group cursor-pointer transition-all ${theme === "dark" ? "bg-black" : "bg-white"
+                                    }`}
+                            >
+                                {/* Media Handling */}
+                                <div className="relative w-full h-60 rounded-xl overflow-hidden">
+                                    {card.type === "video" ? (
+                                        <>
+                                            {/* Show Image by Default */}
+                                            <img
+                                                src={card.thumbnail || "/default-thumbnail.jpg"}
+                                                alt={card.title}
+                                                className="w-full h-full object-cover rounded-xl group-hover:hidden"
+                                            />
+                                            {/* Show Video on Hover */}
+                                            <video
+                                                className="w-full h-full object-cover rounded-xl hidden group-hover:block"
+                                                autoPlay
+                                                loop
+                                                muted
+                                                playsInline
+                                            >
+                                                <source src={card.media} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </>
+                                    ) : (
                                         <img
-                                            src={card.thumbnail || "/default-thumbnail.jpg"}
+                                            src={card.media}
                                             alt={card.title}
-                                            className="w-full h-full object-cover rounded-xl group-hover:hidden"
+                                            className="w-full h-full object-cover rounded-xl"
                                         />
-                                        {/* Show Video on Hover */}
-                                        <video
-                                            className="w-full h-full object-cover rounded-xl hidden group-hover:block"
-                                            autoPlay
-                                            loop
-                                            muted
-                                            playsInline
-                                        >
-                                            <source src={card.media} type="video/mp4" />
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    </>
-                                ) : (
-                                    <img
-                                        src={card.media}
-                                        alt={card.title}
-                                        className="w-full h-full object-cover rounded-xl"
-                                    />
-                                )}
-                            </div>
+                                    )}
+                                </div>
 
-                            {/* User Info at Bottom */}
-                            <div className="py-2 flex items-center gap-3">
-                                <img
-                                    src={card.userImage}
-                                    alt={card.user}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                />
-                                <div className="flex flex-col">
-                                    <h2 className="font-semibold text-base">{card.title}</h2>
-                                    <p className="text-gray-500 text-sm">{card.user}</p>
+                                {/* User Info at Bottom */}
+                                <div className="py-2 flex items-center gap-3">
+                                    <img
+                                        src={card.userImage}
+                                        alt={card.user}
+                                        className="w-10 h-10 rounded-full object-cover"
+                                    />
+                                    <div className="flex flex-col">
+                                        <h2
+                                            className={`font-semibold text-base ${theme === "dark" ? "text-white" : "text-black"
+                                                }`}
+                                        >
+                                            {card.title}
+                                        </h2>
+                                        <p
+                                            className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                                                }`}
+                                        >
+                                            {card.user}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div></Link>
+                        ))}
+                    </div>
+                </Link>
 
                 {/* Load More Button */}
                 <div className="flex justify-center mt-6">
-                    <button className="px-6 py-2 bg-purple-200 text-purple-600 rounded-full font-medium cursor-pointer">Load More</button>
+                    <button
+                        className={`px-6 py-2 rounded-full font-medium cursor-pointer ${theme === "dark" ? "bg-purple-600 text-white" : "bg-purple-200 text-purple-600"
+                            }`}
+                    >
+                        Load More
+                    </button>
                 </div>
             </div>
+
         </>
     );
 };

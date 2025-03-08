@@ -4,7 +4,9 @@ import jwtDecode from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
-import { FiEye, FiEyeOff } from "react-icons/fi"; // Eye Icons
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 const SignIn = () => {
     const [email, setEmail] = useState("");
@@ -13,6 +15,7 @@ const SignIn = () => {
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
     const navigate = useNavigate();
+    const { theme } = useContext(ThemeContext);
 
     // ✅ Handle Email/Password Login
     const handleLogin = async (e) => {
@@ -69,21 +72,36 @@ const SignIn = () => {
             <Helmet>
                 <title>DesignDeck - Signin Page</title>
             </Helmet>
-            <div className="flex items-center justify-between min-h-screen bg-white p-6 h-screen">
+            <div
+                className={`flex items-center justify-between min-h-screen h-screen p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                    }`}
+            >
                 {/* Left Section */}
                 <div className="w-1/2 h-screen p-6 flex flex-col justify-center">
-                    <h1 className="text-xl font-semibold absolute top-7 left-10">DesignDeck</h1>
-                    <form onSubmit={handleLogin} className="px-16 flex flex-col justify-center w-[90%] pt-10">
+                    <h1 className="text-xl font-semibold absolute top-7 left-10">
+                        DesignDeck
+                    </h1>
+                    <form
+                        onSubmit={handleLogin}
+                        className="px-16 flex flex-col justify-center w-[90%] pt-10"
+                    >
                         <h2 className="text-2xl font-semibold">Welcome Back</h2>
-                        <p className="text-gray-500 mt-1">
+                        <p
+                            className={`mt-1 transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-600"
+                                }`}
+                        >
                             Sign in to Showcase, Inspire, and Elevate Your Creativity!
                         </p>
 
+                        {/* ✅ Email Input */}
                         <div className="mt-5">
                             <input
                                 type="email"
                                 placeholder="xyz@abc.com"
-                                className="w-full border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={`w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 transition-all ${theme === "dark"
+                                    ? "bg-gray-800 text-white border-gray-600 focus:ring-blue-400"
+                                    : "bg-white text-black border-gray-300 focus:ring-blue-500"
+                                    }`}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
@@ -95,56 +113,68 @@ const SignIn = () => {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
-                                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                                className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 pr-10 transition-all ${theme === "dark"
+                                    ? "bg-gray-800 text-white border-gray-600 focus:ring-blue-400"
+                                    : "bg-white text-black border-gray-300 focus:ring-blue-500"
+                                    }`}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                ref={(input) => (input && showPassword ? input.setSelectionRange(input.value.length, input.value.length) : null)}
                                 required
                             />
                             {/* Eye Icon Button */}
                             <button
                                 type="button"
-                                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 focus:outline-none"
-                                onClick={(e) => {
-                                    e.preventDefault(); // Prevents focus shift
-                                    const input = e.currentTarget.previousSibling; // Get the input element
-                                    const cursorPosition = input.selectionStart; // Store cursor position
-                                    setShowPassword(!showPassword); // Toggle password visibility
-                                    setTimeout(() => input.setSelectionRange(cursorPosition, cursorPosition), 0); // Restore cursor position
-                                }}
+                                className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none"
+                                onClick={() => setShowPassword(!showPassword)}
                             >
                                 {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                             </button>
                         </div>
 
-                        <Link to="/resetpassword"><div className="text-right text-black text-sm mt-4 cursor-pointer underline">
-                            Forgot Password?
-                        </div></Link>
+                        <Link to="/resetpassword">
+                            <div
+                                className={`text-right text-sm mt-4 cursor-pointer underline transition-all ${theme === "dark" ? "text-gray-300" : "text-black"
+                                    }`}
+                            >
+                                Forgot Password?
+                            </div>
+                        </Link>
 
                         <button
                             type="submit"
-                            className="w-full bg-[#376CFF] text-white p-3 mt-4 rounded-md hover:bg-blue-700 transition hover:cursor-pointer"
+                            className={`w-full p-3 mt-4 rounded-md transition-all hover:cursor-pointer ${theme === "dark"
+                                ? "bg-blue-500 text-white hover:bg-blue-600"
+                                : "bg-[#376CFF] text-white hover:bg-blue-700"
+                                }`}
                         >
                             Sign In
                         </button>
 
                         {/* ✅ Show Message */}
                         {message && (
-                            <p className={`mt-3 text-sm ${messageType === "success" ? "text-green-600" : "text-red-500"}`}>
+                            <p
+                                className={`mt-3 text-sm transition-all ${messageType === "success"
+                                    ? "text-green-400"
+                                    : "text-red-500"
+                                    }`}
+                            >
                                 {message}
                             </p>
                         )}
 
                         <div className="flex items-center my-2">
-                            <hr className="w-full border-gray-300" />
-                            <span className="mx-2 text-gray-500">or</span>
-                            <hr className="w-full border-gray-300" />
+                            <hr className={`w-full transition-all ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
+                            <span className={`mx-2 transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                                or
+                            </span>
+                            <hr className={`w-full transition-all ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
                         </div>
 
                         {/* ✅ Google Sign In */}
                         <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
 
-                        <p className="text-sm text-gray-600 mt-4 text-center">
+                        <p className={`text-sm mt-4 text-center transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-600"
+                            }`}>
                             Are you new?{" "}
                             <Link to="/signup" className="text-[#376CFF] cursor-pointer hover:underline">
                                 Create An Account
@@ -158,10 +188,11 @@ const SignIn = () => {
                     <img
                         src="/Signin.png"
                         alt="Sign in"
-                        className="w-[85%] h-[100%] rounded-lg"
+                        className="w-[85%] h-[100%] rounded-lg transition-all"
                     />
                 </div>
             </div>
+
         </>
     );
 };

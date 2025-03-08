@@ -13,7 +13,7 @@ import Uploadprojectpage from "./pages/Uploadprojectpage";
 import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";// Updated import
 import { useState, useEffect } from "react";
-import { getMessage } from "./services/api";
+import { ThemeProvider } from "./context/ThemeContext";
 import "./App.css";
 import "./index.css";
 import axios from "axios";
@@ -30,22 +30,24 @@ function App() {
   return (
     <GoogleOAuthProvider clientId="924609528520-c0ge88n8hh7lsgaqei01ro17d75jqk19.apps.googleusercontent.com">
       <HelmetProvider>
-        <Router>
-          <Routes>
-            <Route path="*" element={<Landingpage />} />
-            <Route path="/signin" element={<Signin />} />
-            <Route path="/profilepage" element={<Profilepage />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/contactus" element={<Contactus />} />
-            <Route path="/logout" element={<Landingpage />} />
-            <Route path="/view" element={<Projectview />} />
-            <Route path="/upload" element={<Uploadprojectpage />} />
-            <Route path="/otheruser" element={<Profilepageothers />} />
-            <Route path="/resetpassword" element={<ResetPassword />} />
-            <Route path="/changepasswordwithtoken/:token" element={<ChangePassword />} /> {/* Updated path */}
-          </Routes>
-        </Router>
+        <ThemeProvider>
+          <Router>
+            <Routes>
+              <Route path="*" element={<Landingpage />} />
+              <Route path="/signin" element={<Signin />} />
+              <Route path="/profilepage" element={<Profilepage />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/contactus" element={<Contactus />} />
+              <Route path="/logout" element={<Landingpage />} />
+              <Route path="/view" element={<Projectview />} />
+              <Route path="/upload" element={<Uploadprojectpage />} />
+              <Route path="/otheruser" element={<Profilepageothers />} />
+              <Route path="/resetpassword" element={<ResetPassword />} />
+              <Route path="/changepasswordwithtoken/:token" element={<ChangePassword />} /> {/* Updated path */}
+            </Routes>
+          </Router>
+        </ThemeProvider>
       </HelmetProvider>
     </GoogleOAuthProvider>
   );
