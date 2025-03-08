@@ -95,6 +95,7 @@ app.post("/auth/login", async (req, res) => {
 
 // ✅ Google OAuth Routes
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+
 app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/" }), (req, res) => {
     const allowedPorts = [5173, 5174, 3000];
     const referer = req.headers.referer || ""; // Get the request origin
