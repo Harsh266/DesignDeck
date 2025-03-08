@@ -74,21 +74,32 @@ const Profilepage = () => {
                         </div>
 
                         {/* User Details */}
-                        <div className="pl-48">
-                            <h2 className="text-2xl font-semibold">{user.name}</h2>
-                            <p className="text-gray-600 text-sm max-w-xs">
-                                {user.bio || "No Bio     "}
-                            </p>
+                        <div className="pl-48 w-screen flex  flex-col gap-5">
+                            <div className="flex flex-col gap-1">
+                                <h2 className="text-2xl font-semibold">{user.name}</h2>
+                                <p className="text-gray-600 text-sm w-[30%] break-words">
+                                    {user.bio || "hbajbuiuhihihiniinijqniwdunijniuniqwdniuhihqwundijniuhqiwndijniqijwndiuhiuqnwidjniuhiwqundiuhwndiuhfib"}
+                                </p>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => setIsPopupOpen(true)}
+                                    className="bg-[#C3D7FF] text-[#0057FF] px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-[#A9C4FF] transition cursor-pointer"
+                                >
+                                    <FaUserEdit className="text-lg" /> Edit Profile
+                                </button>
+                            </div>
+
                         </div>
 
                         {/* Social Icons */}
                         <div className="ml-auto flex gap-3">
-                            <button
-                                onClick={() => setIsPopupOpen(true)}
-                                className="bg-[#C3D7FF] text-[#0057FF] px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-[#A9C4FF] transition cursor-pointer"
-                            >
-                                <FaUserEdit className="text-lg" /> Edit Profile
-                            </button>
+                            <div className="bg-purple-100 w-10 h-10 text-purple-500 p-2 rounded-full flex items-center justify-center">
+                                <i className="ri-dribbble-line text-xl"></i>
+                            </div>
+                            <div className="bg-blue-100 w-10 h-10  text-blue-500 p-2 rounded-full flex items-center justify-center">
+                                <i className="ri-behance-line text-xl"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
