@@ -122,8 +122,8 @@ const ResetPassword = () => {
                 {/* Right Section */}
                 <div className="w-1/2 h-screen flex items-center justify-end p-8">
                     <img
-                        src="/Signin.png"
-                        alt="Sign in"
+                        src="/forgotpassword.png"
+                        alt="forgot password"
                         className="w-[85%] h-[100%] rounded-lg"
                     />
                 </div>
