@@ -15,15 +15,21 @@ const Landingpage = () => {
                         <div className="text-2xl font-semibold">DesignDeck</div>
 
                         {/* Menu */}
-                        <div className="flex space-x-6 text-lg">
-                            <a href="#home" className="text-gray-700 cursor-pointer">Home</a>
-                            <span>|</span>
-                            <a href="#features" className="text-gray-700 cursor-pointer">Features</a>
-                            <span>|</span>
-                            <a href="#about" className="text-gray-700 cursor-pointer">About us</a>
-                            <span>|</span>
-                            <a href="#explore" className="text-gray-700 cursor-pointer">Explore</a>
+                        <div className="flex space-x-10 text-lg">
+                            <a href="#home" className="text-gray-700 cursor-pointer relative after:block after:h-[2px] after:w-0 after:bg-gray-700 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full">
+                                Home
+                            </a>
+                            <a href="#features" className="text-gray-700 cursor-pointer relative after:block after:h-[2px] after:w-0 after:bg-gray-700 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full">
+                                Features
+                            </a>
+                            <a href="#about" className="text-gray-700 cursor-pointer relative after:block after:h-[2px] after:w-0 after:bg-gray-700 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full">
+                                About us
+                            </a>
+                            <a href="#explore" className="text-gray-700 cursor-pointer relative after:block after:h-[2px] after:w-0 after:bg-gray-700 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full">
+                                Explore
+                            </a>
                         </div>
+
 
 
                         {/* Login Button */}
@@ -35,12 +41,21 @@ const Landingpage = () => {
 
                 {/* Home Section */}
                 <div id="home" className="text-black py-40 px-6 md:px-16 flex flex-col items-center text-center">
-                    <h1 className="text-4xl md:text-4xl font-extrabold leading-tight max-w-2xl">
+                    <h1 className="text-4xl md:text-4xl font-semibold leading-tight max-w-3xl text-gray-900 drop-shadow-lg">
                         Your Designs, Your Code, Your Platform
-                        The Ultimate Creative Hub
+                        The Ultimate Creative Hub 
+                        <span className="mr-2"></span>
+                        <span className="relative inline-block group">
+                            <span className="transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 cursor-pointer">
+                                DesignDeck
+                            </span>
+                            {/* Left-to-Right Underline Effect */}
+                            <span className="absolute left-0 bottom-0 h-[3px] w-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full"></span>
+                        </span>
                     </h1>
+
                     <p className="text-gray-400 mt-4 max-w-xl">
-                        Your creativity deserves the perfect stage—welcome to DesignDeck
+                        Your creativity deserves the perfect stage welcome to DesignDeck
                     </p>
                     <Link to="/signup"><button className="mt-6 px-10 py-3 text-lg font-semibold bg-[#376CFF] text-white rounded-full border-5 shadow-md border border-white/50 backdrop-blur-md cursor-pointer">
                         Get Started
@@ -128,16 +143,16 @@ const Landingpage = () => {
                                 media uploads, and an interactive community, it brings innovation to the forefront.
                             </p>
                             <div className="mt-6 flex flex-wrap gap-4">
-                                <div className="border-4 border-[#FDE8CB] rounded-xl px-8 py-4 text-center">
+                                <div className="border-4 border-[#FDE8CB] rounded-xl px-8 py-4 text-center hover:bg-[#FDE8CB] cursor-pointer">
                                     <span className="text-xl font-semibold text-[#ED9E29]">7000+</span>
                                     <p className="text-[#ED9E29] text-sm opacity-70">Designs</p>
                                 </div>
-                                <div className="border-4 border-[#DCE6FF] rounded-xl px-8 py-4 text-center">
+                                <div className="border-4 border-[#DCE6FF] rounded-xl px-8 py-4 text-center hover:bg-[#DCE6FF] cursor-pointer">
                                     <span className="text-xl font-semibold text-[#9091FF]">10,000+</span>
                                     <p className="text-[#9091FF] text-sm opacity-70">Creators</p>
                                 </div>
-                                <div className="border-4 border-[#F4D9FF] rounded-xl px-6 py-4 text-center">
-                                    <span Name="text-xl font-semibold text-[#D87EF5]">50+</span>
+                                <div className="border-4 border-[#F4D9FF] rounded-xl px-6 py-4 text-center hover:bg-[#F4D9FF] cursor-pointer">
+                                    <span className="text-xl font-semibold text-[#D87EF5]">50+</span>
                                     <p className="text-[#D87EF5] text-sm opacity-70">Design Styles</p>
                                 </div>
                             </div>
@@ -172,6 +187,26 @@ const Landingpage = () => {
                         </div>
                     </div>
                 </div>
+
+                <hr className="border-t border-gray-300" />
+
+                <footer className="bg-white text-black py-4 px-6 flex justify-between items-center">
+                    {/* Left Side - Copyright */}
+                    <p className="text-sm">&copy; {new Date().getFullYear()} DesignDeck. All rights reserved.</p>
+
+                    {/* Right Side - Social Media Links */}
+                    <div className="flex space-x-4">
+                        <a href="www.github.com" className="hover:text-gray-400">
+                            <i class="ri-github-line text-xl"></i>
+                        </a>
+                        <a href="www.twitter.com" className="hover:text-gray-400">
+                            <i class="ri-twitter-x-line text-xl"></i>
+                        </a>
+                        <a href="www.instagram.com" className="hover:text-gray-400">
+                            <i class="ri-instagram-line text-xl"></i>
+                        </a>
+                    </div>
+                </footer>
             </div>
         </>
     );
