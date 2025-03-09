@@ -50,7 +50,7 @@ const Projectview = () => {
             </Helmet>
             <Navbar />
             <div
-                className={`container mx-auto p-4 mt-12 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                className={`container mx-auto p-4 mt-15 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
                     }`}
             >
 

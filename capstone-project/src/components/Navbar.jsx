@@ -61,7 +61,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 backdrop-blur-md z-50 transition-all duration-300 ${theme === "dark" ? "bg-[#000000c3] text-white" : "bg-[#ffffffc3] text-black"}`}
+      className={`flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 backdrop-blur-md z-50 ${theme === "dark" ? "bg-[#000000f3] text-white" : "bg-[#ffffff3] text-black"}`}
     >
       {/* Logo */}
       <Link to="/dashboard">
@@ -94,7 +94,7 @@ const Navbar = () => {
 
             {/* Notification Icon */}
             <button
-              className={`p-2 rounded-full cursor-pointer h-10 w-10 flex items-center justify-center ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
+              className={`p-2 rounded-full cursor-pointer h-10 w-10 flex items-center justify-center transition-all duration-300 ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
                 }`}
             >
               <i className="ri-notification-2-line text-[20px]"></i>

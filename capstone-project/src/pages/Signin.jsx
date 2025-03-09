@@ -99,7 +99,7 @@ const SignIn = () => {
                                 type="email"
                                 placeholder="xyz@abc.com"
                                 className={`w-full border rounded-md px-4 py-3 focus:outline-none focus:ring-2 transition-all ${theme === "dark"
-                                    ? "bg-gray-800 text-white border-gray-600 focus:ring-blue-400"
+                                    ? "bg-black text-white border-gray-600 focus:ring-blue-400"
                                     : "bg-white text-black border-gray-300 focus:ring-blue-500"
                                     }`}
                                 value={email}
@@ -114,7 +114,7 @@ const SignIn = () => {
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
                                 className={`w-full p-3 border rounded-md focus:outline-none focus:ring-2 pr-10 transition-all ${theme === "dark"
-                                    ? "bg-gray-800 text-white border-gray-600 focus:ring-blue-400"
+                                    ? "bg-black text-white border-gray-600 focus:ring-blue-400"
                                     : "bg-white text-black border-gray-300 focus:ring-blue-500"
                                     }`}
                                 value={password}
@@ -171,7 +171,7 @@ const SignIn = () => {
                         </div>
 
                         {/* ✅ Google Sign In */}
-                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
+                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError}/>
 
                         <p className={`text-sm mt-4 text-center transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-600"
                             }`}>

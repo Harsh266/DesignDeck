@@ -66,7 +66,7 @@ const Dashboard = () => {
                         <button
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat
+                            className={`px-4 py-2 rounded-full text-sm font-medium ${activeCategory === cat
                                 ? theme === "dark"
                                     ? "bg-purple-600 text-white"
                                     : "bg-purple-200 text-purple-600"
@@ -86,7 +86,7 @@ const Dashboard = () => {
                         {cards.map((card, index) => (
                             <div
                                 key={index}
-                                className={`rounded-xl overflow-hidden group cursor-pointer transition-all ${theme === "dark" ? "bg-black" : "bg-white"
+                                className={`rounded-xl overflow-hidden group cursor-pointer${theme === "dark" ? "bg-black" : "bg-white"
                                     }`}
                             >
                                 {/* Media Handling */}

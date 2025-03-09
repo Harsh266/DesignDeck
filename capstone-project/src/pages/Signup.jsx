@@ -90,7 +90,7 @@ const Signup = () => {
                             type="text"
                             placeholder="Your Name"
                             className={`w-full border rounded-md px-4 py-3 mt-5 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-gray-800 text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`}
+                                ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
@@ -100,7 +100,7 @@ const Signup = () => {
                             type="email"
                             placeholder="xyz@abc.com"
                             className={`w-full border rounded-md px-4 py-3 mt-3 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-gray-800 text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`}
+                                ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -112,7 +112,7 @@ const Signup = () => {
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
                                 className={`w-full border rounded-md p-3 pr-10 focus:outline-none focus:ring-2
-                                    ${theme === "dark" ? "border-gray-600 bg-gray-800 text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`}
+                                    ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
@@ -198,10 +198,10 @@ const Signup = () => {
                 {isModalOpen && (
                     <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
                         <div className={`p-6 rounded-lg shadow-lg w-[40%] relative 
-                            ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}`}
+                            ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
                         >
                             <IoClose
-                                className="absolute top-4 right-4 text-2xl text-gray-600 cursor-pointer hover:text-black"
+                                className="absolute top-4 right-4 text-2xl text-gray-600 cursor-pointer"
                                 onClick={() => setIsModalOpen(false)}
                             />
                             <h2 className="text-xl font-bold mb-4">Terms & Conditions</h2>
