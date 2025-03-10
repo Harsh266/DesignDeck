@@ -77,7 +77,9 @@ const Navbar = () => {
               onClick={() => setShowPopup(!showPopup)}
             >
               <img
-                src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
+                src={user.profilePicture || (theme === "dark" 
+                  ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg" 
+                  : "https://static.thenounproject.com/png/642902-200.png")}
                 alt="User"
                 className="object-cover object-top w-10 h-10 rounded-full"
               />
@@ -130,7 +132,9 @@ const Navbar = () => {
                 {/* Profile Section */}
                 <div className="flex items-center gap-4">
                   <img
-                    src={user.profilePicture || "https://static.thenounproject.com/png/642902-200.png"}
+                    src={user.profilePicture || (theme === "dark" 
+                      ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg" 
+                      : "https://static.thenounproject.com/png/642902-200.png")}
                     alt="User"
                     className="w-20 h-20 rounded-full object-cover object-top"
                   />

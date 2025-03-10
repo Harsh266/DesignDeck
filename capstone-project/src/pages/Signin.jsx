@@ -173,10 +173,9 @@ const SignIn = () => {
                         {/* ✅ Google Sign In */}
                         <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError}/>
 
-                        <p className={`text-sm mt-4 text-center transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-600"
-                            }`}>
-                            Are you new?{" "}
-                            <Link to="/signup" className="text-[#376CFF] cursor-pointer hover:underline">
+                        <p className={`text-sm mt-4 text-center ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                            Are you new ?{" "}
+                            <Link to="/signup"className={`cursor-pointer hover:underline ml-1 ${theme === "dark" ? "text-gray-300" : "text-[#376CFF]"}`}>
                                 Create An Account
                             </Link>
                         </p>

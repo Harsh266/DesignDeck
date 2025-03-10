@@ -182,9 +182,9 @@ const Signup = () => {
                             className={`w-full flex items-center justify-center p-3 border rounded-md transition hover:cursor-pointer
                                 ${theme === "dark" ? "border-gray-600 hover:bg-gray-700" : "border-gray-300 hover:bg-gray-100"}`}
                         />
-                        <p className="text-sm text-gray-600 mt-4 text-center">
-                            Already have an account?{" "}
-                            <span className="text-[#376CFF] cursor-pointer hover:underline" onClick={() => navigate("/signin")}>
+                        <p className={`text-sm mt-4 text-center ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                            Already have an account ?{" "}
+                            <span className={`cursor-pointer hover:underline ml-1 ${theme === "dark" ? "text-gray-300" : "text-[#376CFF]"}`} onClick={() => navigate("/signin")}>
                                 Sign In
                             </span>
                         </p>
