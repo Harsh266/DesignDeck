@@ -88,7 +88,7 @@ const Landingpage = () => {
                         className={`mt-4 max-w-xl transition-all duration-300 ${theme === "dark" ? "text-gray-300" : "text-gray-600"
                             }`}
                     >
-                        Your creativity deserves the perfect stage—welcome to DesignDeck.
+                        Your creativity deserves the perfect stage welcome to DesignDeck.
                     </p>
 
                     {/* Buttons Container */}
@@ -390,14 +390,12 @@ const Landingpage = () => {
                             {/* Left Side - Title & Description */}
                             <div className="max-w-lg pl-15">
                                 <h2
-                                    className={`text-4xl font-bold mb-4 transition-all ${theme === "dark" ? "text-white" : "text-black"
-                                        }`}
+                                    className="text-4xl font-bold mb-4 transition-all text-white"
                                 >
                                     Get in Touch
                                 </h2>
                                 <p
-                                    className={`text-md transition-all ${theme === "dark" ? "text-gray-300" : "text-gray-700"
-                                        }`}
+                                    className="text-sm text-white"
                                 >
                                     Have questions or need assistance? We're here to help! Reach out to us for
                                     inquiries about admissions, courses, or any other details. Our team is just a
