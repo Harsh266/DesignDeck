@@ -61,7 +61,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 backdrop-blur-md z-50 ${theme === "dark" ? "bg-[#000000f3] text-white" : "bg-[#ffffff3] text-black"}`}
+      className={`flex w-full justify-between items-center px-6 py-3 fixed top-0 left-0 backdrop-blur-md z-50 ${theme === "dark" ? "bg-[#000000c3] text-white" : "bg-[#ffffffc3] text-black"}`}
     >
       {/* Logo */}
       <Link to="/dashboard">

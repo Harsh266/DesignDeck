@@ -76,11 +76,16 @@ const Landingpage = () => {
                         Your Designs, Your Code, Your Platform The Ultimate Creative Hub
                         <span className="mr-2"></span>
                         <span className="relative inline-block group">
-                            <span className="group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 cursor-pointer">
+                            <span
+                                className="text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-[length:200%_200%] animate-[gradientBG_3s_ease-in-out_infinite] bg-clip-text text-transparent cursor-pointer"
+                                style={{
+                                    backgroundSize: "200% 200%",
+                                    WebkitBackgroundClip: "text",
+                                    WebkitTextFillColor: "transparent",
+                                }}
+                            >
                                 DesignDeck
                             </span>
-                            {/* Left-to-Right Underline Effect */}
-                            <span className="absolute left-0 bottom-0 h-[3px] w-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-400 group-hover:w-full"></span>
                         </span>
                     </h1>
 
@@ -96,10 +101,9 @@ const Landingpage = () => {
                         {/* Dark Mode Toggle Button */}
                         <button
                             onClick={toggleTheme}
-                            className={`relative flex items-center justify-center px-6 py-3.5 rounded-full font-semibold transition-all duration-300 cursor-pointer border-2 ${theme === "dark"
-                                ? "bg-white text-black border-white"
-                                : "bg-black text-white border-black"
-                                }`}
+                            className={`mt-6 px-5 py-3 text-lg font-semibold text-lg rounded-full border-5 shadow-md 
+                                ${theme === "dark" ? "bg-white border-white text-black border-opacity-20 " : "bg-black border-[#A0A0A0] border-opacity-40 text-white"} 
+                                backdrop-blur-md cursor-pointer flex flex-row items-center`}
                         >
                             {theme === "dark" ? (
                                 <>
@@ -115,7 +119,7 @@ const Landingpage = () => {
                         </button>
 
                         <Link to="/signup">
-                            <button className="px-10 py-3.5 text-lg font-semibold bg-[#376CFF] text-white rounded-full cursor-pointer">
+                            <button className="mt-6 px-7 py-3 text-lg font-semibold bg-[#376CFF] text-white rounded-full border-5 shadow-md border border-white/50 backdrop-blur-md cursor-pointer">
                                 Get Started
                             </button>
                         </Link>
@@ -172,22 +176,20 @@ const Landingpage = () => {
                     <div className="mt-12 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
                         {/* Card 1 */}
                         <div
-                            className={`rounded-xl flex flex-col gap-2 p-6 hover:shadow-lg transition-all border-3 ${theme === "dark"
-                                ? "bg-gray-800 border-gray-700 hover:border-gray-500"
-                                : "bg-white border-[#FDE8CB] hover:border-[#fff]"
+                            className={`rounded-xl flex flex-col gap-2 p-6 transition-all border-3 border-[#FDE8CB] ${theme === "dark"
+                                ? "bg-black hover:border-[#000] hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                : "bg-white hover:border-[#fff] hover:shadow-lg"
                                 }`}
                         >
                             <div
-                                className={`flex items-center justify-center rounded-[10px] w-12 h-12 mx-auto ${theme === "dark" ? "bg-gray-700" : "bg-[#FDE8CB]"
-                                    }`}
+                                className="flex items-center justify-center rounded-[10px] w-12 h-12 bg-[#FDE8CB] self-start"
                             >
                                 <i
-                                    className={`ri-gallery-line text-[28px] ${theme === "dark" ? "text-yellow-400" : "text-[#ED9E29]"
-                                        }`}
+                                    className="ri-gallery-line text-[28px] text-[#ED9E29]"
                                 ></i>
                             </div>
                             <h3
-                                className={`font-semibold text-lg mt-4 transition-all ${theme === "dark" ? "text-white" : "text-gray-900"
+                                className={`font-semibold text-lg mt-4 transition-all text-left ${theme === "dark" ? "text-white" : "text-black"
                                     }`}
                             >
                                 Image & Video Upload
@@ -203,22 +205,20 @@ const Landingpage = () => {
 
                         {/* Card 2 */}
                         <div
-                            className={`rounded-xl flex flex-col gap-2 p-6 hover:shadow-lg transition-all border-3 ${theme === "dark"
-                                ? "bg-gray-800 border-gray-700 hover:border-gray-500"
-                                : "bg-white border-[#DCE6FF] hover:border-[#fff]"
+                            className={`rounded-xl flex flex-col gap-2 p-6 transition-all border-3 border-[#DCE6FF] ${theme === "dark"
+                                ? "bg-black hover:border-[#000] hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                : "bg-white hover:border-[#fff] hover:shadow-lg"
                                 }`}
                         >
                             <div
-                                className={`flex items-center justify-center rounded-[10px] w-12 h-12 mx-auto ${theme === "dark" ? "bg-gray-700" : "bg-[#DCE6FF]"
-                                    }`}
+                                className="flex items-center justify-center rounded-[10px] w-12 h-12 bg-[#DCE6FF] self-start"
                             >
                                 <i
-                                    className={`ri-live-line text-[28px] ${theme === "dark" ? "text-blue-400" : "text-[#9091FF]"
-                                        }`}
+                                    className="ri-live-line text-[28px] text-[#9091FF]"
                                 ></i>
                             </div>
                             <h3
-                                className={`font-semibold text-lg mt-4 transition-all ${theme === "dark" ? "text-white" : "text-gray-900"
+                                className={`font-semibold text-left text-lg mt-4 transition-all ${theme === "dark" ? "text-white" : "text-black"
                                     }`}
                             >
                                 Live Preview
@@ -234,22 +234,20 @@ const Landingpage = () => {
 
                         {/* Card 3 */}
                         <div
-                            className={`rounded-xl p-6 flex flex-col gap-2 hover:shadow-lg transition-all border-3 ${theme === "dark"
-                                ? "bg-gray-800 border-gray-700 hover:border-gray-500"
-                                : "bg-white border-[#F4D9FF] hover:border-[#fff]"
+                            className={`rounded-xl flex flex-col gap-2 p-6 transition-all border-3 border-[#F4D9FF] ${theme === "dark"
+                                ? "bg-black hover:border-[#000] hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                : "bg-white hover:border-[#fff] hover:shadow-lg"
                                 }`}
                         >
                             <div
-                                className={`flex items-center justify-center rounded-[10px] w-12 h-12 mx-auto ${theme === "dark" ? "bg-gray-700" : "bg-[#F4D9FF]"
-                                    }`}
+                                className="flex items-center justify-center rounded-[10px] w-12 h-12 bg-[#F4D9FF] self-start"
                             >
                                 <i
-                                    className={`ri-bard-line text-[28px] ${theme === "dark" ? "text-purple-400" : "text-[#D87EF5]"
-                                        }`}
+                                    className="ri-bard-line text-[28px] text-[#D87EF5]"
                                 ></i>
                             </div>
                             <h3
-                                className={`font-semibold text-lg mt-4 transition-all ${theme === "dark" ? "text-white" : "text-gray-900"
+                                className={`font-semibold text-lg text-left mt-4 transition-all ${theme === "dark" ? "text-white" : "text-gray-900"
                                     }`}
                             >
                                 Future of Design Deck
@@ -305,20 +303,15 @@ const Landingpage = () => {
                             <div className="mt-6 flex flex-wrap gap-4">
                                 {/* Card 1 */}
                                 <div
-                                    className={`border-4 rounded-xl px-8 py-4 text-center hover:cursor-pointer transition-all ${theme === "dark"
-                                        ? "border-gray-700 hover:bg-gray-800"
-                                        : "border-[#FDE8CB] hover:bg-[#FDE8CB]"
-                                        }`}
+                                    className="border-4 rounded-xl px-8 py-4 text-center hover:cursor-pointer transition-all border-[#FDE8CB] hover:bg-[#FDE8CB]"
                                 >
                                     <span
-                                        className={`text-xl font-semibold transition-all ${theme === "dark" ? "text-yellow-400" : "text-[#ED9E29]"
-                                            }`}
+                                        className="text-xl font-semibold transition-all text-[#ED9E29]"
                                     >
                                         7000+
                                     </span>
                                     <p
-                                        className={`text-sm opacity-70 transition-all ${theme === "dark" ? "text-yellow-400" : "text-[#ED9E29]"
-                                            }`}
+                                        className="text-sm opacity-70 transition-all text-[#ED9E29]"
                                     >
                                         Designs
                                     </p>
@@ -326,20 +319,15 @@ const Landingpage = () => {
 
                                 {/* Card 2 */}
                                 <div
-                                    className={`border-4 rounded-xl px-8 py-4 text-center hover:cursor-pointer transition-all ${theme === "dark"
-                                        ? "border-gray-700 hover:bg-gray-800"
-                                        : "border-[#DCE6FF] hover:bg-[#DCE6FF]"
-                                        }`}
+                                    className="border-4 rounded-xl px-8 py-4 text-center hover:cursor-pointer transition-all border-[#DCE6FF] hover:bg-[#DCE6FF]"
                                 >
                                     <span
-                                        className={`text-xl font-semibold transition-all ${theme === "dark" ? "text-blue-400" : "text-[#9091FF]"
-                                            }`}
+                                        className="text-xl font-semibold transition-all text-[#9091FF]"
                                     >
                                         10,000+
                                     </span>
                                     <p
-                                        className={`text-sm opacity-70 transition-all ${theme === "dark" ? "text-blue-400" : "text-[#9091FF]"
-                                            }`}
+                                        className="text-sm opacity-70 transition-all text-[#9091FF]"
                                     >
                                         Creators
                                     </p>
@@ -347,20 +335,15 @@ const Landingpage = () => {
 
                                 {/* Card 3 */}
                                 <div
-                                    className={`border-4 rounded-xl px-6 py-4 text-center hover:cursor-pointer transition-all ${theme === "dark"
-                                        ? "border-gray-700 hover:bg-gray-800"
-                                        : "border-[#F4D9FF] hover:bg-[#F4D9FF]"
-                                        }`}
+                                    className="border-4 rounded-xl px-6 py-4 text-center hover:cursor-pointer transition-all border-[#F4D9FF] hover:bg-[#F4D9FF]"
                                 >
                                     <span
-                                        className={`text-xl font-semibold transition-all ${theme === "dark" ? "text-purple-400" : "text-[#D87EF5]"
-                                            }`}
+                                        className="text-xl font-semibold transition-all text-[#D87EF5]"
                                     >
                                         50+
                                     </span>
                                     <p
-                                        className={`text-sm opacity-70 transition-all ${theme === "dark" ? "text-purple-400" : "text-[#D87EF5]"
-                                            }`}
+                                        className="text-sm opacity-70 transition-all text-[#D87EF5]"
                                     >
                                         Design Styles
                                     </p>
