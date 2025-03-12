@@ -43,7 +43,7 @@ const SignIn = () => {
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
             const decoded = jwtDecode(credentialResponse.credential);
-            console.log("User Info:", decoded);
+            console.log("Login successfully");
 
             const res = await axios.post(
                 "http://localhost:5000/auth/google",
@@ -55,8 +55,6 @@ const SignIn = () => {
                 },
                 { withCredentials: true }
             );
-
-            console.log("Backend Response:", res.data);
             navigate("/dashboard");
         } catch (error) {
             console.error("Google Login Error:", error.response?.data || error.message);
@@ -127,7 +125,7 @@ const SignIn = () => {
                                 className="absolute top-1/2 right-3 transform -translate-y-1/2 focus:outline-none"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
-                                {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                                {showPassword ? <FiEyeOff size={18} className="text-gray-400" /> : <FiEye size={18} className="text-gray-500" />}
                             </button>
                         </div>
 

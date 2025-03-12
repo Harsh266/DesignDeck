@@ -31,7 +31,7 @@ const ResetPassword = () => {
             });
 
             const data = await response.json();
-            console.log("Token received from backend:", data.token); // ✅ Debug token
+            console.log("Token received from backend:"); // ✅ Debug token
 
             if (response.ok && data.token) {
                 // ✅ Show success message immediately

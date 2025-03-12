@@ -15,8 +15,8 @@ const ChangePassword = () => {
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
-    console.log("Extracted token from URL:", token);
-  }, [token]);
+    console.log("Extracted token from URL:");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

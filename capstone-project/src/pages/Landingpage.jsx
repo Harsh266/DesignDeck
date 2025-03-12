@@ -102,7 +102,7 @@ const Landingpage = () => {
                         <button
                             onClick={toggleTheme}
                             className={`mt-6 px-5 py-3 text-lg font-semibold text-lg rounded-full border-5 shadow-md 
-                                ${theme === "dark" ? "bg-white border-white text-black border-opacity-20 " : "bg-black border-[#A0A0A0] border-opacity-40 text-white"} 
+                                ${theme === "dark" ? "bg-white border-gray-300 text-black border-opacity-40 " : "bg-black border-[#A0A0A0] border-opacity-40 text-white"} 
                                 backdrop-blur-md cursor-pointer flex flex-row items-center`}
                         >
                             {theme === "dark" ? (

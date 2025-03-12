@@ -20,11 +20,11 @@ const Navbar = () => {
         withCredentials: true, // Send cookies for authentication
       });
 
-      console.log("🟢 User Data Received:", res.data);
+      console.log("🟢 User Data Received:");
 
       if (res.data && res.data._id) {
         setUser(res.data); // ✅ Update user state
-        console.log("🟣 User state updated:", res.data);
+        console.log("🟣 User state updated:");
       } else {
         setUser(null);
         console.log("🟣 No valid user found, setting user to null");
