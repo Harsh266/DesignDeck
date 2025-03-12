@@ -36,7 +36,7 @@ const ChangePassword = () => {
       </span>
     );
 
-    const response = await fetch("http://localhost:5000/changepasswordwithtoken", {
+    const response = await fetch("http://localhost:5000/auth/changepasswordwithtoken", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

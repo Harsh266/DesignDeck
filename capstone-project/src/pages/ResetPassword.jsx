@@ -22,7 +22,7 @@ const ResetPassword = () => {
                 </span>
             ); // Show loading message immediately
 
-            const response = await fetch("http://localhost:5000/resetpassword", {
+            const response = await fetch("http://localhost:5000/auth/resetpassword", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
