@@ -1,68 +1,107 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
-const Uploadprojectpage = () => {
-
-    const [showImagePopup, setShowImagePopup] = useState(false);
-    const [selectedImageFiles, setSelectedImageFiles] = useState([]);
-    const [showVideoPopup, setShowVideoPopup] = useState(false);
-    const [selectedVideoFiles, setSelectedVideoFiles] = useState([]);
-    const [showCodePopup, setShowCodePopup] = useState(false);
-    const [selectedCodeFiles, setSelectedCodeFiles] = useState([]);
+const UploadProjectPage = () => {
     const { theme } = useContext(ThemeContext);
 
-    const handleImageFileChange = (event) => {
+    const [popupType, setPopupType] = useState(null);
+    const [imageFiles, setImageFiles] = useState([]);
+    const [videoFiles, setVideoFiles] = useState([]);
+    const [codeFiles, setCodeFiles] = useState([]);
+    const [tempFiles, setTempFiles] = useState([]);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [globalTitle, setGlobalTitle] = useState("");
+    const [globalDescription, setGlobalDescription] = useState("");
+    const [message, setMessage] = useState(null);
+
+    const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
+        const formattedFiles = files.map(file => ({
+            name: file.name,
+            url: URL.createObjectURL(file),
+            file: file
+        }));
+        setTempFiles(prev => [...prev, ...formattedFiles]);
+    };
 
-        const validFiles = files.filter(file =>
-            file.type === "image/jpeg" || file.type === "image/png"
-        );
-
-        if (validFiles.length !== files.length) {
-            alert("Only JPG and PNG files are allowed.");
+    const handleUploadFiles = () => {
+        if (tempFiles.length === 0) {
+            setMessage({ text: "Please select files before uploading.", type: "error" });
+            return;
         }
 
-        setSelectedImageFiles(prevFiles => [...prevFiles, ...validFiles]);
-    };
-
-    const handleVideoFileChange = (event) => {
-        const files = Array.from(event.target.files);
-        const validTypes = ["video/mp4", "video/mov", "video/avi"];
-        const validFiles = files.filter(file => validTypes.includes(file.type));
-
-        if (validFiles.length !== files.length) {
-            alert("Only .mp4, .mov, and .avi files are allowed.");
+        if (!title || !description) {
+            setMessage({ text: "Please enter a title and description.", type: "error" });
+            return;
         }
 
-        setSelectedVideoFiles(prevFiles => [...prevFiles, ...validFiles]);
-    };
-
-    const handleCodeFileChange = (event) => {
-        const files = Array.from(event.target.files);
-        const validTypes = ["text/html", "text/css", "application/javascript"];
-        const validFiles = files.filter(file => validTypes.includes(file.type));
-
-        if (validFiles.length !== files.length) {
-            alert("Only .html, .css, and .js files are allowed.");
+        if (!globalTitle && !globalDescription) {
+            setGlobalTitle(title);
+            setGlobalDescription(description);
+        } else if (globalTitle !== title || globalDescription !== description) {
+            setMessage({ text: "Title and description must be the same for all uploads.", type: "error" });
+            return;
         }
 
-        setSelectedCodeFiles(prevFiles => [...prevFiles, ...validFiles]);
+        if (popupType === "image") {
+            setImageFiles(prev => [...prev, ...tempFiles]);
+        } else if (popupType === "video") {
+            setVideoFiles(prev => [...prev, ...tempFiles]);
+        } else if (popupType === "code") {
+            setCodeFiles(prev => [...prev, ...tempFiles]);
+        }
+
+        setMessage({ text: "Files uploaded successfully!", type: "success" });
+
+        setTempFiles([]);
+        setTitle("");
+        setDescription("");
+        setPopupType(null);
     };
 
-    const handleDeleteImageFile = (index) => {
-        setSelectedImageFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    const handleDeleteTempFile = (index) => {
+        setTempFiles(prev => prev.filter((_, i) => i !== index));
     };
 
-    const handleDeleteVideoFile = (index) => {
-        setSelectedVideoFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    const handleDeleteFile = (type, index) => {
+        if (type === "image") {
+            setImageFiles(prev => prev.filter((_, i) => i !== index));
+        } else if (type === "video") {
+            setVideoFiles(prev => prev.filter((_, i) => i !== index));
+        } else if (type === "code") {
+            setCodeFiles(prev => prev.filter((_, i) => i !== index));
+        }
     };
 
-    const handleDeleteCodeFile = (index) => {
-        setSelectedCodeFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    // Auto-hide message after 3 seconds
+    useEffect(() => {
+        if (message) {
+            const timer = setTimeout(() => setMessage(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
+
+    const handleUpload = () => {
+        // Clear files and project details after upload
+        setImageFiles([]);
+        setVideoFiles([]);
+        setCodeFiles([]);
+        setGlobalTitle("");
+        setGlobalDescription("");
+        setPopup(null);
+    };
+
+    const handleCancel = () => {
+        // Clear files and project details when canceling
+        setImageFiles([]);
+        setVideoFiles([]);
+        setCodeFiles([]);
+        setGlobalTitle("");
+        setGlobalDescription("");
+        setPopup(null);
     };
 
     return (
@@ -71,7 +110,9 @@ const Uploadprojectpage = () => {
                 <title>DesignDeck - Upload Page</title>
             </Helmet>
             <Navbar />
-            <div className={`${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} min-h-screen flex flex-col px-6 md:px-20 w-full pt-20`}>
+
+            <div className={`${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} min-h-screen flex flex-col px-10 md:px-20 w-full pt-20`}>
+
                 {/* Upload Section */}
                 <div className="mt-10 text-left">
                     <h2 className="text-2xl font-semibold">Upload your Project</h2>
@@ -80,268 +121,446 @@ const Uploadprojectpage = () => {
                     </p>
                 </div>
 
+                <div className="flex flex-col items-center justify-center pt-10 gap-10">
+                    <div className="text-center">
+                        <h3 className="text-lg font-medium">Choose your upload type</h3>
+                        <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-sm font-regular mt-2`}>
+                            Easily upload your files by selecting the method that best suits your needs.
+                        </p>
+                    </div>
+
+                    <div className="mt-0 flex flex-col md:flex-row items-center justify-center gap-50">
+                        {/* Image Upload */}
+                        <div className="flex flex-col items-center cursor-pointer" onClick={() => setPopupType("image")}>
+                            <div className="bg-[#FDE8CB] w-20 h-20 flex justify-center items-center rounded-full">
+                                <i className="ri-gallery-line text-[#ED9E29] text-3xl"></i>
+                            </div>
+                            <p className="mt-2 font-medium">Image</p>
+                        </div>
+
+                        {/* Embedded Code Upload */}
+                        <div className="flex flex-col items-center cursor-pointer" onClick={() => setPopupType("code")}>
+                            <div className="bg-[#DCE6FF] w-20 h-20 flex justify-center items-center rounded-full">
+                                <i className="ri-code-s-slash-line text-[#376CFF] text-3xl"></i>
+                            </div>
+                            <p className="mt-2 font-medium">Embedded Code</p>
+                        </div>
+
+                        {/* Video Upload */}
+                        <div className="flex flex-col items-center cursor-pointer" onClick={() => setPopupType("video")}>
+                            <div className="bg-[#F4D9FF] w-20 h-20 flex justify-center items-center rounded-full">
+                                <i className="ri-video-line text-[#C684E0] text-3xl"></i>
+                            </div>
+                            <p className="mt-2 font-medium">Video</p>
+                        </div>
+                    </div>
+                </div>
                 {/* Upload Options */}
-                <div className="mt-20 text-center">
-                    <h3 className="text-lg font-medium">Choose your upload type</h3>
-                    <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-sm font-regular mt-2`}>
-                        Easily upload your files by selecting the method that best suits your needs.
-                    </p>
-                </div>
 
 
-                <div className="mt-10 flex flex-col md:flex-row items-center justify-center gap-50">
-                    {/* Image Upload */}
-                    <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowImagePopup(true)}>
-                        <div className="bg-[#FDE8CB] w-20 h-20 flex justify-center items-center rounded-full">
-                            <i className="ri-gallery-line text-[#ED9E29] text-3xl"></i>
-                        </div>
-                        <p className="mt-2 font-medium">Image</p>
-                    </div>
-
-                    {/* Embedded Code Upload */}
-                    <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowCodePopup(true)}>
-                        <div className="bg-[#DCE6FF] w-20 h-20 flex justify-center items-center rounded-full">
-                            <i className="ri-code-s-slash-line text-[#376CFF] text-3xl"></i>
-                        </div>
-                        <p className="mt-2 font-medium">Embedded Code</p>
-                    </div>
-
-                    {/* Video Upload */}
-                    <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowVideoPopup(true)}>
-                        <div className="bg-[#F4D9FF] w-20 h-20 flex justify-center items-center rounded-full">
-                            <i className="ri-video-line text-[#C684E0] text-3xl"></i>
-                        </div>
-                        <p className="mt-2 font-medium">Video</p>
-                    </div>
-                </div>
-
-                {/* Popup Modal */}
-                {showImagePopup && (
-                    <div className={`fixed h-screen w-screen inset-0 ${theme === "dark" ? "bg-black/60" : "bg-black/40"} backdrop-blur-sm flex items-center justify-center z-50`}>
-                        <div className={`${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"} rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center`}>
-
-                            {/* Close Button */}
-                            <button className={`${theme === "dark" ? "text-gray-300" : "text-gray-600"} absolute top-4 right-4`} onClick={() => setShowImagePopup(false)}>
-                                <i className="ri-close-line text-[20px] cursor-pointer"></i>
-                            </button>
-
-                            {/* Title */}
-                            <h2 className="text-[20px] flex items-center gap-2">
-                                <i className="ri-file-upload-line"></i>
-                                <p className="font-semibold">Upload Images</p>
-                            </h2>
-                            <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-[12px]`}>Add your images here</p>
-
-                            {/* Upload Box */}
-                            <label htmlFor="fileInput" className="mt-4 border border-2 border-[#ED9E29] bg-[#FDE8CB] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
-                                <i className="ri-file-image-line text-[#ED9E29] text-[22px]"></i>
-                                <p className="text-[#ED9E29] font-medium mt-1">Choose Files</p>
-                                <input type="file" id="fileInput" accept=".jpg,.png" className="hidden" onChange={handleImageFileChange} multiple />
-                            </label>
-                            <p className={`${theme === "dark" ? "text-gray-500" : "text-gray-400"} text-xs mt-1`}>Only .jpg and .png files. 50 MB max file size.</p>
-
-                            {/* Project Name */}
-                            <div className="mt-4">
-                                <label className="block font-medium text-[16px]">Project Name</label>
-                                <input type="text" placeholder="Enter your project name" className={`w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-[#1E1E1E] text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`} />
-                            </div>
-
-                            {/* Project Description */}
-                            <div className="mt-3">
-                                <label className="block font-medium text-[16px]">Project Description</label>
-                                <input type="text" placeholder="Enter your project description" className={`w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-[#1E1E1E] text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`} />
-                            </div>
-
-                            {/* Upload Files Section */}
-                            <div className={`mt-3 flex-grow rounded-lg ${selectedImageFiles.length > 1 ? "max-h-25 overflow-y-auto" : ""}`}>
-                                <label className="block font-medium text-[16px] underline">Uploaded Files</label>
-
-                                {selectedImageFiles.length === 0 ? (
-                                    <p className={`${theme === "dark" ? "text-gray-500" : "text-gray-500"} text-sm mt-2`}>No files selected</p>
-                                ) : (
-                                    selectedImageFiles.map((file, index) => (
-                                        <div key={index} className={`${theme === "dark" ? "border-gray-600 text-white" : "border-[#B7B7B7] text-black"} flex items-center justify-between border p-2 rounded mt-2`}>
-                                            <div className="flex items-center gap-2">
-                                                <i className={`${theme === "dark" ? "text-gray-400" : "text-[#9E9E9E]"} ri-image-2-line text-[22px]`}></i>
-                                                <div>
-                                                    <p className="text-sm font-medium">{file.name}</p>
-                                                    <p className={`${theme === "dark" ? "text-gray-500" : "text-gray-400"} text-[10px]`}>{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
-                                                </div>
-                                            </div>
-                                            <button onClick={() => handleDeleteImageFile(index)}>
-                                                <i className={`${theme === "dark" ? "text-gray-400" : "text-[#9E9E9E]"} ri-delete-bin-6-line text-[18px] cursor-pointer`}></i>
-                                            </button>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-
-                            {/* Buttons */}
-                            <div className="mt-3 flex justify-end gap-4">
-                                <button className="border border-[#ED9E29] px-4 py-2 rounded-lg text-[#ED9E29] cursor-pointer" onClick={() => setImageShowPopup(false)}>Cancel</button>
-                                <button className="bg-[#ED9E29] text-white px-4 py-2 rounded-lg cursor-pointer" disabled={selectedImageFiles.length === 0}>
-                                    <Link to="/profilepage">Upload</Link>
-                                </button>
-                            </div>
-                        </div>
+                {message && (
+                    <div className={`absolute top-20 right-4 px-4 py-2 rounded-lg text-white text-sm font-medium shadow-lg ${message.type === "error" ? "bg-red-500" : "bg-green-500"}`}>
+                        {message.text}
                     </div>
                 )}
-
-                {showCodePopup && (
-                    <div className={`fixed h-screen w-screen inset-0 ${theme === "dark" ? "bg-black/60" : "bg-black/40"} backdrop-blur-sm flex items-center justify-center z-50`}>
-                        <div className={`${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"} rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center`}>
-
-                            {/* Close Button */}
-                            <button className={`absolute top-4 right-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`} onClick={() => setShowCodePopup(false)}>
-                                <i className="ri-close-line text-[20px] cursor-pointer"></i>
-                            </button>
-
-                            {/* Title */}
-                            <h2 className="text-[20px] flex items-center gap-2">
-                                <i className="ri-file-upload-line"></i>
-                                <p className="font-semibold">Upload Code Files</p>
-                            </h2>
-                            <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-[12px]`}>Add your HTML, CSS, and JS files here</p>
-
-                            {/* Upload Box */}
-                            <label htmlFor="codeFileInput" className="mt-3 border border-[#376CFF] bg-[#DCE6FF] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
-                                <i className="ri-file-code-line text-[#376CFF] text-[22px]"></i>
-                                <p className="text-[#376CFF] font-medium mt-1">Choose Files</p>
-                                <input type="file" id="codeFileInput" accept=".html,.css,.js" className="hidden" onChange={handleCodeFileChange} multiple />
-                            </label>
-                            <p className={`${theme === "dark" ? "text-gray-500" : "text-gray-400"} text-xs mt-1`}>Only .html, .css, and .js files. 50 MB max file size.</p>
-
-                            {/* Project Name */}
-                            <div className="mt-4">
-                                <label className="block font-medium text-[16px]">Project Name</label>
-                                <input type="text" placeholder="Enter your project name" className={`w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-[#1E1E1E] text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`} />
-                            </div>
-
-                            {/* Project Description */}
-                            <div className="mt-3">
-                                <label className="block font-medium text-[16px]">Project Description</label>
-                                <input type="text" placeholder="Enter your project description" className={`w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-[#1E1E1E] text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`} />
-                            </div>
-
-                            {/* Upload Files Section */}
-                            <div className={`mt-3 flex-grow rounded-lg ${selectedCodeFiles.length > 1 ? "max-h-25 overflow-y-auto" : ""}`}>
-                                <label className="block font-medium text-[16px] underline">Uploaded Code Files</label>
-
-                                {selectedCodeFiles.length === 0 ? (
-                                    <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-sm mt-2`}>No files selected</p>
-                                ) : (
-                                    selectedCodeFiles.map((file, index) => (
-                                        <div key={index} className={`flex items-center justify-between border p-2 rounded mt-2 ${theme === "dark" ? "border-gray-600 bg-[#252525]" : "border-[#B7B7B7]"}`}>
-                                            <div className="flex items-center gap-2">
-                                                <i className={`ri-file-zip-line text-[22px] ${theme === "dark" ? "text-gray-400" : "text-[#9E9E9E]"}`}></i>
-                                                <div>
-                                                    <p className="text-sm font-medium">{file.name}</p>
-                                                    <p className={`${theme === "dark" ? "text-gray-500" : "text-gray-400"} text-[10px]`}>{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
-                                                </div>
-                                            </div>
-                                            <button onClick={() => handleDeleteCodeFile(index)}>
-                                                <i className={`ri-delete-bin-6-line text-[18px] cursor-pointer ${theme === "dark" ? "text-gray-400" : "text-[#9E9E9E]"}`}></i>
-                                            </button>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-
-                            {/* Buttons */}
-                            {/* Buttons */}
-                            <div className="mt-3 flex justify-end gap-4">
-                                <button className="border border-[#376CFF] px-4 py-2 rounded-lg text-[#376CFF] cursor-pointer" onClick={() => setShowCodePopup(false)}>Cancel</button>
-                                <button className="bg-[#376CFF] text-white px-4 py-2 rounded-lg cursor-pointer" disabled={selectedCodeFiles.length === 0}>
-                                    <Link to="/profilepage">Upload</Link>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
+                {popupType === "image" && (
+                    <ImagePopup
+                        setPopup={setPopupType}
+                        handleFileChange={handleFileChange}
+                        handleUpload={handleUploadFiles}
+                        tempFiles={tempFiles}
+                        handleDeleteTempFile={handleDeleteTempFile}
+                        setTitle={setTitle}
+                        setDescription={setDescription}
+                        title={title}
+                        description={description}
+                    />
                 )}
 
-                {showVideoPopup && (
-                    <div className={`fixed h-screen w-screen inset-0 ${theme === "dark" ? "bg-black/60" : "bg-black/40"} backdrop-blur-sm flex items-center justify-center z-50`}>
-                        <div className={`${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"} rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center`}>
-
-                            {/* Close Button */}
-                            <button className={`absolute top-4 right-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`} onClick={() => setShowVideoPopup(false)}>
-                                <i className="ri-close-line text-[20px] cursor-pointer"></i>
-                            </button>
-
-                            {/* Title */}
-                            <h2 className="text-[20px] flex items-center gap-2">
-                                <i className="ri-file-upload-line"></i>
-                                <p className="font-semibold">Upload Videos</p>
-                            </h2>
-                            <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-[12px]`}>Add your videos here</p>
-
-                            {/* Upload Box */}
-                            <label htmlFor="videoFileInput" className="mt-4 border border-2 border-[#C684E0] bg-[#F4D9FF] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
-                                <i className="ri-file-video-line text-[#C684E0] text-[22px]"></i>
-                                <p className="text-[#C684E0] font-medium mt-1">Choose Videos</p>
-                                <input type="file" id="videoFileInput" accept=".mp4,.mov,.avi" className="hidden" onChange={handleVideoFileChange} multiple />
-                            </label>
-                            <p className={`${theme === "dark" ? "text-gray-500" : "text-gray-400"} text-xs mt-1`}>Only .mp4, .mov, and .avi files. 50 MB max file size.</p>
-
-                            {/* Project Name */}
-                            <div className="mt-4">
-                                <label className="block font-medium text-[16px]">Project Name</label>
-                                <input type="text" placeholder="Enter your project name" className={`w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-[#1E1E1E] text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`} />
-                            </div>
-
-                            {/* Project Description */}
-                            <div className="mt-3">
-                                <label className="block font-medium text-[16px]">Project Description</label>
-                                <input type="text" placeholder="Enter your project description" className={`w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2
-                                ${theme === "dark" ? "border-gray-600 bg-[#1E1E1E] text-white focus:ring-blue-400" : "border-gray-300 bg-white text-black focus:ring-blue-500"}`} />
-                            </div>
-
-                            {/* Uploaded Files Section */}
-                            <div className={`mt-3 flex-grow rounded-lg ${selectedVideoFiles.length > 1 ? "max-h-25 overflow-y-auto" : ""}`}>
-                                <label className="block font-medium text-[16px] underline">Uploaded Videos</label>
-
-                                {selectedVideoFiles.length === 0 ? (
-                                    <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-sm mt-2`}>No files selected</p>
-                                ) : (
-                                    selectedVideoFiles.map((file, index) => (
-                                        <div key={index} className={`flex items-center justify-between border p-2 rounded mt-2 ${theme === "dark" ? "border-gray-600 bg-[#252525]" : "border-[#B7B7B7]"}`}>
-                                            <div className="flex items-center gap-2">
-                                                <i className={`ri-video-line text-[22px] ${theme === "dark" ? "text-gray-400" : "text-[#9E9E9E]"}`}></i>
-                                                <div>
-                                                    <p className="text-sm font-medium">{file.name}</p>
-                                                    <p className={`${theme === "dark" ? "text-gray-500" : "text-gray-400"} text-[10px]`}>{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
-                                                </div>
-                                            </div>
-                                            <button onClick={() => handleDeleteVideoFile(index)}>
-                                                <i className={`ri-delete-bin-6-line text-[18px] cursor-pointer ${theme === "dark" ? "text-gray-400" : "text-[#9E9E9E]"}`}></i>
-                                            </button>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-
-                            {/* Buttons */}
-                            {/* Buttons */}
-                            <div className="mt-3 flex justify-end gap-4">
-                                <button className="border border-[#C684E0] px-4 py-2 rounded-lg text-[#C684E0] cursor-pointer" onClick={() => setShowVideoPopup(false)}>Cancel</button>
-                                <button className="bg-[#C684E0] text-white px-4 py-2 rounded-lg cursor-pointer" disabled={selectedVideoFiles.length === 0}>
-                                    <Link to="/profilepage">Upload</Link>
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
+                {popupType === "code" && (
+                    <CodePopup
+                        setPopup={setPopupType}
+                        handleFileChange={handleFileChange}
+                        handleUpload={handleUploadFiles}
+                        tempFiles={tempFiles}
+                        handleDeleteTempFile={handleDeleteTempFile}
+                        setTitle={setTitle}
+                        setDescription={setDescription}
+                        title={title}
+                        description={description}
+                    />
                 )}
 
+                {popupType === "video" && (
+                    <VideoPopup
+                        setPopup={setPopupType}
+                        handleFileChange={handleFileChange}
+                        handleUpload={handleUploadFiles}
+                        tempFiles={tempFiles}
+                        handleDeleteTempFile={handleDeleteTempFile}
+                        setTitle={setTitle}
+                        setDescription={setDescription}
+                        title={title}
+                        description={description}
+                    />
+                )}
+
+                {/* Display Uploaded Files */}
+                {(imageFiles.length > 0 || videoFiles.length > 0 || codeFiles.length > 0) && (
+                    <>
+                        <div className="pt-30">
+                            <h3 className="text-xl font-medium mb-4">Uploaded Files</h3>
+
+                            <div className="mt-6 py-4 rounded-lg">
+                                <h2 className="text-xl font-medium">Project Title : {globalTitle}</h2>
+                                <p className="text-gray-600 text-sm mt-2">Project Discripition : {globalDescription}</p>
+                            </div>
+
+                            {imageFiles.length > 0 && <FileDisplay files={imageFiles} type="image" handleDelete={handleDeleteFile} />}
+                            {videoFiles.length > 0 && <FileDisplay files={videoFiles} type="video" handleDelete={handleDeleteFile} />}
+                            {codeFiles.length > 0 && <FileDisplay files={codeFiles} type="code" handleDelete={handleDeleteFile} />}
+
+                            {/* Buttons at Bottom */}
+
+                        </div>
+                        <div className="mt-6 flex justify-end mb-5">
+                            <button className="bg-gray-500 text-white px-6 py-3 rounded-lg mr-2 cursor-pointer" onClick={handleCancel}>Cancel</button>
+                            <button className="bg-blue-500 text-white px-6 py-3 rounded-lg cursor-pointer" onClick={handleUpload}>Upload Files</button>
+                        </div>
+                    </>
+                )}
             </div>
         </>
     );
 };
 
-export default Uploadprojectpage;
+// Image Popup Component
+const ImagePopup = ({
+    setPopup,
+    handleFileChange,
+    handleUpload,
+    tempFiles,
+    handleDeleteTempFile,
+    setTitle,
+    setDescription,
+    title,
+    description
+}) => {
+    const [previewFiles, setPreviewFiles] = useState([]);
+
+    // Generate image previews when tempFiles changes
+    useEffect(() => {
+        if (tempFiles.length > 0) {
+            const previews = tempFiles.map(file => (file instanceof File ? URL.createObjectURL(file) : null));
+            setPreviewFiles(previews);
+        } else {
+            setPreviewFiles([]);
+        }
+    }, [tempFiles]);
+
+    return (
+        <div className={`fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50`}>
+            <div className={`bg-white text-black rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center`}>
+                {/* Close Button */}
+                <button className="absolute top-4 right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+
+                {/* Title */}
+                <h2 className="text-[20px] flex items-center gap-2">
+                    <i className="ri-file-upload-line"></i>
+                    <p className="font-semibold">Upload Images</p>
+                </h2>
+                <p className="text-gray-500 text-[12px]">Add your images here</p>
+
+                {/* File Upload Box */}
+                <label htmlFor="fileInput" className="mt-4 border border-2 border-[#ED9E29] bg-[#FDE8CB] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
+                    <i className="ri-file-image-line text-[#ED9E29] text-[22px]"></i>
+                    <p className="text-[#ED9E29] font-medium mt-1">Choose Files</p>
+                    <input type="file" id="fileInput" accept=".jpg,.png" className="hidden" onChange={handleFileChange} multiple />
+                </label>
+                <p className="text-gray-500 text-[12px] text-xs mt-1">Only .jpg and .png files. 50 MB max file size.</p>
+
+
+                {/* Project Name */}
+                <label className="text-sm font-medium mt-3 block">Project Name</label>
+                <input
+                    type="text"
+                    placeholder="Enter your project name"
+                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+
+                {/* Project Description */}
+                <label className="mt-2 text-sm font-medium">Project Description</label>
+                <textarea
+                    placeholder="Enter your project description"
+                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    value={description}
+                    rows={1}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+
+                {/* Uploaded Files Section */}
+                <div className="mt-1">
+                    <label className="text-sm font-medium">Uploaded Files</label>
+                    {previewFiles.length > 0 ? (
+                        <div className={`mt-2 ${tempFiles.length > 1 ? 'max-h-15 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-2`}>
+                            {previewFiles.map((preview, index) => (
+                                <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-300">
+                                    <div className="flex items-center gap-2">
+                                        <i className="ri-image-2-line text-[#9E9E9E] text-[25px]"></i>
+                                        <div>
+                                            <p className="text-[14px] font-medium">{tempFiles[index]?.name}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {tempFiles[index]?.size
+                                                    ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
+                                                    : "0 MB"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
+                                        <i class="ri-delete-bin-line text-[22px]"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-gray-500 mt-2">No files selected</p>
+                    )}
+                </div>
+
+
+                {/* Buttons */}
+                <div className="mt-4 flex justify-end gap-2">
+                    <button className="border border-[#ED9E29] px-4 py-2 rounded-lg text-[#ED9E29] cursor-pointer" onClick={() => setPopup(null)}>Cancel</button>
+                    <button className="bg-[#ED9E29] text-white px-4 py-2 rounded-lg cursor-pointer" onClick={handleUpload}>Upload</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Code Popup Component
+const CodePopup = ({
+    setPopup,
+    handleFileChange,
+    handleUpload,
+    tempFiles,
+    handleDeleteTempFile,
+    setTitle,
+    setDescription,
+    title,
+    description
+}) => {
+    const [previewFiles, setPreviewFiles] = useState([]);
+
+    // Generate file previews when tempFiles changes
+    useEffect(() => {
+        if (tempFiles.length > 0) {
+            setPreviewFiles(tempFiles.map(file => file?.name || "Unknown File"));
+        } else {
+            setPreviewFiles([]);
+        }
+    }, [tempFiles]);
+
+    return (
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white text-black rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center">
+                {/* Close Button */}
+                <button className="absolute top-4 right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+
+                {/* Title */}
+                <h2 className="text-[20px] flex items-center gap-2">
+                    <i className="ri-file-upload-line"></i>
+                    <p className="font-semibold">Upload Embedded Code</p>
+                </h2>
+                <p className="text-gray-500 text-[12px]">Add your code files here</p>
+
+                {/* File Upload Box */}
+                <label htmlFor="codeFileInput" className="mt-4 border border-2 border-[#376CFF] bg-[#DCE6FF] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
+                    <i className="ri-file-code-line text-[#376CFF] text-[22px]"></i>
+                    <p className="text-[#376CFF] font-medium mt-1">Choose Files</p>
+                    <input type="file" id="codeFileInput" accept=".html,.css,.js" className="hidden" onChange={handleFileChange} multiple />
+                </label>
+                <p className="text-gray-500 text-[12px] text-xs mt-1">Only .html, .css, .js files. 100 MB max per file.</p>
+
+                {/* Project Name */}
+                <label className="text-sm font-medium mt-3 block">Project Name</label>
+                <input
+                    type="text"
+                    placeholder="Enter your project name"
+                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+
+                {/* Project Description */}
+                <label className="mt-2 text-sm font-medium">Project Description</label>
+                <textarea
+                    placeholder="Enter your project description"
+                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    rows={1}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+
+                {/* Uploaded Files Section */}
+                <div className="mt-1">
+                    <label className="text-sm font-medium">Uploaded Files</label>
+                    {previewFiles.length > 0 ? (
+                        <div className={`mt-2 ${tempFiles.length > 1 ? 'max-h-15 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-2`}>
+                            {previewFiles.map((preview, index) => (
+                                <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-300">
+                                    <div className="flex items-center gap-2">
+                                        <i className="ri-file-zip-line text-[#9E9E9E] text-[25px]"></i>
+                                        <div>
+                                            <p className="text-[14px] font-medium">{tempFiles[index]?.name}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {tempFiles[index]?.size
+                                                    ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
+                                                    : "0 MB"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
+                                        <i className="ri-delete-bin-line text-[22px]"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-gray-500 mt-2">No files selected</p>
+                    )}
+                </div>
+
+                {/* Buttons */}
+                <div className="mt-4 flex justify-end gap-2">
+                    <button className="border border-[#376CFF] px-4 py-2 rounded-lg text-[#376CFF] cursor-pointer" onClick={() => setPopup(null)}>Cancel</button>
+                    <button className="bg-[#376CFF] text-white px-4 py-2 rounded-lg cursor-pointer" onClick={handleUpload}>Upload</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Video Popup Component
+const VideoPopup = ({
+    setPopup,
+    handleFileChange,
+    handleUpload,
+    tempFiles,
+    handleDeleteTempFile,
+    setTitle,
+    setDescription,
+    title,
+    description
+}) => {
+    const [previewFiles, setPreviewFiles] = useState([]);
+
+    // Generate video previews when tempFiles changes
+    useEffect(() => {
+        if (tempFiles.length > 0) {
+            setPreviewFiles(tempFiles.map(file => (file instanceof File ? URL.createObjectURL(file) : null)));
+        } else {
+            setPreviewFiles([]);
+        }
+    }, [tempFiles]);
+
+    return (
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white text-black rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center">
+                {/* Close Button */}
+                <button className="absolute top-4 right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+
+                {/* Title */}
+                <h2 className="text-[20px] flex items-center gap-2">
+                    <i className="ri-file-upload-line"></i>
+                    <p className="font-semibold">Upload Videos</p>
+                </h2>
+                <p className="text-gray-500 text-[12px]">Add your videos here</p>
+
+                {/* File Upload Box */}
+                <label htmlFor="videoFileInput" className="mt-4 border border-2 border-[#C684E0] bg-[#F4D9FF] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
+                    <i className="ri-video-line text-[#C684E0] text-[22px]"></i>
+                    <p className="text-[#C684E0] font-medium mt-1">Choose Videos</p>
+                    <input type="file" id="videoFileInput" accept="video/*" className="hidden" onChange={handleFileChange} multiple />
+                </label>
+                <p className="text-gray-500 text-[12px] text-xs mt-1">Only video files Max 200MB per file.</p>
+
+                {/* Project Name */}
+                <label className="text-sm font-medium mt-3 block">Project Name</label>
+                <input
+                    type="text"
+                    placeholder="Enter project name"
+                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+
+                {/* Project Description */}
+                <label className="text-sm mt-2 font-medium">Project Description</label>
+                <textarea
+                    placeholder="Enter project description"
+                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    value={description}
+                    rows={1}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+
+                {/* Uploaded Videos Section */}
+                <div className="mt-1">
+                    <label className="text-sm font-medium">Uploaded Videos</label>
+                    {previewFiles.length > 0 ? (
+                        <div className={`mt-2 ${tempFiles.length > 1 ? 'max-h-15 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-2`}>
+                            {previewFiles.map((preview, index) => (
+                                <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-300">
+                                    <div className="flex items-center gap-2">
+                                        <i className="ri-video-line text-[#9E9E9E] text-[25px]"></i>
+                                        <div>
+                                            <p className="text-[14px] font-medium">{tempFiles[index]?.name}</p>
+                                            <p className="text-xs text-gray-500">
+                                                {tempFiles[index]?.size
+                                                    ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
+                                                    : "0 MB"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
+                                        <i className="ri-delete-bin-line text-[22px]"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-gray-500 mt-2">No files selected</p>
+                    )}
+                </div>
+
+                {/* Buttons */}
+                <div className="mt-4 flex justify-end gap-2">
+                    <button className="border border-[#C684E0] px-4 py-2 rounded-lg text-[#C684E0] cursor-pointer" onClick={() => setPopup(null)}>Cancel</button>
+                    <button className="bg-[#C684E0] text-white px-4 py-2 rounded-lg cursor-pointer" onClick={handleUpload}>Upload</button>
+                </div>
+            </div>
+        </div>
+    );
+
+};
+
+const FileDisplay = ({ files, type, handleDelete }) => (
+    <div className="mt-4">
+        <h3 className="text-lg font-medium capitalize">{type} Files</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+            {files.map((file, index) => (
+                <div key={index} className="relative p-2 rounded border border-gray-300">
+                    {type === "image" && <img src={file.url} alt={file.name} className="w-full h-64 rounded-lg object-cover pt-10" />}
+                    {type === "video" && <video src={file.url} controls className="w-full h-64 rounded-lg object-cover pt-10" />}
+                    {type === "code" && <p className="truncate h-8 flex flex-col justify-center pl-2 rounded-lg">{file.name}</p>}
+                    <button className="absolute top-2 right-2 text-black cursor-pointer" onClick={() => handleDelete(type, index)}>✖</button>
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
+export default UploadProjectPage;
