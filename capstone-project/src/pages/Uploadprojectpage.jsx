@@ -111,58 +111,58 @@ const UploadProjectPage = () => {
             </Helmet>
             <Navbar />
 
-            <div className={`${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} min-h-screen flex flex-col px-10 md:px-20 w-full pt-20`}>
+            <div className={`${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} min-h-screen flex flex-col px-4 sm:px-6 md:px-10 lg:px-20 w-full pt-10 sm:pt-16 md:pt-20`}>
 
                 {/* Upload Section */}
-                <div className="mt-10 text-left">
-                    <h2 className="text-2xl font-semibold">Upload your Project</h2>
-                    <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} mt-2 max-w-lg font-regular text-[13px]`}>
+                <div className="mt-6 sm:mt-8 md:mt-10 text-left">
+                    <h2 className="text-xl sm:text-2xl font-semibold">Upload your Project</h2>
+                    <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} mt-2 max-w-lg font-regular text-xs sm:text-sm md:text-[13px]`}>
                         Seamlessly upload your project files with ease. Choose your preferred method and get started in just a few clicks.
                     </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center pt-10 gap-10">
-                    <div className="text-center">
-                        <h3 className="text-lg font-medium">Choose your upload type</h3>
-                        <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-sm font-regular mt-2`}>
+                <div className="flex flex-col items-center justify-center pt-6 sm:pt-8 md:pt-10 gap-6 sm:gap-8 md:gap-10">
+                    <div className="text-center px-4">
+                        <h3 className="text-base sm:text-lg font-medium">Choose your upload type</h3>
+                        <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-xs sm:text-sm font-regular mt-2`}>
                             Easily upload your files by selecting the method that best suits your needs.
                         </p>
                     </div>
 
-                    <div className="mt-0 flex flex-col md:flex-row items-center justify-center gap-50">
+                    <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10 md:gap-16 lg:gap-20">
                         {/* Image Upload */}
                         <div className="flex flex-col items-center cursor-pointer" onClick={() => setPopupType("image")}>
-                            <div className="bg-[#FDE8CB] w-20 h-20 flex justify-center items-center rounded-full">
-                                <i className="ri-gallery-line text-[#ED9E29] text-3xl"></i>
+                            <div className="bg-[#FDE8CB] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex justify-center items-center rounded-full">
+                                <i className="ri-gallery-line text-[#ED9E29] text-2xl sm:text-3xl"></i>
                             </div>
-                            <p className="mt-2 font-medium">Image</p>
+                            <p className="mt-2 font-medium text-sm sm:text-base">Image</p>
                         </div>
 
                         {/* Embedded Code Upload */}
                         <div className="flex flex-col items-center cursor-pointer" onClick={() => setPopupType("code")}>
-                            <div className="bg-[#DCE6FF] w-20 h-20 flex justify-center items-center rounded-full">
-                                <i className="ri-code-s-slash-line text-[#376CFF] text-3xl"></i>
+                            <div className="bg-[#DCE6FF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex justify-center items-center rounded-full">
+                                <i className="ri-code-s-slash-line text-[#376CFF] text-2xl sm:text-3xl"></i>
                             </div>
-                            <p className="mt-2 font-medium">Embedded Code</p>
+                            <p className="mt-2 font-medium text-sm sm:text-base">Embedded Code</p>
                         </div>
 
                         {/* Video Upload */}
                         <div className="flex flex-col items-center cursor-pointer" onClick={() => setPopupType("video")}>
-                            <div className="bg-[#F4D9FF] w-20 h-20 flex justify-center items-center rounded-full">
-                                <i className="ri-video-line text-[#C684E0] text-3xl"></i>
+                            <div className="bg-[#F4D9FF] w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 flex justify-center items-center rounded-full">
+                                <i className="ri-video-line text-[#C684E0] text-2xl sm:text-3xl"></i>
                             </div>
-                            <p className="mt-2 font-medium">Video</p>
+                            <p className="mt-2 font-medium text-sm sm:text-base">Video</p>
                         </div>
                     </div>
                 </div>
                 {/* Upload Options */}
 
-
                 {message && (
-                    <div className={`absolute top-20 right-4 px-4 py-2 rounded-lg text-white text-sm font-medium shadow-lg ${message.type === "error" ? "bg-red-500" : "bg-green-500"}`}>
+                    <div className={`fixed top-4 right-4 px-4 py-2 rounded-lg text-white text-xs sm:text-sm font-medium shadow-lg z-50 ${message.type === "error" ? "bg-red-500" : "bg-green-500"}`}>
                         {message.text}
                     </div>
                 )}
+
                 {popupType === "image" && (
                     <ImagePopup
                         setPopup={setPopupType}
@@ -208,24 +208,21 @@ const UploadProjectPage = () => {
                 {/* Display Uploaded Files */}
                 {(imageFiles.length > 0 || videoFiles.length > 0 || codeFiles.length > 0) && (
                     <>
-                        <div className="pt-30">
-                            <h3 className="text-xl font-medium mb-4">Uploaded Files</h3>
+                        <div className="pt-10 sm:pt-16 md:pt-20 lg:pt-24">
+                            <h3 className="text-lg sm:text-xl font-medium mb-2 sm:mb-4">Uploaded Files</h3>
 
-                            <div className="mt-6 py-4 rounded-lg">
-                                <h2 className="text-xl font-medium">Project Title : {globalTitle}</h2>
-                                <p className="text-gray-600 text-sm mt-2">Project Discripition : {globalDescription}</p>
+                            <div className="mt-4 sm:mt-6 py-3 sm:py-4 rounded-lg">
+                                <h2 className="text-lg sm:text-xl font-medium">Project Title: {globalTitle}</h2>
+                                <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-2">Project Description: {globalDescription}</p>
                             </div>
 
                             {imageFiles.length > 0 && <FileDisplay files={imageFiles} type="image" handleDelete={handleDeleteFile} />}
                             {videoFiles.length > 0 && <FileDisplay files={videoFiles} type="video" handleDelete={handleDeleteFile} />}
                             {codeFiles.length > 0 && <FileDisplay files={codeFiles} type="code" handleDelete={handleDeleteFile} />}
-
-                            {/* Buttons at Bottom */}
-
                         </div>
-                        <div className="mt-6 flex justify-end mb-5">
-                            <button className="bg-gray-500 text-white px-6 py-3 rounded-lg mr-2 cursor-pointer" onClick={handleCancel}>Cancel</button>
-                            <button className="bg-blue-500 text-white px-6 py-3 rounded-lg cursor-pointer" onClick={handleUpload}>Upload Files</button>
+                        <div className="mt-6 flex justify-end mb-5 sm:mb-8">
+                            <button className="bg-gray-500 text-white px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm rounded-lg mr-2 cursor-pointer" onClick={handleCancel}>Cancel</button>
+                            <button className="bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm rounded-lg cursor-pointer" onClick={handleUpload}>Upload Files</button>
                         </div>
                     </>
                 )}
@@ -259,59 +256,59 @@ const ImagePopup = ({
     }, [tempFiles]);
 
     return (
-        <div className={`fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50`}>
-            <div className={`bg-white text-black rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center`}>
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
+            <div className="bg-white text-black rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center ">
                 {/* Close Button */}
-                <button className="absolute top-4 right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+                <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
 
                 {/* Title */}
-                <h2 className="text-[20px] flex items-center gap-2">
+                <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
                     <i className="ri-file-upload-line"></i>
                     <p className="font-semibold">Upload Images</p>
                 </h2>
-                <p className="text-gray-500 text-[12px]">Add your images here</p>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your images here</p>
 
                 {/* File Upload Box */}
-                <label htmlFor="fileInput" className="mt-4 border border-2 border-[#ED9E29] bg-[#FDE8CB] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
-                    <i className="ri-file-image-line text-[#ED9E29] text-[22px]"></i>
-                    <p className="text-[#ED9E29] font-medium mt-1">Choose Files</p>
+                <label htmlFor="fileInput" className="mt-3 sm:mt-4 border border-2 border-[#ED9E29] bg-[#FDE8CB] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
+                    <i className="ri-file-image-line text-[#ED9E29] text-lg sm:text-xl md:text-[22px]"></i>
+                    <p className="text-[#ED9E29] font-medium mt-1 text-sm sm:text-base">Choose Files</p>
                     <input type="file" id="fileInput" accept=".jpg,.png" className="hidden" onChange={handleFileChange} multiple />
                 </label>
-                <p className="text-gray-500 text-[12px] text-xs mt-1">Only .jpg and .png files. 50 MB max file size.</p>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only .jpg and .png files. 50 MB max file size.</p>
 
 
                 {/* Project Name */}
-                <label className="text-sm font-medium mt-3 block">Project Name</label>
+                <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
                 <input
                     type="text"
                     placeholder="Enter your project name"
-                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
 
                 {/* Project Description */}
-                <label className="mt-2 text-sm font-medium">Project Description</label>
+                <label className="mt-2 text-xs sm:text-sm font-medium">Project Description</label>
                 <textarea
                     placeholder="Enter your project description"
-                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
                     value={description}
                     rows={1}
                     onChange={(e) => setDescription(e.target.value)}
                 />
 
                 {/* Uploaded Files Section */}
-                <div className="mt-1">
-                    <label className="text-sm font-medium">Uploaded Files</label>
+                <div className="mt-1 sm:mt-2">
+                    <label className="text-xs sm:text-sm font-medium">Uploaded Files</label>
                     {previewFiles.length > 0 ? (
-                        <div className={`mt-2 ${tempFiles.length > 1 ? 'max-h-15 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-2`}>
+                        <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
                             {previewFiles.map((preview, index) => (
-                                <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-300">
-                                    <div className="flex items-center gap-2">
-                                        <i className="ri-image-2-line text-[#9E9E9E] text-[25px]"></i>
+                                <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
+                                    <div className="flex items-center gap-1 sm:gap-2">
+                                        <i className="ri-image-2-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
                                         <div>
-                                            <p className="text-[14px] font-medium">{tempFiles[index]?.name}</p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
+                                            <p className="text-[10px] sm:text-xs text-gray-500">
                                                 {tempFiles[index]?.size
                                                     ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
                                                     : "0 MB"}
@@ -319,21 +316,21 @@ const ImagePopup = ({
                                         </div>
                                     </div>
                                     <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
-                                        <i class="ri-delete-bin-line text-[22px]"></i>
+                                        <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
                                     </button>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-gray-500 mt-2">No files selected</p>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
                     )}
                 </div>
 
 
                 {/* Buttons */}
-                <div className="mt-4 flex justify-end gap-2">
-                    <button className="border border-[#ED9E29] px-4 py-2 rounded-lg text-[#ED9E29] cursor-pointer" onClick={() => setPopup(null)}>Cancel</button>
-                    <button className="bg-[#ED9E29] text-white px-4 py-2 rounded-lg cursor-pointer" onClick={handleUpload}>Upload</button>
+                <div className="mt-3 sm:mt-4 flex justify-end gap-2">
+                    <button className="border border-[#ED9E29] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#ED9E29] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
+                    <button className="bg-[#ED9E29] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
                 </div>
             </div>
         </div>
@@ -364,58 +361,58 @@ const CodePopup = ({
     }, [tempFiles]);
 
     return (
-        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white text-black rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center">
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
+            <div className="bg-white text-black rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center">
                 {/* Close Button */}
-                <button className="absolute top-4 right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+                <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
 
                 {/* Title */}
-                <h2 className="text-[20px] flex items-center gap-2">
+                <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
                     <i className="ri-file-upload-line"></i>
                     <p className="font-semibold">Upload Embedded Code</p>
                 </h2>
-                <p className="text-gray-500 text-[12px]">Add your code files here</p>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your code files here</p>
 
                 {/* File Upload Box */}
-                <label htmlFor="codeFileInput" className="mt-4 border border-2 border-[#376CFF] bg-[#DCE6FF] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
-                    <i className="ri-file-code-line text-[#376CFF] text-[22px]"></i>
-                    <p className="text-[#376CFF] font-medium mt-1">Choose Files</p>
+                <label htmlFor="codeFileInput" className="mt-3 sm:mt-4 border border-2 border-[#376CFF] bg-[#DCE6FF] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
+                    <i className="ri-file-code-line text-[#376CFF] text-lg sm:text-xl md:text-[22px]"></i>
+                    <p className="text-[#376CFF] font-medium mt-1 text-sm sm:text-base">Choose Files</p>
                     <input type="file" id="codeFileInput" accept=".html,.css,.js" className="hidden" onChange={handleFileChange} multiple />
                 </label>
-                <p className="text-gray-500 text-[12px] text-xs mt-1">Only .html, .css, .js files. 100 MB max per file.</p>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only .html, .css, .js files. 100 MB max per file.</p>
 
                 {/* Project Name */}
-                <label className="text-sm font-medium mt-3 block">Project Name</label>
+                <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
                 <input
                     type="text"
                     placeholder="Enter your project name"
-                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
 
                 {/* Project Description */}
-                <label className="mt-2 text-sm font-medium">Project Description</label>
+                <label className="mt-2 text-xs sm:text-sm font-medium">Project Description</label>
                 <textarea
                     placeholder="Enter your project description"
-                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
                     rows={1}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
 
                 {/* Uploaded Files Section */}
-                <div className="mt-1">
-                    <label className="text-sm font-medium">Uploaded Files</label>
+                <div className="mt-1 sm:mt-2">
+                    <label className="text-xs sm:text-sm font-medium">Uploaded Files</label>
                     {previewFiles.length > 0 ? (
-                        <div className={`mt-2 ${tempFiles.length > 1 ? 'max-h-15 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-2`}>
+                        <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
                             {previewFiles.map((preview, index) => (
-                                <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-300">
-                                    <div className="flex items-center gap-2">
-                                        <i className="ri-file-zip-line text-[#9E9E9E] text-[25px]"></i>
+                                <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
+                                    <div className="flex items-center gap-1 sm:gap-2">
+                                        <i className="ri-file-zip-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
                                         <div>
-                                            <p className="text-[14px] font-medium">{tempFiles[index]?.name}</p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
+                                            <p className="text-[10px] sm:text-xs text-gray-500">
                                                 {tempFiles[index]?.size
                                                     ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
                                                     : "0 MB"}
@@ -423,20 +420,20 @@ const CodePopup = ({
                                         </div>
                                     </div>
                                     <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
-                                        <i className="ri-delete-bin-line text-[22px]"></i>
+                                        <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
                                     </button>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-gray-500 mt-2">No files selected</p>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
                     )}
                 </div>
 
                 {/* Buttons */}
-                <div className="mt-4 flex justify-end gap-2">
-                    <button className="border border-[#376CFF] px-4 py-2 rounded-lg text-[#376CFF] cursor-pointer" onClick={() => setPopup(null)}>Cancel</button>
-                    <button className="bg-[#376CFF] text-white px-4 py-2 rounded-lg cursor-pointer" onClick={handleUpload}>Upload</button>
+                <div className="mt-3 sm:mt-4 flex justify-end gap-2">
+                    <button className="border border-[#376CFF] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#376CFF] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
+                    <button className="bg-[#376CFF] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
                 </div>
             </div>
         </div>
@@ -467,58 +464,58 @@ const VideoPopup = ({
     }, [tempFiles]);
 
     return (
-        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white text-black rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center">
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
+            <div className="bg-white text-black rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center">
                 {/* Close Button */}
-                <button className="absolute top-4 right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+                <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
 
                 {/* Title */}
-                <h2 className="text-[20px] flex items-center gap-2">
+                <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
                     <i className="ri-file-upload-line"></i>
                     <p className="font-semibold">Upload Videos</p>
                 </h2>
-                <p className="text-gray-500 text-[12px]">Add your videos here</p>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your videos here</p>
 
                 {/* File Upload Box */}
-                <label htmlFor="videoFileInput" className="mt-4 border border-2 border-[#C684E0] bg-[#F4D9FF] p-6 text-center rounded-lg cursor-pointer h-[25%] flex flex-col justify-center">
-                    <i className="ri-video-line text-[#C684E0] text-[22px]"></i>
-                    <p className="text-[#C684E0] font-medium mt-1">Choose Videos</p>
+                <label htmlFor="videoFileInput" className="mt-3 sm:mt-4 border border-2 border-[#C684E0] bg-[#F4D9FF] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
+                    <i className="ri-video-line text-[#C684E0] text-lg sm:text-xl md:text-[22px]"></i>
+                    <p className="text-[#C684E0] font-medium mt-1 text-sm sm:text-base">Choose Videos</p>
                     <input type="file" id="videoFileInput" accept="video/*" className="hidden" onChange={handleFileChange} multiple />
                 </label>
-                <p className="text-gray-500 text-[12px] text-xs mt-1">Only video files Max 200MB per file.</p>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only video files. Max 200MB per file.</p>
 
                 {/* Project Name */}
-                <label className="text-sm font-medium mt-3 block">Project Name</label>
+                <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
                 <input
                     type="text"
                     placeholder="Enter project name"
-                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
 
                 {/* Project Description */}
-                <label className="text-sm mt-2 font-medium">Project Description</label>
+                <label className="text-xs sm:text-sm mt-2 font-medium">Project Description</label>
                 <textarea
                     placeholder="Enter project description"
-                    className="w-full border rounded-md p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
                     value={description}
                     rows={1}
                     onChange={(e) => setDescription(e.target.value)}
                 />
 
                 {/* Uploaded Videos Section */}
-                <div className="mt-1">
-                    <label className="text-sm font-medium">Uploaded Videos</label>
+                <div className="mt-1 sm:mt-2">
+                    <label className="text-xs sm:text-sm font-medium">Uploaded Videos</label>
                     {previewFiles.length > 0 ? (
-                        <div className={`mt-2 ${tempFiles.length > 1 ? 'max-h-15 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-2`}>
+                        <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
                             {previewFiles.map((preview, index) => (
-                                <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-300">
-                                    <div className="flex items-center gap-2">
-                                        <i className="ri-video-line text-[#9E9E9E] text-[25px]"></i>
+                                <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
+                                    <div className="flex items-center gap-1 sm:gap-2">
+                                        <i className="ri-video-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
                                         <div>
-                                            <p className="text-[14px] font-medium">{tempFiles[index]?.name}</p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
+                                            <p className="text-[10px] sm:text-xs text-gray-500">
                                                 {tempFiles[index]?.size
                                                     ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
                                                     : "0 MB"}
@@ -526,25 +523,24 @@ const VideoPopup = ({
                                         </div>
                                     </div>
                                     <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
-                                        <i className="ri-delete-bin-line text-[22px]"></i>
+                                        <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
                                     </button>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-sm text-gray-500 mt-2">No files selected</p>
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
                     )}
                 </div>
 
                 {/* Buttons */}
-                <div className="mt-4 flex justify-end gap-2">
-                    <button className="border border-[#C684E0] px-4 py-2 rounded-lg text-[#C684E0] cursor-pointer" onClick={() => setPopup(null)}>Cancel</button>
-                    <button className="bg-[#C684E0] text-white px-4 py-2 rounded-lg cursor-pointer" onClick={handleUpload}>Upload</button>
+                <div className="mt-3 sm:mt-4 flex justify-end gap-2">
+                    <button className="border border-[#C684E0] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#C684E0] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
+                    <button className="bg-[#C684E0] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
                 </div>
             </div>
         </div>
     );
-
 };
 
 const FileDisplay = ({ files, type, handleDelete }) => (

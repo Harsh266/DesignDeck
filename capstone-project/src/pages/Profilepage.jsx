@@ -10,7 +10,6 @@ import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 const Profilepage = () => {
-
     const [user, setUser] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const { theme } = useContext(ThemeContext);
@@ -43,8 +42,6 @@ const Profilepage = () => {
                 Loading...
             </h1>
         </div>
-
-
     }
 
     return (
@@ -53,11 +50,11 @@ const Profilepage = () => {
                 <title>DesignDeck - Profile Page {user.name}</title>
             </Helmet>
             <Navbar />
-            <div className="min-h-screen bg-gray-100 mt-16">
+            <div className="min-h-screen bg-gray-100 mt-13">
                 {/* Profile Section */}
                 <div className="w-full flex flex-col items-center">
                     {/* Banner Section */}
-                    <div className="w-[100%] max-w-full h-60">
+                    <div className="w-full max-w-full h-40 sm:h-48 md:h-60">
                         <img
                             src={user.bannerPicture || "/public/image.png"}
                             alt="Gradient Banner"
@@ -66,14 +63,14 @@ const Profilepage = () => {
                     </div>
 
                     {/* Biodata Section */}
-                    <div className={`relative w-[100%] max-full ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} p-6 flex items-center -mt-12`}>
+                    <div className={`relative w-full ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center -mt-12`}>
                         {/* Profile Image */}
-                        <div className="absolute -top-12 left-6">
+                        <div className="absolute -top-12 left-4 sm:left-6">
                             {/* Blurred Border */}
-                            <div className="w-44 h-44 absolute -inset-2 rounded-2xl border-4 border-white blur-2xl"></div>
+                            <div className="w-32 h-32 sm:w-44 sm:h-44 absolute -inset-2 rounded-2xl border-4 border-white blur-2xl"></div>
 
                             {/* Profile Image Container */}
-                            <div className={`w-40 h-40 ${theme === "dark" ? "bg-black" : "bg-white"} rounded-2xl p-1 relative border-4 border-transparent`}>
+                            <div className={`w-28 h-28 sm:w-40 sm:h-40 ${theme === "dark" ? "bg-black" : "bg-white"} rounded-2xl p-1 relative border-4 border-transparent`}>
                                 <img
                                     src={user.profilePicture || (theme === "dark" 
                                         ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg" 
@@ -85,17 +82,17 @@ const Profilepage = () => {
                         </div>
 
                         {/* User Details */}
-                        <div className="pl-48 w-screen flex flex-col gap-5">
+                        <div className="pl-2 sm:pl-48 w-full pt-16 sm:pt-0 flex flex-col gap-3 sm:gap-5">
                             <div className="flex flex-col gap-1">
-                                <h2 className="text-2xl font-semibold">{user.name}</h2>
-                                <p className={`text-sm w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                <h2 className="text-xl sm:text-2xl font-semibold">{user.name}</h2>
+                                <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                     {user.bio || "No Bio"}
                                 </p>
                             </div>
                             <div>
                                 <button
                                     onClick={() => setIsPopupOpen(true)}
-                                    className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition cursor-pointer ${theme === "dark" ? "bg-blue-900 text-blue-300 hover:bg-blue-800" : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"}`}
+                                    className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg font-medium flex items-center gap-2 transition cursor-pointer ${theme === "dark" ? "bg-blue-900 text-blue-300 hover:bg-blue-800" : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"}`}
                                 >
                                     <FaUserEdit className="text-lg" /> Edit Profile
                                 </button>
@@ -103,7 +100,7 @@ const Profilepage = () => {
                         </div>
 
                         {/* Social Icons */}
-                        <div className="ml-auto flex gap-3">
+                        <div className="mt-4 sm:mt-0 sm:ml-auto flex gap-3 self-end sm:self-auto">
                             <div className={`w-10 h-10 p-2 rounded-full flex items-center justify-center ${theme === "dark" ? "bg-purple-900 text-purple-400" : "bg-purple-100 text-purple-500"}`}>
                                 <i className="ri-dribbble-line text-xl"></i>
                             </div>
@@ -114,15 +111,14 @@ const Profilepage = () => {
                     </div>
                 </div>
 
-
                 {/* My Projects Section */}
-                <div className={`max-w-full mx-auto p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                    <h3 className={`text-xl font-semibold border-b-2 pb-2 w-[10%] ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
+                <div className={`max-w-full mx-auto p-4 sm:p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                    <h3 className={`text-xl font-semibold border-b-2 pb-2 w-[30%] sm:w-[20%] md:w-[15%] lg:w-[10%] ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
                         My Projects
                     </h3>
 
                     {/* Projects Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                         {/* Sample Project Cards */}
                         {[
                             { title: "Fitme app", img: "https://cdn.dribbble.com/userupload/36848296/file/original-8f9bf66f9b3c64857e1c49d26dfc1a5d.jpg?format=webp&resize=450x338&vertical=center" },
@@ -132,11 +128,10 @@ const Profilepage = () => {
                             { title: "Solar Gate-Investing Dashboard", img: "https://cdn.dribbble.com/userupload/36931891/file/original-d7f77534f6e882cc40a418e261314863.jpg?format=webp&resize=450x338&vertical=center" },
                         ].map((project, index) => (
                             <div key={index} className={`rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}>
-                                <img src={project.img} alt={project.title} className="rounded-lg w-full h-65" />
+                                <img src={project.img} alt={project.title} className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover" />
                                 <div className="flex items-center justify-between mt-1">
-                                    <p className="mt-2 text-lg font-medium">{project.title}</p>
-                                    <div className={`text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"
-                                        }`}>
+                                    <p className="mt-2 text-base sm:text-lg font-medium truncate">{project.title}</p>
+                                    <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
                                         <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
                                     </div>
                                 </div>
@@ -144,26 +139,25 @@ const Profilepage = () => {
                         ))}
 
                         {/* Upload Project Card */}
-                        <div className={`shadow-lg rounded-2xl p-6 flex flex-col items-center justify-center w-full h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                            <div className={`rounded-full w-15 h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
-                                <Link to="/upload"><i className="ri-function-add-fill text-3xl"></i></Link>
+                        <div className={`shadow-lg rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center w-full h-40 sm:h-48 md:h-56 lg:h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                            <div className={`rounded-full w-12 h-12 sm:w-15 sm:h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
+                                <Link to="/upload"><i className="ri-function-add-fill text-2xl sm:text-3xl"></i></Link>
                             </div>
-                            <p className="mt-3 text-2xl font-medium">Upload Project</p>
-                            <p className="text-sm text-center w-[70%]">
+                            <p className="mt-3 text-xl sm:text-2xl font-medium">Upload Project</p>
+                            <p className="text-xs sm:text-sm text-center w-full sm:w-[80%] md:w-[70%]">
                                 Show your creativity by uploading it to world.
                             </p>
                         </div>
-
                     </div>
                 </div>
 
                 {isPopupOpen && (
                     <div
-                        className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+                        className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
                         onClick={() => setIsPopupOpen(false)}
                     >
                         <div
-                            className={`rounded-xl p-6 w-[90%] max-w-md shadow-lg relative flex flex-col justify-center ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
+                            className={`rounded-xl p-4 sm:p-6 w-full sm:w-[90%] max-w-md shadow-lg relative flex flex-col justify-center ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Close Button */}
@@ -176,7 +170,7 @@ const Profilepage = () => {
 
                             {/* Title */}
                             <h2 className="mt-4 font-medium">Update Your Profile</h2>
-                            <hr className={`border-t-2 w-39 mt-1 ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`} />
+                            <hr className={`border-t-2 w-36 sm:w-39 mt-1 ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`} />
 
                             {/* Form */}
                             <div className="mt-4">
