@@ -10,9 +10,7 @@ const MongoStore = require("connect-mongo");
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
-const logoutRoutes = require("./routes/logoutRoutes");
 const passwordResetRoutes = require("./routes/passwordResetRoutes");
-const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 app.use(express.json());
@@ -66,8 +64,6 @@ app.use(passport.session());
 // ✅ Routes
 app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
-app.use("/auth", userRoutes);
-app.use("/auth", logoutRoutes);
 app.use("/auth", passwordResetRoutes); // ✅ Password Reset Routes
 
 // ✅ Root Route
