@@ -552,11 +552,11 @@ const FileDisplay = ({ files, type, handleDelete }) => (
         <h3 className="text-lg font-medium capitalize">{type} Files</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
             {files.map((file, index) => (
-                <div key={index} className="relative p-2 rounded border border-gray-300">
+                <div key={index} className="relative p-2 rounded-lg border border-gray-300">
                     {type === "image" && <img src={file.url} alt={file.name} className="w-full h-64 rounded-lg object-cover pt-10" />}
                     {type === "video" && <video src={file.url} controls className="w-full h-64 rounded-lg object-cover pt-10" />}
                     {type === "code" && <p className="truncate h-8 flex flex-col justify-center pl-2 rounded-lg">{file.name}</p>}
-                    <button className="absolute top-2 right-2 text-black cursor-pointer" onClick={() => handleDelete(type, index)}>✖</button>
+                    <button className="absolute top-2 right-2.5 text-black cursor-pointer" onClick={() => handleDelete(type, index)}>✖</button>
                 </div>
             ))}
         </div>
