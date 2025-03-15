@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { IoMdDoneAll } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
-import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 const ChangePassword = () => {
@@ -49,7 +48,7 @@ const ChangePassword = () => {
     if (response.ok) {
       setMessage(
         <span className="flex items-center gap-2 text-[#00B70F]">
-          <IoMdDoneAll className="text-2xl" /> Password Reset Succesfully
+          <IoMdDoneAll className="text-2xl" /> Password Reset Successfully
         </span>
       );
       setTimeout(() => navigate("/signin"), 3000);
@@ -65,28 +64,25 @@ const ChangePassword = () => {
   return (
     <>
       <Helmet>
-        <title>DesignDeck - Changepassword Page</title>
+        <title>DesignDeck - Change Password</title>
       </Helmet>
 
       <div
-        className={`flex items-center justify-between min-h-screen p-6 h-screen ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+        className={`flex flex-col lg:flex-row items-center justify-center min-h-screen h-screen overflow-hidden p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
       >
-        {/* Left Section */}
+        {/* Left Section (Form) */}
         <div
-          className={`w-1/2 h-full p-10 flex flex-col justify-center items-center ${theme === "dark" ? "bg-black" : "bg-white"
+          className={`w-full lg:w-1/2 h-full p-10 flex flex-col justify-center items-center ${theme === "dark" ? "bg-black" : "bg-white"
             }`}
         >
           {/* Logo */}
-          <h1
-            className={`text-xl font-semibold absolute top-7 left-10 ${theme === "dark" ? "text-white" : "text-black"
-              }`}
-          >
+          <h1 className={`text-xl font-semibold absolute top-7 left-10 ${theme === "dark" ? "text-white" : "text-black"}`}>
             DesignDeck
           </h1>
 
           {/* Form Container */}
-          <div className="w-full max-w-md px-15">
+          <div className="w-full max-w-md px-6">
             {/* Lock Icon */}
             <div className="flex justify-center mb-4">
               <div
@@ -95,19 +91,13 @@ const ChangePassword = () => {
                   : "bg-white border-[#D9D9D9]"
                   }`}
               >
-                <i
-                  className={`ri-lock-password-line text-2xl ${theme === "dark" ? "text-gray-300" : "text-black"
-                    }`}
-                ></i>
+                <i className={`ri-lock-password-line text-2xl ${theme === "dark" ? "text-gray-300" : "text-black"}`}></i>
               </div>
             </div>
 
             {/* Title & Description */}
             <h2 className="text-3xl font-semibold text-center">Set New Password</h2>
-            <p
-              className={`text-center mt-2 text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"
-                }`}
-            >
+            <p className={`text-center mt-2 text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
               Must be at least 8 characters
             </p>
 
@@ -145,7 +135,7 @@ const ChangePassword = () => {
               </div>
               <button
                 type="submit"
-                className={`p-3 rounded w-full rounded-[5px] cursor-pointer ${theme === "dark" ? "bg-blue-500 text-white" : "bg-[#376CFF] text-white"
+                className={`p-3 rounded w-full cursor-pointer ${theme === "dark" ? "bg-blue-500 text-white" : "bg-[#376CFF] text-white"
                   }`}
               >
                 Reset Password
@@ -153,33 +143,20 @@ const ChangePassword = () => {
             </form>
 
             {/* Success/Error Message */}
-            {message && (
-              <p className="mt-4 text-center flex justify-center items-center">
-                {message}
-              </p>
-            )}
+            {message && <p className="mt-4 text-center flex justify-center items-center">{message}</p>}
 
             {/* Back to login */}
-            <a
-              href="/signin"
-              className={`mt-4 flex items-center justify-center ${theme === "dark" ? "text-gray-400" : "text-gray-600"
-                }`}
-            >
+            <a href="/signin" className={`mt-4 flex items-center justify-center ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
               ← Back to login
             </a>
           </div>
         </div>
 
-        {/* Right Section */}
-        <div className="w-1/2 h-screen flex items-center justify-end p-8">
-          <img
-            src="/resetpass.png"
-            alt="Sign in"
-            className="w-[85%] h-[100%] rounded-lg"
-          />
+        {/* Right Section (Image) - Visible Only on lg Screens */}
+        <div className="hidden lg:flex w-1/2 h-full items-center justify-end p-8">
+          <img src="/resetpass.png" alt="Sign in" className="w-[85%] h-[100%] rounded-lg" />
         </div>
       </div>
-
     </>
   );
 };

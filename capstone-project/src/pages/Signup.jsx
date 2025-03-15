@@ -1,27 +1,27 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { ThemeContext } from "../context/ThemeContext"; // ✅ Import ThemeContext
+import { ThemeContext } from "../context/ThemeContext";
 
 const Signup = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [message, setMessage] = useState(""); // ✅ Success/Error Message
-    const [messageType, setMessageType] = useState(""); // ✅ "success" or "error"
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
-    const { theme } = useContext(ThemeContext); // ✅ Access theme
+    const { theme } = useContext(ThemeContext);
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setMessage(""); // Reset message before new request
+        setMessage("");
 
         try {
             const response = await axios.post(
@@ -33,7 +33,6 @@ const Signup = () => {
             setMessage(response.data.message);
             setMessageType("success");
 
-            // ✅ Redirect after 2 seconds
             setTimeout(() => navigate("/signin"), 2000);
         } catch (error) {
             setMessage(error.response?.data?.message || "Registration failed. Please try again.");
@@ -41,13 +40,11 @@ const Signup = () => {
         }
     };
 
-    // ✅ Handle Google Login
     const handleGoogleSuccess = async (credentialResponse) => {
         try {
             const decoded = jwtDecode(credentialResponse.credential);
-            console.log("User Info:", decoded);
 
-            const res = await axios.post(
+            await axios.post(
                 "http://localhost:5000/auth/google",
                 {
                     name: decoded.name,
@@ -58,15 +55,10 @@ const Signup = () => {
                 { withCredentials: true }
             );
 
-            console.log("Backend Response:", res.data);
             navigate("/dashboard");
         } catch (error) {
             console.error("Google Login Error:", error.response?.data || error.message);
         }
-    };
-
-    const handleGoogleError = () => {
-        console.error("Google Login Failed");
     };
 
     return (
@@ -74,13 +66,15 @@ const Signup = () => {
             <Helmet>
                 <title>DesignDeck - Signup Page</title>
             </Helmet>
-            <div className={`flex items-center justify-between min-h-screen p-6 h-screen transition-colors 
+
+            <div className={`flex flex-col lg:flex-row items-center justify-between min-h-screen p-6 h-screen transition-colors
                 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
             >
-                <div className="w-1/2 h-screen flex flex-col justify-center p-6">
+                {/* Left Content */}
+                <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-6">
                     <h1 className="text-xl font-semibold absolute top-7 left-10">DesignDeck</h1>
 
-                    <form onSubmit={handleRegister} className="px-16 py-2 flex flex-col justify-center w-[90%] pt-10">
+                    <form onSubmit={handleRegister} className="px-6 md:px-16 py-2 flex flex-col justify-center w-full pt-10">
                         <h2 className="text-2xl font-semibold">Create an Account</h2>
                         <p className={`mt-1 text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                             Let's Create an Account & Showcase Your Creativity
@@ -106,7 +100,6 @@ const Signup = () => {
                             required
                         />
 
-                        {/* ✅ Password Input */}
                         <div className="mt-3 relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -133,72 +126,55 @@ const Signup = () => {
                                 className={`mr-2 accent-blue-500 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-white border-gray-300"}`}
                                 required
                             />
-                            <label
-                                htmlFor="terms"
-                                className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}
-                            >
+                            <label htmlFor="terms" className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                 I agree to the{" "}
-                                <span
-                                    className={`cursor-pointer hover:underline ${theme === "dark" ? "text-white" : "text-black"}`}
-                                    onClick={() => setIsModalOpen(true)}
-                                >
+                                <span className="cursor-pointer hover:underline" onClick={() => setIsModalOpen(true)}>
                                     Terms & Conditions
                                 </span>
                             </label>
                         </div>
 
-
-                        <button
-                            type="submit"
-                            className={`w-full p-3 mt-4 rounded-md transition hover:cursor-pointer
-                                ${theme === "dark" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-[#376CFF] hover:bg-blue-700 text-white"}`}
-                        >
+                        <button type="submit" className={`w-full p-3 mt-4 rounded-md transition hover:cursor-pointer
+                            ${theme === "dark" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-[#376CFF] hover:bg-blue-700 text-white"}`}>
                             Sign Up
                         </button>
 
-                        {/* ✅ Show Message */}
                         {message && (
-                            <p
-                                className={`mt-3 text-sm transition-all ${messageType === "success"
-                                    ? "text-green-400"
-                                    : "text-red-500"
-                                    }`}
-                            >
+                            <p className={`mt-3 text-sm ${messageType === "success" ? "text-green-400" : "text-red-500"}`}>
                                 {message}
                             </p>
                         )}
 
                         <div className="flex items-center my-2">
-                            <hr className={`w-full transition-all ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
-                            <span className={`mx-2 transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                                or
-                            </span>
-                            <hr className={`w-full transition-all ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
+                            <hr className="w-full border-gray-300" />
+                            <span className="mx-2 text-gray-500">or</span>
+                            <hr className="w-full border-gray-300" />
                         </div>
 
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={handleGoogleError}
-                            className={`w-full flex items-center justify-center p-3 border rounded-md transition hover:cursor-pointer
-                                ${theme === "dark" ? "border-gray-600 hover:bg-gray-700" : "border-gray-300 hover:bg-gray-100"}`}
-                        />
+                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => console.error("Google Login Failed")} />
+
                         <p className={`text-sm mt-4 text-center ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                            Already have an account ?{" "}
-                            <span className={`cursor-pointer hover:underline ml-1 ${theme === "dark" ? "text-gray-300" : "text-[#376CFF]"}`} onClick={() => navigate("/signin")}>
-                                Sign In
-                            </span>
+                            Already have an account?
+                            <Link
+                                to="/signin"
+                                className={`cursor-pointer hover:underline ml-1
+                                ${theme === "dark" ? "text-gray-300" : "text-[#376CFF]"}`}
+                            >
+                                Sign in
+                            </Link>
                         </p>
                     </form>
                 </div>
 
-                <div className="w-1/2 h-screen flex items-center justify-end p-8">
-                    <img src="/Signup.png" alt="Sign up" className="w-[85%] h-full rounded-lg" />
+                {/* Right Image (Visible only on lg screens) */}
+                <div className="hidden lg:flex w-1/2 h-screen items-center justify-end p-8">
+                    <img src="/Signup.png" alt="Sign in" className="w-[85%] h-full rounded-lg" />
                 </div>
 
                 {isModalOpen && (
-                    <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
-                        <div className={`p-6 rounded-lg shadow-lg w-[40%] relative 
-                            ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+                        <div className={`p-6 rounded-lg w-[90%] md:w-[70%] lg:w-[40%] max-h-[90vh] overflow-y-auto relative
+            ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
                         >
                             <IoClose
                                 className="absolute top-4 right-4 text-2xl text-gray-600 cursor-pointer"
@@ -206,11 +182,17 @@ const Signup = () => {
                             />
                             <h2 className="text-xl font-bold mb-4">Terms & Conditions</h2>
                             <p className="text-sm text-justify">
-                                DesignDeck allows users to showcase their creative work while ensuring a respectful and professional environment. By using our platform, you agree to follow ethical guidelines, avoid posting offensive or copyrighted content, and respect others' intellectual property. Your uploaded content remains yours, but you grant DesignDeck the right to display it publicly. We prioritize user privacy and data security, ensuring that your information is handled responsibly. Any misuse of the platform, including fraud or harassment, may result in account suspension. Continued use of DesignDeck means you accept these terms, which may be updated periodically.
+                                DesignDeck allows users to showcase their creative work while ensuring a respectful and professional environment.
+                                By using our platform, you agree to follow ethical guidelines, avoid posting offensive or copyrighted content,
+                                and respect others' intellectual property. Your uploaded content remains yours, but you grant DesignDeck the right
+                                to display it publicly. We prioritize user privacy and data security, ensuring that your information is handled responsibly.
+                                Any misuse of the platform, including fraud or harassment, may result in account suspension. Continued use of DesignDeck
+                                means you accept these terms, which may be updated periodically.
                             </p>
                         </div>
                     </div>
                 )}
+
             </div>
         </>
     );
