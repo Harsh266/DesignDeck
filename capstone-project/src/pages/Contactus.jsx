@@ -28,19 +28,19 @@ const Contactus = () => {
                             <input
                                 type="text"
                                 placeholder="Your Name"
-                                className={`w-full rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 
+                                className={`w-full border rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 
                                     ${theme === "dark" ? "bg-gray-800 border-gray-600 text-white" : "bg-white border-gray-300 text-black"}`}
                             />
                             <input
                                 type="email"
                                 placeholder="Your E-Mail ID"
-                                className={`w-full rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 
+                                className={`w-full border rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 
                                     ${theme === "dark" ? "bg-gray-800 border-gray-600 text-white" : "bg-white border-gray-300 text-black"}`}
                             />
                             <textarea
                                 placeholder="Message"
                                 rows="5"
-                                className={`w-full rounded-[20px] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 
+                                className={`w-full border rounded-[20px] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 
                                     ${theme === "dark" ? "bg-gray-800 border-gray-600 text-white" : "bg-white border-gray-300 text-black"}`}
                             ></textarea>
                             <button className="w-full bg-[#376CFF] text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition ease-in-out duration-300 cursor-pointer">
