@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import { useContext, useState } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { Sun, Moon, Menu, X } from "lucide-react";
+import { CardContainer } from "../UI/3d-card";
 
 const Landingpage = () => {
     const { theme, toggleTheme } = useContext(ThemeContext);
@@ -27,12 +28,12 @@ const Landingpage = () => {
                         <div className="text-xl sm:text-2xl font-semibold">DesignDeck</div>
 
                         {/* Mobile Menu Button */}
-                        <button 
+                        <button
                             className="block md:hidden"
                             onClick={toggleMobileMenu}
                         >
-                            {mobileMenuOpen ? 
-                                <X size={24} /> : 
+                            {mobileMenuOpen ?
+                                <X size={24} /> :
                                 <Menu size={24} />
                             }
                         </button>
@@ -124,37 +125,40 @@ const Landingpage = () => {
                     id="home"
                     className={`py-24 sm:py-32 md:py-40 px-4 sm:px-6 md:px-16 flex flex-col items-center text-center transition-all duration-300 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
                 >
-                    <h1
-                        className={`text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight max-w-3xl drop-shadow-lg transition-all duration-300 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
-                    >
-                        Your Designs, Your Code, Your Platform The Ultimate Creative Hub
-                        <span className="mr-2"></span>
-                        <span className="relative inline-block group">
-                            <span
-                                className="text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-[length:200%_200%] animate-[gradientBG_3s_ease-in-out_infinite] bg-clip-text text-transparent cursor-pointer"
-                                style={{
-                                    backgroundSize: "200% 200%",
-                                    WebkitBackgroundClip: "text",
-                                    WebkitTextFillColor: "transparent",
-                                }}
-                            >
-                                DesignDeck
+                    <div className="flex flex-col items-center">
+                        <h1
+                            className={`text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight max-w-3xl drop-shadow-lg transition-all duration-300 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                        >
+                            Your Designs, Your Code, Your Platform The Ultimate Creative Hub
+                            <span className="mr-2"></span>
+                            <span className="relative inline-block group">
+                                <span
+                                    className="text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-[length:200%_200%] animate-[gradientBG_3s_ease-in-out_infinite] bg-clip-text text-transparent cursor-pointer"
+                                    style={{
+                                        backgroundSize: "200% 200%",
+                                        WebkitBackgroundClip: "text",
+                                        WebkitTextFillColor: "transparent",
+                                    }}
+                                >
+                                    DesignDeck
+                                </span>
                             </span>
-                        </span>
-                    </h1>
+                        </h1>
 
-                    <p
-                        className={`mt-4 max-w-xl px-4 transition-all duration-300 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}
-                    >
-                        Your creativity deserves the perfect stage welcome to DesignDeck.
-                    </p>
+                        <p
+                            className={`mt-4 max-w-xl px-4 transition-all duration-300 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}
+                        >
+                            Your creativity deserves the perfect stage welcome to DesignDeck.
+                        </p>
+                    </div>
+
 
                     {/* Buttons Container */}
                     <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
                         {/* Dark Mode Toggle Button */}
                         <button
                             onClick={toggleTheme}
-                            className={`mt-2 sm:mt-6 px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg font-semibold rounded-full border-5 shadow-md 
+                            className={`mt-2 transition-all duration-300 sm:mt-6 px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg font-semibold rounded-full border-5 shadow-md 
                                 ${theme === "dark" ? "bg-white border-gray-300 text-black border-opacity-40 " : "bg-black border-[#A0A0A0] border-opacity-40 text-white"} 
                                 backdrop-blur-md cursor-pointer flex flex-row items-center`}
                         >
@@ -200,11 +204,13 @@ const Landingpage = () => {
                 {/* Features Section */}
                 <div
                     id="features"
-                    className={`py-12 sm:py-16 text-center transition-all duration-300 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
+                    className={`py-12 sm:py-16 md:py-20 lg:py-24 text-center transition-all duration-300 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                        }`}
                 >
-                    <div className="max-w-4xl mx-auto px-4">
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                         <h2
-                            className={`text-2xl sm:text-3xl font-bold transition-all duration-300 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                            className={`text-2xl sm:text-3xl md:text-4xl font-bold transition-all duration-300 ${theme === "dark" ? "text-white" : "text-gray-900"
+                                }`}
                         >
                             Explore the Power of{" "}
                             <span className={`${theme === "dark" ? "text-gray-300" : "text-black"}`}>
@@ -212,95 +218,102 @@ const Landingpage = () => {
                             </span>
                         </h2>
                         <p
-                            className={`mt-2 px-4 transition-all duration-300 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
+                            className={`mt-2 sm:mt-3 md:mt-4 px-4 transition-all duration-300 ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                                }`}
                         >
-                            DesignDeck is a powerful platform to showcase your designs, upload code, share
-                            visuals, and connect with a vibrant creative community.
+                            DesignDeck is a powerful platform to showcase your designs, upload code,
+                            share visuals, and connect with a vibrant creative community.
                         </p>
                     </div>
 
                     {/* Feature Cards */}
-                    <div className="mt-8 sm:mt-12 grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto px-4 sm:px-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                         {/* Card 1 */}
-                        <div
-                            className={`rounded-xl flex flex-col gap-2 p-4 sm:p-6 transition-all border-3 border-[#FDE8CB] ${theme === "dark"
-                                ? "bg-black hover:border-[#000] hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                : "bg-white hover:border-[#fff] hover:shadow-lg"}`}
-                        >
+                        <CardContainer>
                             <div
-                                className="flex items-center justify-center rounded-[10px] w-10 h-10 sm:w-12 sm:h-12 bg-[#FDE8CB] self-start"
+                                className={`rounded-xl flex flex-col gap-3 p-6 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${theme === "dark"
+                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                    }`}
                             >
-                                <i
-                                    className="ri-gallery-line text-[22px] sm:text-[28px] text-[#ED9E29]"
-                                ></i>
+                                <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#FDE8CB] self-start">
+                                    <i className="ri-gallery-line text-[24px] sm:text-[30px] text-[#ED9E29]"></i>
+                                </div>
+                                <h3
+                                    className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${theme === "dark" ? "text-white" : "text-black"
+                                        }`}
+                                >
+                                    Image & Video Upload
+                                </h3>
+                                <p
+                                    className={`text-sm sm:text-base mt-2 sm:mt-3 text-justify transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                                        }`}
+                                >
+                                    DesignDeck empowers creators with Image & Video Upload for seamless
+                                    media sharing, portfolio building, and high-quality project
+                                    showcasing.
+                                </p>
                             </div>
-                            <h3
-                                className={`font-semibold text-base sm:text-lg mt-2 sm:mt-4 transition-all text-left ${theme === "dark" ? "text-white" : "text-black"}`}
-                            >
-                                Image & Video Upload
-                            </h3>
-                            <p
-                                className={`text-xs sm:text-sm mt-1 sm:mt-2 text-justify transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
-                            >
-                                DesignDeck empowers creators with Image & Video Upload for seamless media
-                                sharing, portfolio building, and high-quality project showcasing.
-                            </p>
-                        </div>
+                        </CardContainer>
 
                         {/* Card 2 */}
-                        <div
-                            className={`rounded-xl flex flex-col gap-2 p-4 sm:p-6 transition-all border-3 border-[#DCE6FF] ${theme === "dark"
-                                ? "bg-black hover:border-[#000] hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                : "bg-white hover:border-[#fff] hover:shadow-lg"}`}
-                        >
+                        <CardContainer>
                             <div
-                                className="flex items-center justify-center rounded-[10px] w-10 h-10 sm:w-12 sm:h-12 bg-[#DCE6FF] self-start"
+                                className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${theme === "dark"
+                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                    }`}
                             >
-                                <i
-                                    className="ri-live-line text-[22px] sm:text-[28px] text-[#9091FF]"
-                                ></i>
+                                <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#DCE6FF] self-start">
+                                    <i className="ri-live-line text-[24px] sm:text-[30px] text-[#9091FF]"></i>
+                                </div>
+                                <h3
+                                    className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${theme === "dark" ? "text-white" : "text-black"
+                                        }`}
+                                >
+                                    Live Preview
+                                </h3>
+                                <p
+                                    className={`text-sm sm:text-base mt-2 sm:mt-3 text-justify transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                                        }`}
+                                >
+                                    DesignDeck empowers creators with Live Preview for real-time coding,
+                                    instant feedback, interactive design testing, and enhanced development
+                                    efficiency.
+                                </p>
                             </div>
-                            <h3
-                                className={`font-semibold text-left text-base sm:text-lg mt-2 sm:mt-4 transition-all ${theme === "dark" ? "text-white" : "text-black"}`}
-                            >
-                                Live Preview
-                            </h3>
-                            <p
-                                className={`text-xs sm:text-sm mt-1 sm:mt-2 text-justify transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
-                            >
-                                DesignDeck empowers creators with Live Preview for real-time coding, instant
-                                feedback, interactive design testing, and enhanced development efficiency.
-                            </p>
-                        </div>
+                        </CardContainer>
 
                         {/* Card 3 */}
-                        <div
-                            className={`rounded-xl flex flex-col gap-2 p-4 sm:p-6 transition-all border-3 border-[#F4D9FF] ${theme === "dark"
-                                ? "bg-black hover:border-[#000] hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                : "bg-white hover:border-[#fff] hover:shadow-lg"}`}
-                        >
+                        <CardContainer>
                             <div
-                                className="flex items-center justify-center rounded-[10px] w-10 h-10 sm:w-12 sm:h-12 bg-[#F4D9FF] self-start"
+                                className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${theme === "dark"
+                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                    }`}
                             >
-                                <i
-                                    className="ri-bard-line text-[22px] sm:text-[28px] text-[#D87EF5]"
-                                ></i>
+                                <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#F4D9FF] self-start">
+                                    <i className="ri-bard-line text-[24px] sm:text-[30px] text-[#D87EF5]"></i>
+                                </div>
+                                <h3
+                                    className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${theme === "dark" ? "text-white" : "text-gray-900"
+                                        }`}
+                                >
+                                    Future of DesignDeck
+                                </h3>
+                                <p
+                                    className={`text-sm sm:text-base mt-2 sm:mt-3 text-justify transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                                        }`}
+                                >
+                                    Future of DesignDeck to revolutionize creative possibilities,
+                                    streamline workflows, boost collaboration, and unlock limitless
+                                    innovation for designers and developers.
+                                </p>
                             </div>
-                            <h3
-                                className={`font-semibold text-base sm:text-lg mt-2 sm:mt-4 text-left transition-all ${theme === "dark" ? "text-white" : "text-gray-900"}`}
-                            >
-                                Future of Design Deck
-                            </h3>
-                            <p
-                                className={`text-xs sm:text-sm mt-1 sm:mt-2 text-justify transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
-                            >
-                                Future of DesignDeck to revolutionize creative possibilities, streamline
-                                workflows, boost collaboration, and unlock limitless innovation for designers
-                                and developers.
-                            </p>
-                        </div>
+                        </CardContainer>
                     </div>
                 </div>
+
 
                 {/* About Us Section */}
                 <div
