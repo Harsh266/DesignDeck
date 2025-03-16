@@ -1,8 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const passport = require("passport");
 const router = express.Router();
 
 // ✅ Register Route
@@ -25,47 +24,37 @@ router.post("/register", async (req, res) => {
 });
 
 // ✅ Login Route
-router.post("/login", async (req, res) => {
-    try {
-        const { email, password } = req.body;
+router.post("/login", async (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+        console.log(err);
+        if (err) return res.status(500).json({ message: "Server error" });
+        if (!user) return res.status(400).json({ message: info.message });
 
-        const user = await User.findOne({ email });
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(400).json({ message: "Invalid email or password" });
-        }
-
-        const token = jwt.sign(
-            { userId: user._id, name: user.name, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
-        );
-
-        res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
-        res.status(200).json({ message: "Login successful", user: { name: user.name, email: user.email } });
-    } catch (error) {
-        console.error("Login Error:", error);
-        res.status(500).json({ message: "Server error" });
-    }
+        req.login(user, (err) => {
+            if (err) return res.status(500).json({ message: "Login failed" });
+            req.session.user = user; // ✅ Store user in session
+            req.session.save((err) => {
+                if (err) return res.status(500).json({ message: "Session error" });
+                res.status(200).json({ message: "Login successful", user });
+            });
+        });
+    })(req, res, next);
 });
 
 // ✅ Get Authenticated User Route
 router.get("/me", async (req, res) => {
     try {
-        if (req.session?.user) {
-            return res.json(req.session.user);
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "Unauthorized" });
         }
 
-        const token = req.cookies.token;
-        if (!token) return res.status(401).json({ message: "Unauthorized" });
+        // ✅ Fetch complete user data from MongoDB
+        const user = await User.findById(req.user.id).select("-password"); // Exclude password
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json(user);
 
-        jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-            if (err) return res.status(403).json({ message: "Invalid token" });
-
-            const user = await User.findById(decoded.userId).select("-password");
-            if (!user) return res.status(404).json({ message: "User not found" });
-
-            res.status(200).json(user);
-        });
     } catch (error) {
         console.error("User Fetch Error:", error);
         res.status(500).json({ message: "Internal server error" });

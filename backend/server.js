@@ -2,15 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("./config/passport.js");
 const MongoStore = require("connect-mongo");
-
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const passwordResetRoutes = require("./routes/passwordResetRoutes");
+const updateProfileRoutes = require("./routes/updateProfileRoutes");
 
 const app = express();
 app.use(express.json());
@@ -51,25 +52,38 @@ mongoose.connect(MONGO_URI, {
 // ✅ Session Configuration (For Google OAuth)
 app.use(
     session({
-        secret: process.env.SESSION_SECRET || "your_secret_key",
+        secret: "your-secret-key",  // Change this to a secure random string
         resave: false,
         saveUninitialized: false,
-        store: MongoStore.create({ mongoUrl: MONGO_URI, collectionName: "sessions" }),
-        cookie: { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 1000 * 60 * 60 * 24 },
+        store: MongoStore.create({
+            mongoUrl: process.env.MONGO_URI,
+            collectionName: "sessions",
+        }),
+        cookie: {
+            httpOnly: true,
+            secure: false, // Set to true if using HTTPS
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+        },
     })
 );
+app.use(express.urlencoded({ extended: true }));
+
 app.use(passport.initialize());
 app.use(passport.session());
-
 // ✅ Routes
 app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
-app.use("/auth", passwordResetRoutes); // ✅ Password Reset Routes
+app.use("/auth", passwordResetRoutes);
+app.use('/auth', updateProfileRoutes) // ✅ Password Reset Routes
 
 // ✅ Root Route
 app.get("/", (req, res) => {
     res.send("🚀 Backend is running & MongoDB connected!");
 });
+app.use("/uploads/profileImages", express.static(path.join(__dirname, "uploads/profileImages")));
+app.use("/uploads/coverImages", express.static(path.join(__dirname, "uploads/coverImages")));
+
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;

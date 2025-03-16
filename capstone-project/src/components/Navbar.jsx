@@ -20,7 +20,11 @@ const Navbar = () => {
     try {
       const res = await axios.get("http://localhost:5000/auth/me", {
         withCredentials: true, // Send cookies for authentication
+      }).catch((error) => {
+        console.log("❌ Error fetching user:", error.response?.data?.message || error.message);
+
       });
+
 
       console.log("🟢 User Data Received:");
 
@@ -174,10 +178,10 @@ const Navbar = () => {
                     {/* Social Media Links */}
                     <div className="flex flex-col mt-2 text-sm">
                       <div className="flex items-center gap-2">
-                        <i className="ri-instagram-fill text-lg"></i> @instaacc
+                        <i className="ri-dribbble-fill text-lg"></i> {user.dribbbleProfile || "@Dribbbleacc"}
                       </div>
                       <div className="flex items-center gap-2">
-                        <i className="ri-behance-fill text-lg"></i> @Behanceacc
+                        <i className="ri-behance-fill text-lg"></i> {user.dribbbleProfile || "@Behanceacc"}
                       </div>
                     </div>
                   </div>
@@ -241,19 +245,43 @@ const Navbar = () => {
 
                 {/* Social Media Links */}
                 <div className="flex gap-4 mt-2">
-                  <div
-                    className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
-                      }`}
-                  >
-                    <i className="ri-instagram-fill text-2xl"></i>
+                  {/* Instagram */}
+                  <div className="relative group">
+                    <div
+                      className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full transition-all ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
+                        }`}
+                    >
+                      <i className="ri-dribbble-fill text-2xl"></i>
+                    </div>
+                    {/* Link on hover */}
+                    <span className="absolute bottom-[-35px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all bg-black text-white text-xs py-1 px-2 rounded-md shadow-lg">
+                      {user.dribbbleProfile ? (
+                        <a href={user.dribbbleProfile} target="_blank" rel="noopener noreferrer" className="underline">
+                          {user.dribbbleProfile}
+                        </a>
+                      ) : "No link"}
+                    </span>
                   </div>
-                  <div
-                    className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
-                      }`}
-                  >
-                    <i className="ri-behance-fill text-2xl"></i>
+
+                  {/* Behance */}
+                  <div className="relative group">
+                    <div
+                      className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full transition-all ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
+                        }`}
+                    >
+                      <i className="ri-behance-fill text-2xl"></i>
+                    </div>
+                    {/* Link on hover */}
+                    <span className="absolute bottom-[-35px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all bg-black text-white text-xs py-1 px-2 rounded-md shadow-lg">
+                      {user.behanceProfile ? (
+                        <a href={user.behanceProfile} target="_blank" rel="noopener noreferrer" className="underline">
+                          {user.behanceProfile}
+                        </a>
+                      ) : "No link"}
+                    </span>
                   </div>
                 </div>
+
 
                 {/* Mobile Menu Actions */}
                 <div className="flex items-center gap-4 mt-0">

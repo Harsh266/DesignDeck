@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
-import { GoogleLogin } from "@react-oauth/google";
-import jwtDecode from "jwt-decode";
+import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet";
@@ -35,31 +34,10 @@ const SignIn = () => {
             setMessageType("error");
         }
     };
-
-    const handleGoogleSuccess = async (credentialResponse) => {
-        try {
-            const decoded = jwtDecode(credentialResponse.credential);
-            console.log("Login successfully");
-
-            await axios.post(
-                "http://localhost:5000/auth/google",
-                {
-                    name: decoded.name,
-                    email: decoded.email,
-                    profilePicture: decoded.picture,
-                    googleId: decoded.sub,
-                },
-                { withCredentials: true }
-            );
-            navigate("/dashboard");
-        } catch (error) {
-            console.error("Google Login Error:", error.response?.data || error.message);
-        }
+    const handleGoogleLogin = () => {
+        window.open("http://localhost:5000/auth/google", "_self"); // Redirect to Google login
     };
 
-    const handleGoogleError = () => {
-        console.error("Google Login Failed");
-    };
 
     return (
         <>
@@ -134,7 +112,7 @@ const SignIn = () => {
 
                         <button
                             type="submit"
-                            className={`w-full p-3 mt-4 rounded-md
+                            className={`w-full p-3 mt-4 rounded-md cursor-pointer
                             ${theme === "dark" ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-[#376CFF] text-white hover:bg-blue-700"}`}
                         >
                             Sign In
@@ -148,7 +126,7 @@ const SignIn = () => {
                         )}
 
                         {/* OR Divider */}
-                        <div className="flex items-center my-2">
+                        <div className="flex items-center my-3">
                             <hr className={`w-full ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
                             <span className={`mx-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                                 or
@@ -157,7 +135,16 @@ const SignIn = () => {
                         </div>
 
                         {/* Google Login */}
-                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
+                        <button
+                            onClick={handleGoogleLogin}
+                            className={`flex items-center justify-center gap-2 px-5 py-2.5 
+                        border rounded-md cursor-pointer transition-all 
+                        ${theme === "dark" ? "bg-black text-white border-gray-600 hover:bg-gray-800"
+                                    : "bg-white text-black border-gray-300 hover:bg-gray-100"}`}
+                        >
+                            <FcGoogle className="text-xl" />
+                            Sign in with Google
+                        </button>
 
                         <p className={`text-sm mt-4 text-center ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
                             Are you new?

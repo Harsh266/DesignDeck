@@ -23,13 +23,13 @@ const ResetPassword = () => {
             });
 
             const data = await response.json();
-            if (response.ok && data.token) {
+            if (response.ok) {
                 setMessage(
                     <span className="flex items-center gap-2 text-[#00B70F]">
                         <IoMdDoneAll className="text-2xl" /> Reset password link sent
                     </span>
                 );
-                setTimeout(() => navigate(`/changepasswordwithtoken/${data.token}`), 3000);
+                setTimeout(() => navigate(`/signin`), 3000);
             } else {
                 setMessage(
                     <span className="flex items-center gap-2 text-red-500">

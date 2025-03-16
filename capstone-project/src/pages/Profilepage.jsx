@@ -11,30 +11,39 @@ import { ThemeContext } from "../context/ThemeContext";
 
 const Profilepage = () => {
     const [user, setUser] = useState(null);
+    const [profileImage, setProfileImage] = useState(null);
+    const [coverImage, setCoverImage] = useState(null);
+    const [bio, setBio] = useState('');
+    const [dribbbleProfile, setDribbbleProfile] = useState('');
+    const [behanceProfile, setBehanceProfile] = useState('');
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const { theme } = useContext(ThemeContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const res = await axios.get("http://localhost:5000/auth/me", {
-                    withCredentials: true,
-                });
 
-                if (res.data && res.data._id) {
-                    setUser(res.data);
-                } else {
-                    navigate("/signin"); // Redirect to login if no user found
-                }
-            } catch (error) {
-                console.error("❌ Error fetching user:", error.response?.data?.message || error.message);
-                navigate("/signin"); // Redirect if not authenticated
-            }
-        };
 
         fetchUser();
     }, [navigate]);
+
+    const fetchUser = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/auth/me", {
+                withCredentials: true,
+            });
+            console.log("🟢 User Data Received:", res.data);
+
+
+            if (res.data && res.data._id) {
+                setUser(res.data);
+            } else {
+                navigate("/signin"); // Redirect to login if no user found
+            }
+        } catch (error) {
+            console.error("❌ Error fetching user:", error.response?.data?.message || error.message);
+            navigate("/signin"); // Redirect if not authenticated
+        }
+    };
 
     if (!user) {
         return <div className={`flex items-center justify-center h-screen w-screen ${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}>
@@ -43,6 +52,51 @@ const Profilepage = () => {
             </h1>
         </div>
     }
+
+    const handleprofileChange = (event) => {
+        event.preventDefault();
+        setProfileImage(event.target.files[0]);
+    };
+    const handleCoverChange = (event) => {
+        event.preventDefault();
+        setCoverImage(event.target.files[0]);
+    };
+
+    const handleUpdateProfile = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        if (profileImage) formData.append("profileImage", profileImage);
+        if (coverImage) formData.append("coverImage", coverImage);
+        formData.append("bio", bio);
+        formData.append("dribbbleProfile", dribbbleProfile);
+        formData.append("behanceProfile", behanceProfile);
+
+        try {
+            const response = await axios.post(
+                "http://localhost:5000/auth/updateprofile",
+                formData,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                alert("Profile updated successfully!"); // ✅ Show confirmation
+                setIsPopupOpen(false); // ✅ Close popup
+                fetchUser(); // ✅ Reload page to reflect changes
+            }
+
+            console.log(response.data);
+        } catch (error) {
+            console.error("Upload error:", error.response?.data || error.message);
+        }
+    };
+
+
 
     return (
         <>
@@ -56,7 +110,7 @@ const Profilepage = () => {
                     {/* Banner Section */}
                     <div className="w-full max-w-full h-40 sm:h-48 md:h-60">
                         <img
-                            src={user.bannerPicture || "/public/image.png"}
+                            src={user.bannerImage || "/public/image.png"}
                             alt="Gradient Banner"
                             className="w-full h-full object-cover"
                         />
@@ -72,8 +126,8 @@ const Profilepage = () => {
                             {/* Profile Image Container */}
                             <div className={`w-28 h-28 sm:w-40 sm:h-40 ${theme === "dark" ? "bg-black" : "bg-white"} rounded-2xl p-1 relative border-4 border-transparent`}>
                                 <img
-                                    src={user.profilePicture || (theme === "dark" 
-                                        ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg" 
+                                    src={user.profilePicture || (theme === "dark"
+                                        ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg"
                                         : "https://static.thenounproject.com/png/642902-200.png")}
                                     alt="User"
                                     className="w-full h-full object-cover rounded-2xl"
@@ -101,13 +155,39 @@ const Profilepage = () => {
 
                         {/* Social Icons */}
                         <div className="mt-4 sm:mt-0 sm:ml-auto flex gap-3 self-end sm:self-auto">
-                            <div className={`w-10 h-10 p-2 rounded-full flex items-center justify-center ${theme === "dark" ? "bg-purple-900 text-purple-400" : "bg-purple-100 text-purple-500"}`}>
-                                <i className="ri-dribbble-line text-xl"></i>
+                            {/* Instagram */}
+                            <div className="relative group">
+                                <a
+                                    href={user.dribbbleProfile || "#"}
+                                    target={user.dribbbleProfile ? "_blank" : "_self"}
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 p-2 rounded-full flex items-center justify-center transition-all cursor-pointer  hover:scale-110 active:scale-95 "
+                                    style={{
+                                        backgroundColor: theme === "dark" ? "#833AB4" : "#FEE2FE",
+                                        color: theme === "dark" ? "#FBC2EB" : "#C13584"
+                                    }}
+                                >
+                                    <i className="ri-dribbble-line text-xl"></i>
+                                </a>
                             </div>
-                            <div className={`w-10 h-10 p-2 rounded-full flex items-center justify-center ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-blue-100 text-blue-500"}`}>
-                                <i className="ri-behance-line text-xl"></i>
+
+                            {/* Behance */}
+                            <div className="relative group">
+                                <a
+                                    href={user.behanceProfile || "#"}
+                                    target={user.behanceProfile ? "_blank" : "_self"}
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 p-2 rounded-full flex items-center justify-center transition-all cursor-pointer  hover:scale-110 active:scale-95 "
+                                    style={{
+                                        backgroundColor: theme === "dark" ? "#1E40AF" : "#DBEAFE",
+                                        color: theme === "dark" ? "#93C5FD" : "#3B82F6"
+                                    }}
+                                >
+                                    <i className="ri-behance-line text-xl"></i>
+                                </a>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -179,6 +259,7 @@ const Profilepage = () => {
                                 <input
                                     type="file"
                                     accept="image/*"
+                                    onChange={handleCoverChange}
                                     className={`w-full p-2 border rounded-lg mt-2 text-sm ${theme === "dark" ? "border-gray-600 bg-black text-white" : "border-[#B7B7B7] bg-white text-black"}`}
                                 />
 
@@ -187,6 +268,7 @@ const Profilepage = () => {
                                 <input
                                     type="file"
                                     accept="image/*"
+                                    onChange={handleprofileChange}
                                     className={`w-full p-2 border rounded-lg mt-2 text-sm ${theme === "dark" ? "border-gray-600 bg-black text-white" : "border-[#B7B7B7] bg-white text-black"}`}
                                 />
 
@@ -195,15 +277,19 @@ const Profilepage = () => {
                                 <textarea
                                     className={`w-full p-2 border rounded-lg mt-2 text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Tell something about yourself"
+                                    value={bio}
+                                    onChange={(e) => setBio(e.target.value)}
                                     rows="2"
                                 ></textarea>
 
-                                {/* Instagram Link */}
-                                <label className="font-medium text-sm mt-1 block">Instagram Profile</label>
+                                {/* Dribbble Link */}
+                                <label className="font-medium text-sm mt-1 block">Dribbble Profile</label>
                                 <input
                                     type="url"
                                     className={`w-full p-2 border rounded-lg mt-2 text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Enter your Social Media link"
+                                    value={dribbbleProfile}
+                                    onChange={(e) => setDribbbleProfile(e.target.value)}
                                 />
 
                                 {/* Behance Link */}
@@ -212,11 +298,16 @@ const Profilepage = () => {
                                     type="url"
                                     className={`w-full p-2 border rounded-lg mt-2 text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Enter your Social Media link"
+                                    value={behanceProfile}
+                                    onChange={(e) => setBehanceProfile(e.target.value)}
                                 />
                             </div>
 
                             {/* Save Changes Button */}
-                            <button className={`text-md font-medium w-full py-3 mt-4 rounded-full cursor-pointer ${theme === "dark" ? "bg-blue-700 text-white hover:bg-blue-600" : "bg-[#376CFF] text-white hover:bg-[#2D5BEA]"}`}>
+                            <button className={`text-md font-medium w-full py-3 mt-4 rounded-full cursor-pointer ${theme === "dark" ? "bg-blue-700 text-white hover:bg-blue-600" : "bg-[#376CFF] text-white hover:bg-[#2D5BEA]"}`}
+                                onClick={handleUpdateProfile}
+
+                            >
                                 Save Changes
                             </button>
                         </div>

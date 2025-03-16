@@ -34,7 +34,7 @@ router.post('/resetpassword', async (req, res) => {
     // Send email
     try {
         await sendMail(email, "Password Reset", `Click the link to reset your password: ${resetUrl}`);
-        res.status(200).json({ message: "Password reset email sent", token: resetToken });
+        res.status(200).json({ message: "Password reset email sent" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error sending email" });

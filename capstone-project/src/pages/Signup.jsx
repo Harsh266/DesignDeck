@@ -1,8 +1,7 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { GoogleLogin } from "@react-oauth/google";
-import jwtDecode from "jwt-decode";
+import { FcGoogle } from "react-icons/fc";
 import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -40,25 +39,8 @@ const Signup = () => {
         }
     };
 
-    const handleGoogleSuccess = async (credentialResponse) => {
-        try {
-            const decoded = jwtDecode(credentialResponse.credential);
-
-            await axios.post(
-                "http://localhost:5000/auth/google",
-                {
-                    name: decoded.name,
-                    email: decoded.email,
-                    profilePicture: decoded.picture,
-                    googleId: decoded.sub,
-                },
-                { withCredentials: true }
-            );
-
-            navigate("/dashboard");
-        } catch (error) {
-            console.error("Google Login Error:", error.response?.data || error.message);
-        }
+    const handleGoogleLogin = () => {
+        window.open("http://localhost:5000/auth/google", "_self"); // Redirect to Google login
     };
 
     return (
@@ -151,7 +133,16 @@ const Signup = () => {
                             <hr className="w-full border-gray-300" />
                         </div>
 
-                        <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => console.error("Google Login Failed")} />
+                        <button
+                            onClick={handleGoogleLogin}
+                            className={`flex items-center justify-center gap-2 px-5 py-2.5 
+                                                border rounded-md cursor-pointer transition-all 
+                                                ${theme === "dark" ? "bg-black text-white border-gray-600 hover:bg-gray-800"
+                                    : "bg-white text-black border-gray-300 hover:bg-gray-100"}`}
+                        >
+                            <FcGoogle className="text-xl" />
+                            Sign in with Google
+                        </button>
 
                         <p className={`text-sm mt-4 text-center ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
                             Already have an account?
