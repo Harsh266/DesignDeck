@@ -1,0 +1,17 @@
+/* Override progress bar color */
+/* Gradient progress bar for both dark & light mode */
+.Toastify__progress-bar {
+  background: linear-gradient(to right, #0099FF, #00D4FF) !important; /* Gradient from light blue to cyan */
+  height: 4px !important; /* Adjust height if needed */
+  border-radius: 2px;
+}
+
+/* Center close button vertically */
+.Toastify__close-button {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  opacity: 0.8;
+}

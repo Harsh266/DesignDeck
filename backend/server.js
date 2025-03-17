@@ -12,6 +12,7 @@ const authRoutes = require("./routes/authRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const passwordResetRoutes = require("./routes/passwordResetRoutes");
 const updateProfileRoutes = require("./routes/updateProfileRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 app.use(express.json());
@@ -76,6 +77,7 @@ app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
 app.use("/auth", passwordResetRoutes);
 app.use('/auth', updateProfileRoutes) // ✅ Password Reset Routes
+app.use("/api/contact", contactRoutes);
 
 // ✅ Root Route
 app.get("/", (req, res) => {
