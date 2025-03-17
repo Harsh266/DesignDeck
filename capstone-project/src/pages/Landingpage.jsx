@@ -37,7 +37,7 @@ const Landingpage = () => {
             </button>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex space-x-4 lg:space-x-10 text-base lg:text-lg">
+            <div className="hidden md:flex space-x-2 lg:space-x-6 text-base lg:text-lg">
               <a
                 href="#home"
                 className={`cursor-pointer relative after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
@@ -87,7 +87,7 @@ const Landingpage = () => {
                   className={`px-4 lg:px-6 py-2 rounded-full border-5 shadow-md border backdrop-blur-md cursor-pointer transition-all duration-300 ${
                     theme === "dark"
                       ? "bg-purple-600 text-white border-white/50"
-                      : "bg-purple-400 text-white border-white/50"
+                      : "bg-purple-500 text-white border-white/50"
                   }`}
                 >
                   Login
@@ -159,7 +159,7 @@ const Landingpage = () => {
         {/* Home Section */}
         <div
           id="home"
-          className={`py-24 sm:py-32 md:py-40 px-4 sm:px-6 md:px-16 flex flex-col items-center text-center transition-all duration-300 ${
+          className={`py-20 sm:py-28 md:py-36 px-4 sm:px-6 md:px-16 flex flex-col items-center text-center transition-all duration-300 ${
             theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
@@ -187,7 +187,7 @@ const Landingpage = () => {
 
             <p
               className={`mt-4 max-w-xl px-4 transition-all duration-300 ${
-                theme === "dark" ? "text-gray-300" : "text-gray-600"
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
               }`}
             >
               Your creativity deserves the perfect stage welcome to DesignDeck.
@@ -195,7 +195,7 @@ const Landingpage = () => {
           </div>
 
           {/* Buttons Container */}
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2">
             {/* Dark Mode Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -228,8 +228,8 @@ const Landingpage = () => {
           </div>
 
           {/* Image Section */}
-          <div className="mt-8 sm:mt-12 flex flex-col md:flex-row gap-4 sm:gap-6 max-w-5xl">
-            <div className="w-full md:w-1/2">
+          <div className="mt-6 sm:mt-6 flex flex-col md:flex-row gap-2 sm:gap-4 max-w-5xl">
+            <div className="w-full md:w-1/2 rounded-[30px] overflow-hidden">
               <img
                 src="./public/image.jpg"
                 alt="Creative Design Showcase"
@@ -238,7 +238,7 @@ const Landingpage = () => {
                 }`}
               />
             </div>
-            <div className="w-full md:w-1/2 mt-4 md:mt-0">
+            <div className="w-full md:w-1/2 mt-4 md:mt-0 rounded-[30px] overflow-hidden">
               <img
                 src="./public/image-1.jpg"
                 alt="Growth Stats"
@@ -253,7 +253,7 @@ const Landingpage = () => {
         {/* Features Section */}
         <div
           id="features"
-          className={`py-12 sm:py-16 md:py-20 lg:py-24 text-center transition-all duration-300 ${
+          className={`py-10 sm:py-14 md:py-18 lg:py-22 text-center transition-all duration-300 ${
             theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
@@ -284,13 +284,13 @@ const Landingpage = () => {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Card 1 */}
             <CardContainer>
               <div
                 className={`rounded-xl flex flex-col gap-3 p-6 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${
                   theme === "dark"
-                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                    ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
                     : "bg-white hover:border-[#fff] hover:shadow-lg"
                 }`}
               >
@@ -321,12 +321,12 @@ const Landingpage = () => {
               <div
                 className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${
                   theme === "dark"
-                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                    ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
                     : "bg-white hover:border-[#fff] hover:shadow-lg"
                 }`}
               >
                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#DCE6FF] self-start">
-                  <i className="ri-live-line text-[24px] sm:text-[30px] text-[#9091FF]"></i>
+                  <i className="ri-live-line text-[24px] sm:text-[30px] text-[#4A4AFF]"></i>
                 </div>
                 <h3
                   className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${
@@ -352,12 +352,12 @@ const Landingpage = () => {
               <div
                 className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${
                   theme === "dark"
-                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                    ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
                     : "bg-white hover:border-[#fff] hover:shadow-lg"
                 }`}
               >
                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#F4D9FF] self-start">
-                  <i className="ri-bard-line text-[24px] sm:text-[30px] text-[#D87EF5]"></i>
+                  <i className="ri-bard-line text-[24px] sm:text-[30px] text-[#A64CA6]"></i>
                 </div>
                 <h3
                   className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${
@@ -390,11 +390,7 @@ const Landingpage = () => {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12 xl:px-6 flex flex-wrap items-center">
             {/* Image Section */}
             <div className="w-full md:w-1/2">
-              <img
-                src="/public/About.png"
-                alt="Analytics Graph"
-                className="rounded-lg"
-              />
+              <video muted autoPlay loop src="/public/graph.mp4"></video>
             </div>
 
             {/* Text Section */}
@@ -408,7 +404,7 @@ const Landingpage = () => {
               </h2>
               <p
                 className={`mt-3 sm:mt-4 text-base sm:text-lg transition-all ${
-                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  theme === "dark" ? "text-gray-300" : "text-gray-700"
                 }`}
               >
                 DesignDeck is a cutting-edge design and development showcase
@@ -419,7 +415,7 @@ const Landingpage = () => {
               </p>
 
               {/* Stats Cards */}
-              <div className="mt-4 sm:mt-6 flex flex-wrap gap-3 sm:gap-4">
+              <div className="mt-4 sm:mt-5 flex flex-wrap gap-2 sm:gap-3">
                 {/* Card 1 */}
                 <div className="border-4 rounded-xl px-4 sm:px-8 py-3 sm:py-4 text-center hover:cursor-pointer transition-all border-[#FDE8CB] hover:bg-[#FDE8CB]">
                   <span className="text-lg sm:text-xl font-semibold transition-all text-[#ED9E29]">
@@ -457,13 +453,13 @@ const Landingpage = () => {
         {/* Explore Section */}
         <section
           id="explore"
-          className={`w-full relative py-20 px-6 md:px-12 lg:px-24 transition-all duration-300 ${
+          className={`w-full relative py-14 px-4 md:px-10 lg:px-20 transition-all duration-300 ${
             theme === "dark"
               ? "bg-[#0d0d0d] text-white"
               : "bg-gray-100 text-black"
           }`}
         >
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-14">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
             {/* Left Side - Title & Description */}
             <div className="flex-1 text-center md:text-left">
               <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight">
@@ -476,7 +472,7 @@ const Landingpage = () => {
             </div>
 
             {/* Right Side - Contact Card with Aesthetic Gradient */}
-            <div className="relative w-full md:w-auto p-8 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#d946ef] shadow-xl text-center">
+            <div className="relative w-full md:w-auto p-6 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#d946ef] shadow-xl text-center">
               <h3 className="text-2xl font-semibold mb-3 text-white">
                 Contact Us
               </h3>
@@ -484,7 +480,7 @@ const Landingpage = () => {
                 We’re just a click away for your queries!
               </p>
               <Link to="/contactus">
-                <button className="bg-white text-indigo-600 text-lg font-semibold py-3 px-8 rounded-lg transition-all duration-300 hover:bg-gray-200 hover:scale-105 shadow-md">
+                <button className="bg-white text-indigo-600 text-lg font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:bg-gray-200 hover:scale-105 shadow-md">
                   Get in Touch
                 </button>
               </Link>
@@ -500,7 +496,7 @@ const Landingpage = () => {
 
         {/* Footer Section */}
         <footer
-          className={`py-4 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 transition-all ${
+          className={`py-2 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0 transition-all ${
             theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
