@@ -8,6 +8,9 @@ import { FaUserEdit } from "react-icons/fa";
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../styles/toastStyles.css";
 
 const Profilepage = () => {
     const [user, setUser] = useState(null);
@@ -21,8 +24,6 @@ const Profilepage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-
-
         fetchUser();
     }, [navigate]);
 
@@ -64,14 +65,65 @@ const Profilepage = () => {
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
-
+    
+        const isValidDribbble = (url) => 
+            /^https?:\/\/(www\.)?dribbble\.com\/[a-zA-Z0-9_-]+\/?$/.test(url);
+    
+        const isValidBehance = (url) => 
+            /^https?:\/\/(www\.)?behance\.net\/[a-zA-Z0-9_-]+\/?$/.test(url);
+    
+        const isDribbbleValid = isValidDribbble(dribbbleProfile);
+        const isBehanceValid = isValidBehance(behanceProfile);
+    
+        if (!isDribbbleValid && !isBehanceValid) {
+            toast("Both Dribbble & Behance links are not valid!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progressClassName: "Toastify__progress-bar",
+                className: "Toastify__toast",
+            });
+            return;
+        }
+    
+        if (!isDribbbleValid) {
+            toast("Dribbble link is not valid!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progressClassName: "Toastify__progress-bar",
+                className: "Toastify__toast",
+            });
+            return;
+        }
+    
+        if (!isBehanceValid) {
+            toast("Behance link is not valid!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progressClassName: "Toastify__progress-bar",
+                className: "Toastify__toast",
+            });
+            return;
+        }
+    
         const formData = new FormData();
         if (profileImage) formData.append("profileImage", profileImage);
         if (coverImage) formData.append("coverImage", coverImage);
         formData.append("bio", bio);
         formData.append("dribbbleProfile", dribbbleProfile);
         formData.append("behanceProfile", behanceProfile);
-
+    
         try {
             const response = await axios.post(
                 "http://localhost:5000/auth/updateprofile",
@@ -83,26 +135,34 @@ const Profilepage = () => {
                     },
                 }
             );
-
+    
             if (response.status === 200) {
-                alert("Profile updated successfully!"); // ✅ Show confirmation
-                setIsPopupOpen(false); // ✅ Close popup
-                fetchUser(); // ✅ Reload page to reflect changes
+                toast("Profile updated successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progressClassName: "Toastify__progress-bar",
+                    className: "Toastify__toast",
+                });
+                setIsPopupOpen(false);
+                fetchUser();
             }
-
+    
             console.log(response.data);
         } catch (error) {
             console.error("Upload error:", error.response?.data || error.message);
         }
     };
 
-
-
     return (
         <>
             <Helmet>
                 <title>DesignDeck - Profile Page {user.name}</title>
             </Helmet>
+            <ToastContainer />
             <Navbar />
             <div className="min-h-screen bg-gray-100 mt-13">
                 {/* Profile Section */}
@@ -289,9 +349,10 @@ const Profilepage = () => {
                                     className={`w-full p-2 border rounded-lg mt-2 text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Enter your Social Media link"
                                     value={dribbbleProfile}
-                                    onChange={(e) => setDribbbleProfile(e.target.value)}
+                                    onChange={(e) => {
+                                        setDribbbleProfile(e.target.value);
+                                    }}
                                 />
-
                                 {/* Behance Link */}
                                 <label className="font-medium text-sm mt-1 block">Behance Profile</label>
                                 <input
@@ -299,7 +360,9 @@ const Profilepage = () => {
                                     className={`w-full p-2 border rounded-lg mt-2 text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Enter your Social Media link"
                                     value={behanceProfile}
-                                    onChange={(e) => setBehanceProfile(e.target.value)}
+                                    onChange={(e) => {
+                                        setBehanceProfile(e.target.value);
+                                    }}
                                 />
                             </div>
 
