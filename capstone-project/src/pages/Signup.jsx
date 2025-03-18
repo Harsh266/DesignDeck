@@ -6,21 +6,54 @@ import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { ThemeContext } from "../context/ThemeContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [message, setMessage] = useState("");
-    const [messageType, setMessageType] = useState("");
+    const [termsAccepted, setTermsAccepted] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const { theme } = useContext(ThemeContext);
 
+    const getCustomToastStyle = (theme) => ({
+        borderRadius: "5px", // Less rounded
+        padding: "18px 25px",
+        fontSize: "14px",
+        fontWeight: "500",
+        textAlign: "left", // Align text properly
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between", // Ensures proper spacing
+        gap: "10px", // Adds space between text and close icon
+        boxShadow: theme === "dark"
+            ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
+            : "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        background: theme === "dark" ? "#181818" : "#fff",
+        color: theme === "dark" ? "#fff" : "#333",
+        border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
+        width: "320px", // Fixed width for consistency
+    });
+
     const handleRegister = async (e) => {
         e.preventDefault();
-        setMessage("");
+
+        if (!termsAccepted) {
+            toast("You must accept the terms and conditions to proceed", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+            return;
+        }
 
         try {
             const response = await axios.post(
@@ -29,13 +62,29 @@ const Signup = () => {
                 { withCredentials: true }
             );
 
-            setMessage(response.data.message);
-            setMessageType("success");
-
-            setTimeout(() => navigate("/signin"), 2000);
+            toast(response.data.message || "User registered successfully", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+            setTimeout(() => navigate("/signin"), 3000);
         } catch (error) {
-            setMessage(error.response?.data?.message || "Registration failed. Please try again.");
-            setMessageType("error");
+            const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
+            toast(errorMessage, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
         }
     };
 
@@ -48,6 +97,10 @@ const Signup = () => {
             <Helmet>
                 <title>DesignDeck - Signup Page</title>
             </Helmet>
+
+            <ToastContainer
+                toastClassName={() => "custom-toast"}
+            />
 
             <div className={`flex flex-col lg:flex-row items-center justify-between min-h-screen p-6 h-screen transition-colors
                 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
@@ -106,7 +159,8 @@ const Signup = () => {
                                 type="checkbox"
                                 id="terms"
                                 className={`mr-2 accent-blue-500 ${theme === "dark" ? "bg-gray-800 border-gray-600" : "bg-white border-gray-300"}`}
-                                required
+                                checked={termsAccepted}
+                                onChange={(e) => setTermsAccepted(e.target.checked)}
                             />
                             <label htmlFor="terms" className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                 I agree to the{" "}
@@ -121,12 +175,6 @@ const Signup = () => {
                             Sign Up
                         </button>
 
-                        {message && (
-                            <p className={`mt-3 text-sm ${messageType === "success" ? "text-green-400" : "text-red-500"}`}>
-                                {message}
-                            </p>
-                        )}
-
                         <div className="flex items-center my-2">
                             <hr className="w-full border-gray-300" />
                             <span className="mx-2 text-gray-500">or</span>
@@ -134,10 +182,11 @@ const Signup = () => {
                         </div>
 
                         <button
+                            type="button"
                             onClick={handleGoogleLogin}
                             className={`flex items-center justify-center gap-2 px-5 py-2.5 
-                                                border rounded-md cursor-pointer transition-all 
-                                                ${theme === "dark" ? "bg-black text-white border-gray-600 hover:bg-gray-800"
+                                border rounded-md cursor-pointer transition-all 
+                                ${theme === "dark" ? "bg-black text-white border-gray-600 hover:bg-gray-800"
                                     : "bg-white text-black border-gray-300 hover:bg-gray-100"}`}
                         >
                             <FcGoogle className="text-xl" />
