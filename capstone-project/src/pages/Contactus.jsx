@@ -73,6 +73,7 @@ const Contactus = () => {
                     draggable: true,
                     style: getCustomToastStyle(theme),
                     progressStyle, // Light Blue Progress Bar
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
                 setFormData({ name: "", email: "", message: "" });
             } else {
@@ -85,6 +86,7 @@ const Contactus = () => {
                     draggable: true,
                     style: getCustomToastStyle(theme),
                     progressStyle, // Light Blue Progress Bar
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
             }
         } catch (error) {
@@ -97,6 +99,7 @@ const Contactus = () => {
                 draggable: true,
                 style: getCustomToastStyle(theme),
                 progressStyle, // Light Blue Progress Bar
+                className: theme === "dark" ? "dark-theme" : "light-theme",
             });
         }
         setLoading(false);
