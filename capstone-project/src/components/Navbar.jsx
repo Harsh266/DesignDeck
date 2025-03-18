@@ -178,12 +178,19 @@ const Navbar = () => {
                     {/* Social Media Links */}
                     <div className="flex flex-col mt-2 text-sm">
                       <div className="flex items-center gap-2">
-                        <i className="ri-dribbble-fill text-lg"></i> {user.dribbbleProfile || "@Dribbbleacc"}
+                        <i className="ri-dribbble-line text-lg"></i>
+                        <span className="break-words whitespace-normal max-w-[200px]">
+                          {user.dribbbleProfile || "@Dribbbleacc"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <i className="ri-behance-fill text-lg"></i> {user.behanceProfile || "@Behanceacc"}
+                        <i className="ri-behance-fill text-lg"></i>
+                        <span className="break-words whitespace-normal max-w-[200px]">
+                          {user.behanceProfile || "@Behanceacc"}
+                        </span>
                       </div>
                     </div>
+
                   </div>
                 </div>
 
