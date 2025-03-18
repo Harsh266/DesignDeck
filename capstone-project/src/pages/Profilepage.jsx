@@ -23,6 +23,25 @@ const Profilepage = () => {
     const { theme } = useContext(ThemeContext);
     const navigate = useNavigate();
 
+    const getCustomToastStyle = (theme) => ({
+        borderRadius: "5px",
+        padding: "16px",
+        fontSize: "16px",
+        fontWeight: "500",
+        textAlign: "left",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "10px",
+        boxShadow: theme === "dark"
+            ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
+            : "0px 4px 10px rgba(0, 0, 0, 0.15)",
+        background: theme === "dark" ? "#181818" : "#ffffff",
+        color: theme === "dark" ? "#ffffff" : "#333333",
+        border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
+        width: "400px"
+    });
+    
     useEffect(() => {
         fetchUser();
     }, [navigate]);
@@ -84,7 +103,9 @@ const Profilepage = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progressClassName: "Toastify__progress-bar",
-                className: "Toastify__toast",
+                className: "custom-toast",
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
             });
             return;
         }
@@ -98,7 +119,9 @@ const Profilepage = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progressClassName: "Toastify__progress-bar",
-                className: "Toastify__toast",
+                className: "custom-toast",
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
             });
             return;
         }
@@ -112,7 +135,9 @@ const Profilepage = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progressClassName: "Toastify__progress-bar",
-                className: "Toastify__toast",
+                className: "custom-toast",
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
             });
             return;
         }
@@ -137,7 +162,7 @@ const Profilepage = () => {
             );
     
             if (response.status === 200) {
-                toast("Profile updated successfully!", {
+                toast.success("✅ Profile updated successfully!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -145,7 +170,9 @@ const Profilepage = () => {
                     pauseOnHover: true,
                     draggable: true,
                     progressClassName: "Toastify__progress-bar",
-                    className: "Toastify__toast",
+                    className: "custom-toast",
+                    style: getCustomToastStyle(theme),
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
                 setIsPopupOpen(false);
                 fetchUser();
@@ -156,6 +183,7 @@ const Profilepage = () => {
             console.error("Upload error:", error.response?.data || error.message);
         }
     };
+    
 
     return (
         <>
