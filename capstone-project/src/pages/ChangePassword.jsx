@@ -4,14 +4,35 @@ import { IoMdDoneAll } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 import { ThemeContext } from "../context/ThemeContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ChangePassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { theme } = useContext(ThemeContext);
+
+  const getCustomToastStyle = (theme) => ({
+    borderRadius: "5px", // Less rounded
+    padding: "18px 25px",
+    fontSize: "14px",
+    fontWeight: "500",
+    textAlign: "left", // Align text properly
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between", // Ensures proper spacing
+    gap: "10px", // Adds space between text and close icon
+    boxShadow: theme === "dark"
+        ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
+        : "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    background: theme === "dark" ? "#181818" : "#fff",
+    color: theme === "dark" ? "#fff" : "#333",
+    border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
+    width: "320px", // Fixed width for consistency
+});
 
   useEffect(() => {
     console.log("Extracted token from URL:");
@@ -21,44 +42,82 @@ const ChangePassword = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setMessage(
-        <span className="flex items-center gap-2 text-red-500">
-          <IoClose className="text-2xl" /> Passwords do not match!
-        </span>
-      );
+      toast(
+        "Password do not match"
+        , {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+        }
+    );
       return;
     }
 
-    setMessage(
-      <span className="flex items-center gap-2 text-blue-500">
-        Processing request...
-      </span>
-    );
+    setIsProcessing(true);
 
-    const response = await fetch("http://localhost:5000/auth/changepasswordwithtoken", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ password, token }),
-    });
+    try {
+      const response = await fetch("http://localhost:5000/auth/changepasswordwithtoken", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password, token }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      setMessage(
-        <span className="flex items-center gap-2 text-[#00B70F]">
-          <IoMdDoneAll className="text-2xl" /> Password Reset Successfully
-        </span>
-      );
-      setTimeout(() => navigate("/signin"), 3000);
+      if (response.ok) {
+        toast(
+            "Your password has been reset successfully. Please log in with your new password.",
+            {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            }
+        );
+        setTimeout(() => navigate(`/signin`), 5000);
     } else {
-      setMessage(
-        <span className="flex items-center gap-2 text-red-500">
-          <IoClose className="text-2xl" /> {data.message || "Something went wrong"}
-        </span>
-      );
-    }
+        toast(
+            data.message || "Something went wrong",
+            {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            }
+        );
+    }            
+} catch (error) {
+    toast(
+        "Failed to send request. Please try again"
+        , {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+        }
+    );
+} finally {
+    setIsProcessing(false);
+}
   };
 
   return (
@@ -66,7 +125,9 @@ const ChangePassword = () => {
       <Helmet>
         <title>DesignDeck - Change Password</title>
       </Helmet>
-
+      <ToastContainer
+        toastClassName={() => "custom-toast"}
+      />
       <div
         className={`flex flex-col lg:flex-row items-center justify-center min-h-screen h-screen overflow-hidden p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
@@ -87,8 +148,8 @@ const ChangePassword = () => {
             <div className="flex justify-center mb-4">
               <div
                 className={`h-12 w-12 flex items-center justify-center rounded-[12px] border ${theme === "dark"
-                  ? "bg-gray-700 border-gray-600"
-                  : "bg-white border-[#D9D9D9]"
+                    ? "bg-gray-700 border-gray-600"
+                    : "bg-white border-[#D9D9D9]"
                   }`}
               >
                 <i className={`ri-lock-password-line text-2xl ${theme === "dark" ? "text-gray-300" : "text-black"}`}></i>
@@ -111,8 +172,8 @@ const ChangePassword = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`border p-3 rounded w-full mt-1 focus:outline-none focus:ring-2 ${theme === "dark"
-                    ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
-                    : "border-gray-300 bg-white text-black focus:ring-blue-500"
+                      ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
+                      : "border-gray-300 bg-white text-black focus:ring-blue-500"
                     }`}
                   required
                   minLength={8}
@@ -126,8 +187,8 @@ const ChangePassword = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className={`border p-3 rounded w-full mt-1 focus:outline-none focus:ring-2 ${theme === "dark"
-                    ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
-                    : "border-gray-300 bg-white text-black focus:ring-blue-500"
+                      ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
+                      : "border-gray-300 bg-white text-black focus:ring-blue-500"
                     }`}
                   required
                   minLength={8}
@@ -135,15 +196,13 @@ const ChangePassword = () => {
               </div>
               <button
                 type="submit"
+                disabled={isProcessing}
                 className={`p-3 rounded w-full cursor-pointer ${theme === "dark" ? "bg-blue-500 text-white" : "bg-[#376CFF] text-white"
-                  }`}
+                  } ${isProcessing ? "opacity-70" : ""}`}
               >
-                Reset Password
+                {isProcessing ? "Processing..." : "Reset Password"}
               </button>
             </form>
-
-            {/* Success/Error Message */}
-            {message && <p className="mt-4 text-center flex justify-center items-center">{message}</p>}
 
             {/* Back to login */}
             <a href="/signin" className={`mt-4 flex items-center justify-center ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
