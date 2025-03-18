@@ -91,43 +91,11 @@ const Profilepage = () => {
         const isValidBehance = (url) => 
             /^https?:\/\/(www\.)?behance\.net\/[a-zA-Z0-9_-]+\/?$/.test(url);
     
-        const isDribbbleValid = isValidDribbble(dribbbleProfile);
-        const isBehanceValid = isValidBehance(behanceProfile);
+        const isDribbbleValid = !dribbbleProfile || isValidDribbble(dribbbleProfile);
+        const isBehanceValid = !behanceProfile || isValidBehance(behanceProfile);
     
-        if (!isDribbbleValid && !isBehanceValid) {
-            toast("Both Dribbble & Behance links are not valid!", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progressClassName: "Toastify__progress-bar",
-                className: "custom-toast",
-                style: getCustomToastStyle(theme),
-                className: theme === "dark" ? "dark-theme" : "light-theme",
-            });
-            return;
-        }
-    
-        if (!isDribbbleValid) {
-            toast("Dribbble link is not valid!", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progressClassName: "Toastify__progress-bar",
-                className: "custom-toast",
-                style: getCustomToastStyle(theme),
-                className: theme === "dark" ? "dark-theme" : "light-theme",
-            });
-            return;
-        }
-    
-        if (!isBehanceValid) {
-            toast("Behance link is not valid!", {
+        if (!isDribbbleValid || !isBehanceValid) {
+            toast("Please enter valid Dribbble and Behance links!", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -146,8 +114,8 @@ const Profilepage = () => {
         if (profileImage) formData.append("profileImage", profileImage);
         if (coverImage) formData.append("coverImage", coverImage);
         formData.append("bio", bio);
-        formData.append("dribbbleProfile", dribbbleProfile);
-        formData.append("behanceProfile", behanceProfile);
+        if (dribbbleProfile) formData.append("dribbbleProfile", dribbbleProfile);
+        if (behanceProfile) formData.append("behanceProfile", behanceProfile);
     
         try {
             const response = await axios.post(
@@ -162,7 +130,7 @@ const Profilepage = () => {
             );
     
             if (response.status === 200) {
-                toast.success("✅ Profile updated successfully!", {
+                toast("Profile updated successfully!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -183,6 +151,7 @@ const Profilepage = () => {
             console.error("Upload error:", error.response?.data || error.message);
         }
     };
+    
     
 
     return (
