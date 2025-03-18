@@ -181,7 +181,7 @@ const Navbar = () => {
                         <i className="ri-dribbble-fill text-lg"></i> {user.dribbbleProfile || "@Dribbbleacc"}
                       </div>
                       <div className="flex items-center gap-2">
-                        <i className="ri-behance-fill text-lg"></i> {user.dribbbleProfile || "@Behanceacc"}
+                        <i className="ri-behance-fill text-lg"></i> {user.behanceProfile || "@Behanceacc"}
                       </div>
                     </div>
                   </div>

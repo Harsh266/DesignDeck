@@ -288,7 +288,7 @@ const Landingpage = () => {
             {/* Card 1 */}
             <CardContainer>
               <div
-                className={`rounded-xl flex flex-col gap-3 p-6 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${
+                className={`rounded-xl h-[300px] w-[350px] flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${
                   theme === "dark"
                     ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
                     : "bg-white hover:border-[#fff] hover:shadow-lg"
@@ -319,7 +319,7 @@ const Landingpage = () => {
             {/* Card 2 */}
             <CardContainer>
               <div
-                className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${
+                className={`rounded-xl h-[300px] w-[350px] flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${
                   theme === "dark"
                     ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
                     : "bg-white hover:border-[#fff] hover:shadow-lg"
@@ -350,7 +350,7 @@ const Landingpage = () => {
             {/* Card 3 */}
             <CardContainer>
               <div
-                className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${
+                className={`rounded-xl h-[300px] w-[350px] flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${
                   theme === "dark"
                     ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
                     : "bg-white hover:border-[#fff] hover:shadow-lg"
@@ -453,10 +453,10 @@ const Landingpage = () => {
         {/* Explore Section */}
         <section
           id="explore"
-          className={`w-full relative py-14 px-4 md:px-10 lg:px-20 transition-all duration-300 ${
+          className={`w-full relative py-14 px-4 md:px-20 lg:px-20 transition-all duration-300 ${
             theme === "dark"
-              ? "bg-[#0d0d0d] text-white"
-              : "bg-gray-100 text-black"
+              ? "bg-black text-white"
+              : "bg-white text-black"
           }`}
         >
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
@@ -480,7 +480,7 @@ const Landingpage = () => {
                 We’re just a click away for your queries!
               </p>
               <Link to="/contactus">
-                <button className="bg-white text-indigo-600 text-lg font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:bg-gray-200 hover:scale-105 shadow-md">
+                <button className="bg-white text-indigo-600 text-lg font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:bg-gray-200 hover:scale-105 shadow-md cursor-pointer">
                   Get in Touch
                 </button>
               </Link>
