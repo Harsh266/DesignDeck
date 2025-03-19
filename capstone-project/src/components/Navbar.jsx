@@ -18,7 +18,7 @@ const Navbar = () => {
   const fetchUser = async () => {
     console.log("🟡 Fetching user data...");
     try {
-      const res = await axios.get("https://designdeck-backend.onrender.com//auth/me", {
+      const res = await axios.get("https://designdeck-backend.onrender.com/auth/me", {
         withCredentials: true, // Send cookies for authentication
       }).catch((error) => {
         console.log("❌ Error fetching user:", error.response?.data?.message || error.message);
