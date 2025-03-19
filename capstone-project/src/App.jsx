@@ -21,27 +21,27 @@ import "./index.css";
 import axios from "axios";
 
 function App() {
-
   return (
-    <GoogleOAuthProvider clientId="924609528520-c0ge88n8hh7lsgaqei01ro17d75jqk19.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <HelmetProvider>
         <ThemeProvider>
           <Router>
             <Routes>
-              <Route path="*" element={<Landingpage />} />
+              <Route path="/" element={<Landingpage />} />
               <Route path="/signin" element={<Signin />} />
-              <Route path="/profilepage" element={<Profilepage />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profilepage" element={<Profilepage />} />
               <Route path="/contactus" element={<Contactus />} />
               <Route path="/logout" element={<Landingpage />} />
               <Route path="/view" element={<Projectview />} />
               <Route path="/upload" element={<Uploadprojectpage />} />
               <Route path="/otheruser" element={<Profilepageothers />} />
               <Route path="/resetpassword" element={<ResetPassword />} />
-              <Route path="/changepasswordwithtoken/:token" element={<ChangePassword />} /> {/* Updated path */}
+              <Route path="/changepasswordwithtoken/:token" element={<ChangePassword />} />
               <Route path="/user-notifications" element={<UserNotifications />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="*" element={<Landingpage />} />
             </Routes>
           </Router>
         </ThemeProvider>
@@ -49,5 +49,6 @@ function App() {
     </GoogleOAuthProvider>
   );
 }
+
 
 export default App;
