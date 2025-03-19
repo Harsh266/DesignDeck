@@ -12,6 +12,8 @@ import Projectview from "./pages/Projectview";
 import Uploadprojectpage from "./pages/Uploadprojectpage";
 import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";// Updated import
+import UserNotifications from "./pages/UserNotifications";
+import AdminDashboard from "./pages/AdminDashboard";
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./App.css";
@@ -19,13 +21,6 @@ import "./index.css";
 import axios from "axios";
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    axios.get("http://localhost:5000")
-      .then((res) => setMessage(res.data))
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <GoogleOAuthProvider clientId="924609528520-c0ge88n8hh7lsgaqei01ro17d75jqk19.apps.googleusercontent.com">
@@ -45,6 +40,8 @@ function App() {
               <Route path="/otheruser" element={<Profilepageothers />} />
               <Route path="/resetpassword" element={<ResetPassword />} />
               <Route path="/changepasswordwithtoken/:token" element={<ChangePassword />} /> {/* Updated path */}
+              <Route path="/user-notifications" element={<UserNotifications />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
             </Routes>
           </Router>
         </ThemeProvider>

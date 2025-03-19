@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const passport = require("passport");
 const router = express.Router();
+const adminAuth = require("../middleware/adminAuth"); // Import adminAuth middleware
 
 // ✅ Register Route
 router.post("/register", async (req, res) => {
@@ -59,6 +60,10 @@ router.get("/me", async (req, res) => {
         console.error("User Fetch Error:", error);
         res.status(500).json({ message: "Internal server error" });
     }
+});
+
+router.get("/admin-dashboard", adminAuth, (req, res) => {
+    res.status(200).json({ message: "Welcome Admin!", isAdmin: true });
 });
 
 // ✅ Logout Route

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -15,24 +15,34 @@ const SignIn = () => {
     const navigate = useNavigate();
     const { theme } = useContext(ThemeContext);
 
-    // Custom toast styles
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            if (user.email === "harshvekriya441@gmail.com") {
+                navigate("/admin-notifications");
+            } else {
+                navigate("/signin");
+            }
+        }
+    }, [navigate]);
+
     const getCustomToastStyle = (theme) => ({
-        borderRadius: "5px", // Less rounded
+        borderRadius: "5px",
         padding: "18px 25px",
         fontSize: "14px",
         fontWeight: "500",
-        textAlign: "left", // Align text properly
+        textAlign: "left",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between", // Ensures proper spacing
-        gap: "10px", // Adds space between text and close icon
+        justifyContent: "space-between",
+        gap: "10px",
         boxShadow: theme === "dark"
             ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
             : "0px 4px 10px rgba(0, 0, 0, 0.1)",
         background: theme === "dark" ? "#181818" : "#fff",
         color: theme === "dark" ? "#fff" : "#333",
         border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
-        width: "320px", // Fixed width for consistency
+        width: "320px",
     });
 
     const handleLogin = async (e) => {
@@ -43,7 +53,10 @@ const SignIn = () => {
                 { email, password },
                 { withCredentials: true }
             );
-            toast("Login successfully!", {
+
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+
+            toast("Login successful!", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -53,7 +66,14 @@ const SignIn = () => {
                 style: getCustomToastStyle(theme),
                 className: theme === "dark" ? "dark-theme" : "light-theme",
             });
-            setTimeout(() => navigate("/dashboard"), 3000);
+
+            setTimeout(() => {
+                if (res.data.user.email === "harshvekariya441@gmail.com") {
+                    navigate("/admin-notifications");
+                } else {
+                    navigate("/dashboard");
+                }
+            }, 3000);
         } catch (error) {
             toast("Incorrect email or password!", {
                 position: "top-right",

@@ -7,14 +7,24 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("./config/passport.js");
 const MongoStore = require("connect-mongo");
+const http = require("http");
+const { Server } = require("socket.io");
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
 const passwordResetRoutes = require("./routes/passwordResetRoutes");
 const updateProfileRoutes = require("./routes/updateProfileRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+    },
+});
 app.use(express.json());
 app.use(cookieParser());
 
@@ -31,7 +41,18 @@ app.use(
         credentials: true,
     })
 );
+app.use((req, res, next) => {
+    req.io = io; // Attach Socket.io to request
+    next();
+});
 
+io.on("connection", (socket) => {
+    console.log("New client connected", socket.id);
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected", socket.id);
+    });
+});
 
 // ✅ MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -78,6 +99,7 @@ app.use("/auth", googleAuthRoutes);
 app.use("/auth", passwordResetRoutes);
 app.use('/auth', updateProfileRoutes) // ✅ Password Reset Routes
 app.use("/api/contact", contactRoutes);
+app.use("/notifications", notificationRoutes);
 
 // ✅ Root Route
 app.get("/", (req, res) => {

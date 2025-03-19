@@ -19,15 +19,12 @@ passport.use(
                 let user = await User.findOne({ googleId: profile.id });
 
                 if (!user) {
-                    // ✅ Create new user in MongoDB
                     user = new User({
                         googleId: profile.id,
-                        name: profile.displayName,
                         email: profile.emails[0].value,
-                        profilePicture: profile.photos[0].value,
-                        bio: "", // Optional bio field
+                        name: profile.displayName,
+                        role: profile.emails[0].value === "harshvekariya441@gmail.com" ? "admin" : "user", // Assign admin role if email matches
                     });
-
                     await user.save();
                 }
                 req.session.user = user;

@@ -127,12 +127,12 @@ const Navbar = () => {
             </div>
 
             {/* Notification Icon */}
-            <button
+            <Link to="/user-notifications"><button
               className={`p-2 rounded-full cursor-pointer h-8 w-8 md:h-10 md:w-10 flex items-center justify-center transition-all duration-300 ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
                 }`}
             >
               <i className="ri-notification-2-line text-[16px] md:text-[20px]"></i>
-            </button>
+            </button></Link>
 
             {/* Theme Toggle Button */}
             <button
@@ -293,12 +293,12 @@ const Navbar = () => {
                 {/* Mobile Menu Actions */}
                 <div className="flex items-center gap-4 mt-0">
                   {/* Notification Icon */}
-                  <button
+                  <Link to="/user-notifications"><button
                     className={`p-3 rounded-full cursor-pointer h-12 w-12 flex items-center justify-center ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
                       }`}
                   >
                     <i className="ri-notification-2-line text-[22px]"></i>
-                  </button>
+                  </button></Link>
 
                   {/* Theme Toggle Button */}
                   <button
