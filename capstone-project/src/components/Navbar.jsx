@@ -66,7 +66,7 @@ const Navbar = () => {
     console.log("🟡 Logging out...");
 
     try {
-      await axios.post("https://designdeck-backend.onrender.com//auth/logout", {}, { withCredentials: true });
+      await axios.post("https://designdeck-backend.onrender.com/auth/logout", {}, { withCredentials: true });
       console.log("🟢 Logout successful");
 
       setUser(null);
