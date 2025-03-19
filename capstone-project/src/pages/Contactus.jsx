@@ -77,7 +77,7 @@ const Contactus = () => {
                 });
                 setFormData({ name: "", email: "", message: "" });
             } else {
-                toast.error(data.message || "Failed to send message!", {
+                toast(data.message || "Failed to send message!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -90,7 +90,7 @@ const Contactus = () => {
                 });
             }
         } catch (error) {
-            toast.error("Something went wrong! Try again.", {
+            toast("Something went wrong! Try again.", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,

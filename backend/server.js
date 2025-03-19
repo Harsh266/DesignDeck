@@ -29,18 +29,26 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ CORS Configuration
+import cors from "cors";
+
+const allowedOrigins = [
+    "http://localhost:3000",  // ✅ Local Development
+    "https://designdeck-frontend.onrender.com/" // ✅ Deployed Frontend
+];
+
 app.use(
     cors({
         origin: (origin, callback) => {
-            if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
-                callback(null, true); // ✅ Allow any localhost port
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true); // ✅ Allow request
             } else {
                 callback(new Error("Not allowed by CORS"));
             }
         },
-        credentials: true,
+        credentials: true, // ✅ Required if using cookies
     })
 );
+
 app.use((req, res, next) => {
     req.io = io; // Attach Socket.io to request
     next();
