@@ -33,7 +33,7 @@ import cors from "cors";
 
 const allowedOrigins = [
     "http://localhost:3000",  // ✅ Local Development
-    "https://designdeck-frontend.onrender.com/" // ✅ Deployed Frontend
+    "https://designdeck-frontend.onrender.com" // ✅ Corrected (Removed Trailing Slash)
 ];
 
 app.use(
@@ -48,6 +48,7 @@ app.use(
         credentials: true, // ✅ Required if using cookies
     })
 );
+
 
 app.use((req, res, next) => {
     req.io = io; // Attach Socket.io to request
