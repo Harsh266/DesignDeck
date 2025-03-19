@@ -390,7 +390,7 @@ const Landingpage = () => {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12 xl:px-6 flex flex-wrap items-center">
             {/* Image Section */}
             <div className="w-full md:w-1/2">
-              <video muted autoPlay loop src="/public/graph.mp4"></video>
+              <video muted autoPlay loop src="/public/graph.mp4" className="rounded-lg"></video>
             </div>
 
             {/* Text Section */}

@@ -2,6 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Helmet } from "react-helmet";
 import { ThemeContext } from "../context/ThemeContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UploadProjectPage = () => {
     const { theme } = useContext(ThemeContext);
@@ -15,7 +17,26 @@ const UploadProjectPage = () => {
     const [description, setDescription] = useState("");
     const [globalTitle, setGlobalTitle] = useState("");
     const [globalDescription, setGlobalDescription] = useState("");
-    const [message, setMessage] = useState(null);
+
+    // Custom toast styles
+    const getCustomToastStyle = (theme) => ({
+        borderRadius: "5px", // Less rounded
+        padding: "18px 25px",
+        fontSize: "14px",
+        fontWeight: "500",
+        textAlign: "left", // Align text properly
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between", // Ensures proper spacing
+        gap: "10px", // Adds space between text and close icon
+        boxShadow: theme === "dark"
+            ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
+            : "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        background: theme === "dark" ? "#181818" : "#fff",
+        color: theme === "dark" ? "#fff" : "#333",
+        border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
+        width: "320px", // Fixed width for consistency
+    });
 
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
@@ -29,12 +50,30 @@ const UploadProjectPage = () => {
 
     const handleUploadFiles = () => {
         if (tempFiles.length === 0) {
-            setMessage({ text: "Please select files before uploading.", type: "error" });
+            toast("Please select files before uploading.", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
             return;
         }
 
         if (!title || !description) {
-            setMessage({ text: "Please enter a title and description.", type: "error" });
+            toast("Please enter a title and description.",{
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
             return;
         }
 
@@ -42,7 +81,16 @@ const UploadProjectPage = () => {
             setGlobalTitle(title);
             setGlobalDescription(description);
         } else if (globalTitle !== title || globalDescription !== description) {
-            setMessage({ text: "Title and description must be the same for all uploads.", type: "error" });
+            toast("Title and description must be the same for all uploads.",{
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
             return;
         }
 
@@ -54,7 +102,16 @@ const UploadProjectPage = () => {
             setCodeFiles(prev => [...prev, ...tempFiles]);
         }
 
-        setMessage({ text: "Files uploaded successfully!", type: "success" });
+        toast("Files uploaded successfully!",{
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+        });
 
         setTempFiles([]);
         setTitle("");
@@ -76,14 +133,6 @@ const UploadProjectPage = () => {
         }
     };
 
-    // Auto-hide message after 3 seconds
-    useEffect(() => {
-        if (message) {
-            const timer = setTimeout(() => setMessage(null), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [message]);
-
     const handleUpload = () => {
         // Clear files and project details after upload
         setImageFiles([]);
@@ -92,6 +141,7 @@ const UploadProjectPage = () => {
         setGlobalTitle("");
         setGlobalDescription("");
         setPopup(null);
+        toast.success("Project successfully uploaded!");
     };
 
     const handleCancel = () => {
@@ -102,15 +152,15 @@ const UploadProjectPage = () => {
         setGlobalTitle("");
         setGlobalDescription("");
         setPopup(null);
+        toast.info("Upload canceled");
     };
-
     return (
         <>
             <Helmet>
                 <title>DesignDeck - Upload Page</title>
             </Helmet>
             <Navbar />
-
+            <ToastContainer toastClassName={() => "custom-toast"} />
             <div className={`${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} min-h-screen flex flex-col px-4 sm:px-6 md:px-10 lg:px-20 w-full pt-10 sm:pt-16 md:pt-20`}>
 
                 {/* Upload Section */}
@@ -155,14 +205,8 @@ const UploadProjectPage = () => {
                         </div>
                     </div>
                 </div>
+
                 {/* Upload Options */}
-
-                {message && (
-                    <div className={`fixed top-4 right-4 px-4 py-2 rounded-lg text-white text-xs sm:text-sm font-medium shadow-lg z-50 ${message.type === "error" ? "bg-red-500" : "bg-green-500"}`}>
-                        {message.text}
-                    </div>
-                )}
-
                 {popupType === "image" && (
                     <ImagePopup
                         setPopup={setPopupType}
