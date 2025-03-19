@@ -134,6 +134,16 @@ const UploadProjectPage = () => {
     };
 
     const handleUpload = () => {
+        toast("Project successfully uploaded!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+        });
         // Clear files and project details after upload
         setImageFiles([]);
         setVideoFiles([]);
@@ -141,10 +151,19 @@ const UploadProjectPage = () => {
         setGlobalTitle("");
         setGlobalDescription("");
         setPopup(null);
-        toast.success("Project successfully uploaded!");
     };
 
     const handleCancel = () => {
+        toast("Upload canceled", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+        });
         // Clear files and project details when canceling
         setImageFiles([]);
         setVideoFiles([]);
@@ -152,7 +171,6 @@ const UploadProjectPage = () => {
         setGlobalTitle("");
         setGlobalDescription("");
         setPopup(null);
-        toast.info("Upload canceled");
     };
     return (
         <>
