@@ -103,7 +103,7 @@ const Profilepage = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progressClassName: "Toastify__progress-bar",
-                className: "custom-toast",
+                className: theme === "dark" ? "dark-theme" : "light-theme",
                 style: getCustomToastStyle(theme),
                 className: theme === "dark" ? "dark-theme" : "light-theme",
             });
@@ -138,7 +138,7 @@ const Profilepage = () => {
                     pauseOnHover: true,
                     draggable: true,
                     progressClassName: "Toastify__progress-bar",
-                    className: "custom-toast",
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
                     style: getCustomToastStyle(theme),
                     className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
