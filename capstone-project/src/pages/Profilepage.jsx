@@ -105,7 +105,6 @@ const Profilepage = () => {
                 progressClassName: "Toastify__progress-bar",
                 className: theme === "dark" ? "dark-theme" : "light-theme",
                 style: getCustomToastStyle(theme),
-                className: theme === "dark" ? "dark-theme" : "light-theme",
             });
             return;
         }
@@ -140,7 +139,6 @@ const Profilepage = () => {
                     progressClassName: "Toastify__progress-bar",
                     className: theme === "dark" ? "dark-theme" : "light-theme",
                     style: getCustomToastStyle(theme),
-                    className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
                 setIsPopupOpen(false);
                 fetchUser();
