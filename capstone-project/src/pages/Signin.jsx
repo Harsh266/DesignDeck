@@ -49,7 +49,7 @@ const SignIn = () => {
         e.preventDefault();
         try {
             const res = await axios.post(
-                "http://localhost:5000/auth/login",
+                "https://designdeck-backend.onrender.com/auth/login",
                 { email, password },
                 { withCredentials: true }
             );
@@ -89,7 +89,7 @@ const SignIn = () => {
     };
 
     const handleGoogleLogin = () => {
-        window.open("http://localhost:5000/auth/google", "_self");
+        window.open("https://designdeck-backend.onrender.com/auth/google", "_self");
     };
 
     return (
