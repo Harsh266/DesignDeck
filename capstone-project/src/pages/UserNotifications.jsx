@@ -32,7 +32,7 @@ function UserNotifications() {
     return (
         <>
             <Navbar />
-            <div className={`min-h-screen p-5 sm:p-6 md:p-8 lg:p-10 mt-10 ${theme === "dark" ? "bg-black text-white" : "bg-gray-100 text-black"}`}>
+            <div className={`min-h-screen p-5 sm:p-6 md:p-8 lg:p-10 mt-10 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-2xl font-bold text-center">🔔 User Notifications</h2>
                     
