@@ -4,6 +4,7 @@ const User = require("../models/User");
 const passport = require("passport");
 const router = express.Router();
 const adminAuth = require("../middleware/adminAuth"); // Import adminAuth middleware
+const currentUserMiddleware = require("../middleware/currentUserMiddleware"); // Import currentUserMiddleware
 
 // ✅ Register Route
 router.post("/register", async (req, res) => {
@@ -43,14 +44,10 @@ router.post("/login", async (req, res, next) => {
 });
 
 // ✅ Get Authenticated User Route
-router.get("/me", async (req, res) => {
+router.get("/me", currentUserMiddleware, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
-
-        // ✅ Fetch complete user data from MongoDB
-        const user = await User.findById(req.user.id).select("-password"); // Exclude password
+        // User is already authenticated via `currentUserMiddleware`
+        const user = await User.findById(req.user._id).select("-password"); // Exclude password
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
