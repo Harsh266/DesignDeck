@@ -33,7 +33,7 @@ const AdminDashboard = () => {
     });
 
     useEffect(() => {
-        axios.get("http://localhost:5000/auth/admin-dashboard", { withCredentials: true })
+        axios.get("https://designdeck-backend.onrender.com/auth/admin-dashboard", { withCredentials: true })
             .then((res) => {
                 if (res.data.isAdmin) {
                     setIsAdmin(true);
@@ -94,7 +94,7 @@ const AdminDashboard = () => {
             return;
         }
 
-        axios.post("http://localhost:5000/notifications/admin-notifications", { message }, { withCredentials: true })
+        axios.post("https://designdeck-backend.onrender.com/notifications/admin-notifications", { message }, { withCredentials: true })
             .then(() => {
                 toast("Notification sent successfully!", {
                     position: "top-right",
@@ -123,7 +123,7 @@ const AdminDashboard = () => {
     };
 
     const handleLogout = () => {
-        axios.post("http://localhost:5000/auth/logout", {}, { withCredentials: true })
+        axios.post("https://designdeck-backend.onrender.com/auth/logout", {}, { withCredentials: true })
             .then(() => {
                 toast("Logged out successfully!", {
                     position: "top-right",

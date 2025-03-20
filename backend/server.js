@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const allowedOrigins = [
-    "http://localhost:5000",  // ✅ Local Development
+    "http://localhost:3000",  // ✅ Local Development
     "https://designdeck-frontend.onrender.com" // ✅ Corrected (Removed Trailing Slash)
 ];
 

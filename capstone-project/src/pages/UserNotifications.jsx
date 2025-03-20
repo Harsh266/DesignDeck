@@ -8,11 +8,11 @@ import moment from "moment"; // For formatting timestamps
 function UserNotifications() {
     const [notifications, setNotifications] = useState([]);
     const { theme } = useContext(ThemeContext);
-    const socket = io("http://localhost:5000");
+    const socket = io("http://localhost:3000");
 
     useEffect(() => {
         // Fetch notifications from backend
-        axios.get("http://localhost:5000/notifications/user-notifications")
+        axios.get("https://designdeck-backend.onrender.com/notifications/user-notifications")
             .then(res => setNotifications(res.data))
             .catch(err => console.error(err));
 
