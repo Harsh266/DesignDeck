@@ -15,9 +15,9 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
 
     // ✅ Check if logged-in user is the admin
     if (req.user.email === "harshvekriya441@gmail.com") {
-        res.redirect("/admin-dashboard"); // ✅ Redirect to Admin Dashboard
+        res.redirect("https://designdeck-frontend.onrender.com/admin-dashboard"); // ✅ Redirect to Admin Dashboard
     } else {
-        res.redirect("/dashboard"); // 🚫 Redirect non-admins to user dashboard
+        res.redirect("https://designdeck-frontend.onrender.com/dashboard"); // 🚫 Redirect non-admins to user dashboard
     }
 });
 
