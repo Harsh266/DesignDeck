@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const passport = require("passport");
 const router = express.Router();
-const currentUser = require("../middleware/currentUserMiddleware");
 const adminAuth = require("../middleware/adminAuth"); // ✅ Import adminAuth middleware
 
 // ✅ Register Route
@@ -44,7 +43,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 // ✅ Get Authenticated User Route
-router.get("/me", currentUser, async (req, res) => {
+router.get("/me", async (req, res) => {
     try {
         // ✅ Fetch complete user data from MongoDB
         const user = await User.findById(req.user.id).select("-password"); // Exclude password
