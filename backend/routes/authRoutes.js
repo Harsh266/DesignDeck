@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const passport = require("passport");
 const router = express.Router();
-const adminAuth = require("../middleware/adminAuth"); // Import adminAuth middleware
+const currentUser = require("../middleware/currentUserMiddleware");
+const adminAuth = require("../middleware/adminAuth"); // ✅ Import adminAuth middleware
 
 // ✅ Register Route
 router.post("/register", async (req, res) => {
@@ -43,12 +44,8 @@ router.post("/login", async (req, res, next) => {
 });
 
 // ✅ Get Authenticated User Route
-router.get("/me", async (req, res) => {
+router.get("/me", currentUser, async (req, res) => {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
-
         // ✅ Fetch complete user data from MongoDB
         const user = await User.findById(req.user.id).select("-password"); // Exclude password
         if (!user) {
