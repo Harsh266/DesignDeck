@@ -20,17 +20,13 @@ const Navbar = () => {
     try {
       const res = await axios.get("https://designdeck-backend.onrender.com/auth/me", {
         withCredentials: true, // Send cookies for authentication
-      }).catch((error) => {
-        console.log("❌ Error fetching user:", error.response?.data?.message || error.message);
-
       });
-
-
-      console.log("🟢 User Data Received:");
-
+  
+      console.log("🟢 User Data Received:", res.data);
+  
       if (res.data && res.data._id) {
         setUser(res.data); // ✅ Update user state
-        console.log("🟣 User state updated:");
+        console.log("🟣 User state updated:", res.data);
       } else {
         setUser(null);
         console.log("🟣 No valid user found, setting user to null");
