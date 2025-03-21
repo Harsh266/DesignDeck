@@ -47,9 +47,6 @@ router.post("/login", async (req, res, next) => {
     })(req, res, next);
 });
 
-// ✅ Get Authenticated User Route
-const jwt = require("jsonwebtoken");
-
 router.get("/me", async (req, res) => {
     try {
         // ✅ Check if user is stored in session
