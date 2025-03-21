@@ -10,6 +10,9 @@ const UserSchema = new mongoose.Schema({
     bio: { type: String, maxlength: 500 }, // User bio with a max length
     dribbbleProfile: { type: String }, // Instagram profile link
     behanceProfile: { type: String }, // Behance profile link
+    isAdmin: { type: Boolean, default: false },
+    lastLogin: { type: Date, default: null },
+    isLoggedIn: { type: Boolean, default: false },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
 }, { timestamps: true });

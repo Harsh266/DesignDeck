@@ -9,6 +9,7 @@ const passport = require("./config/passport.js");
 const MongoStore = require("connect-mongo");
 const http = require("http");
 const { Server } = require("socket.io");
+
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const googleAuthRoutes = require("./routes/googleAuthRoutes");
@@ -18,47 +19,42 @@ const contactRoutes = require("./routes/contactRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
-const server = http.createServer(app);
+const server = http.createServer(app); // ✅ Use HTTP server instance
+
+// ✅ Configure Socket.io
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
-    },
+        origin: "http://localhost:5173", // Update to match your frontend
+        credentials: true
+    }
 });
+
+// ✅ Middleware Setup
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = [
-    "http://localhost:3000",  // ✅ Local Development
-    "https://designdeck-frontend.onrender.com" // ✅ Corrected (Removed Trailing Slash)
-];
+// ✅ WebSocket Events
+io.on("connection", (socket) => {
+    console.log("🔗 New client connected:", socket.id);
 
+    socket.on("disconnect", () => {
+        console.log("❌ Client disconnected:", socket.id);
+    });
+});
+
+// ✅ CORS Configuration
 app.use(
     cors({
         origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true); // ✅ Allow request
+            if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+                callback(null, true); // ✅ Allow any localhost port
             } else {
                 callback(new Error("Not allowed by CORS"));
             }
         },
-        credentials: true, // ✅ Required if using cookies
+        credentials: true,
     })
 );
-
-
-app.use((req, res, next) => {
-    req.io = io; // Attach Socket.io to request
-    next();
-});
-
-io.on("connection", (socket) => {
-    console.log("New client connected", socket.id);
-
-    socket.on("disconnect", () => {
-        console.log("Client disconnected", socket.id);
-    });
-});
 
 // ✅ MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -99,22 +95,24 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 // ✅ Routes
 app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
 app.use("/auth", passwordResetRoutes);
-app.use('/auth', updateProfileRoutes) // ✅ Password Reset Routes
+app.use('/auth', updateProfileRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/notifications", notificationRoutes);
+
+// ✅ Static File Serving
+app.use("/uploads/profileImages", express.static(path.join(__dirname, "uploads/profileImages")));
+app.use("/uploads/coverImages", express.static(path.join(__dirname, "uploads/coverImages")));
 
 // ✅ Root Route
 app.get("/", (req, res) => {
     res.send("🚀 Backend is running & MongoDB connected!");
 });
-app.use("/uploads/profileImages", express.static(path.join(__dirname, "uploads/profileImages")));
-app.use("/uploads/coverImages", express.static(path.join(__dirname, "uploads/coverImages")));
 
-
-// ✅ Start Server
+// ✅ Start Server (⚡ Fix: Use `server.listen()` instead of `app.listen()`)
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
