@@ -14,18 +14,35 @@ router.get("/user-notifications", async (req, res) => {
 });
 
 // Admin sends a notification (Protected)
-router.post("/admin-notifications", adminAuth, async (req, res) => {
+router.post("/admin-notifications", async (req, res) => {
     try {
         const { message } = req.body;
-        const newNotification = new Notification({ message });
+
+        if (!message || message.trim() === "") {
+            return res.status(400).json({ success: false, message: "Message cannot be empty!" });
+        }
+
+        // Save notification in the database
+        const newNotification = new Notification({
+            message,
+            createdAt: new Date(),
+        });
+
         await newNotification.save();
 
-        // Emit notification via Socket.io
-        req.io.emit("newNotification", newNotification);
+        res.status(201).json({
+            success: true,
+            message: "Notification sent successfully!",
+            data: newNotification,
+        });
 
-        res.status(201).json(newNotification);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
     }
 });
 

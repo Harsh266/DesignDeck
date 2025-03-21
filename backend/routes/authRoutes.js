@@ -47,26 +47,24 @@ router.post("/login", async (req, res, next) => {
     })(req, res, next);
 });
 
+// ✅ Get Authenticated User Route
 router.get("/me", async (req, res) => {
     try {
-        // ✅ Check if user is stored in session
-        if (!req.session.user) {
-            return res.status(401).json({ message: "Unauthorized - No active session" });
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "Unauthorized" });
         }
 
-        // ✅ Fetch user data from MongoDB
-        const user = await User.findById(req.session.user.id).select("-password"); // Exclude password
+        // ✅ Fetch complete user data from MongoDB
+        const user = await User.findById(req.user.id).select("-password"); // Exclude password
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-
         res.status(200).json(user);
     } catch (error) {
         console.error("User Fetch Error:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
-
 
 // ✅ Admin Dashboard Route
 router.get("/admin-dashboard", adminAuth, (req, res) => {

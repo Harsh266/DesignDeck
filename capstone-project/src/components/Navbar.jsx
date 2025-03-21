@@ -22,17 +22,17 @@ const Navbar = () => {
         withCredentials: true, // Send cookies for authentication
       });
   
-      console.log("🟢 User Data Received:", res.data);
+      console.log("🟢 User Data Received:");
   
       if (res.data && res.data._id) {
         setUser(res.data); // ✅ Update user state
-        console.log("🟣 User state updated:", res.data);
+        console.log("🟣 User state updated:");
       } else {
         setUser(null);
         console.log("🟣 No valid user found, setting user to null");
       }
     } catch (error) {
-      console.error("❌ Error fetching user:", error.response?.data?.message || error.message);
+      console.error("❌ Error fetching user:",);
       setUser(null);
     }
   };
@@ -57,23 +57,32 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ Logout Function
   const handleLogout = async () => {
     console.log("🟡 Logging out...");
 
     try {
-      await axios.post("http://localhost:5000/auth/logout", {}, { withCredentials: true });
-      console.log("🟢 Logout successful");
+        const response = await axios.post(
+            "http://localhost:5000/auth/logout",
+            {},
+            { withCredentials: true } // Ensure cookies are sent
+        );
 
-      setUser(null);
-      setShowPopup(false);
-      setMobileMenuOpen(false);
-      navigate("/landingpage");
+        console.log("🟢 Logout successful:");
+
+        setUser(null);
+        localStorage.removeItem("user");
+
+        setShowPopup(false);
+        setMobileMenuOpen(false);
+        navigate("/landingpage");
     } catch (error) {
-      console.error("❌ Logout failed:", error);
-    }
-  };
+        console.error("❌ Logout failed:");
 
+        // Debug cookies in the browser
+        document.cookie.split(";").forEach((cookie) => {
+        });
+    }
+};
   return (
     <nav
       className={`flex w-full justify-between items-center px-4 sm:px-6 py-3 fixed top-0 left-0 backdrop-blur-2xl z-50 ${theme === "dark" ? "bg-[#000000f3] text-white" : "bg-[#ffffffc3] text-black"

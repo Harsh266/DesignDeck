@@ -51,7 +51,7 @@ const Profilepage = () => {
             const res = await axios.get("http://localhost:5000/auth/me", {
                 withCredentials: true,
             });
-            console.log("🟢 User Data Received:", res.data);
+            console.log("🟢 User Data Received:");
 
 
             if (res.data && res.data._id) {
@@ -60,7 +60,7 @@ const Profilepage = () => {
                 navigate("/signin"); // Redirect to login if no user found
             }
         } catch (error) {
-            console.error("❌ Error fetching user:", error.response?.data?.message || error.message);
+            console.error("❌ Error fetching user:");
             navigate("/signin"); // Redirect if not authenticated
         }
     };
@@ -143,8 +143,6 @@ const Profilepage = () => {
                 setIsPopupOpen(false);
                 fetchUser();
             }
-    
-            console.log(response.data);
         } catch (error) {
             console.error("Upload error:", error.response?.data || error.message);
         }

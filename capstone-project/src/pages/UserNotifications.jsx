@@ -38,6 +38,10 @@ function UserNotifications() {
         } catch (error) {
             console.error("Error fetching notifications:", error);
         }
+
+        const interval = setInterval(fetchNotifications, 5000); // Auto-refresh every 5 sec
+    
+        return () => clearInterval(interval); // Cleanup on unmount
     };
 
     // ✅ Clear all notifications

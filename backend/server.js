@@ -10,32 +10,26 @@ const MongoStore = require("connect-mongo");
 const http = require("http");
 const { Server } = require("socket.io");
 
-// Routes
-const authRoutes = require("./routes/authRoutes");
-const googleAuthRoutes = require("./routes/googleAuthRoutes");
-const passwordResetRoutes = require("./routes/passwordResetRoutes");
-const updateProfileRoutes = require("./routes/updateProfileRoutes");
-const contactRoutes = require("./routes/contactRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
-
+// ✅ Initialize Express App & HTTP Server
 const app = express();
-const server = http.createServer(app); // Use HTTP server instance
+const server = http.createServer(app);
 
 // ✅ CORS Configuration
 const allowedOrigins = [
-    "http://localhost:5173" // Local Development
+    "http://localhost:5173", // Local Development
+    "https://designdeck-frontend.onrender.com" // Deployed Frontend
 ];
 
 app.use(
     cors({
         origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin)) {
+            if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
                 callback(null, true);
             } else {
                 callback(new Error("CORS policy does not allow this origin"), false);
             }
         },
-        credentials: true, // Allow cookies
+        credentials: true,
     })
 );
 
@@ -50,10 +44,7 @@ const io = new Server(server, {
 // ✅ WebSocket Events
 io.on("connection", (socket) => {
     console.log("🔗 New client connected:", socket.id);
-
-    socket.on("disconnect", () => {
-        console.log("❌ Client disconnected:", socket.id);
-    });
+    socket.on("disconnect", () => console.log("❌ Client disconnected:", socket.id));
 });
 
 // ✅ Middleware Setup
@@ -90,7 +81,7 @@ app.use(
         }),
         cookie: {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+            secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             maxAge: 1000 * 60 * 60 * 24, // 1 day
         },
@@ -101,6 +92,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ✅ Routes
+const authRoutes = require("./routes/authRoutes");
+const googleAuthRoutes = require("./routes/googleAuthRoutes");
+const passwordResetRoutes = require("./routes/passwordResetRoutes");
+const updateProfileRoutes = require("./routes/updateProfileRoutes");
+const contactRoutes = require("./routes/contactRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+
 app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
 app.use("/auth", passwordResetRoutes);

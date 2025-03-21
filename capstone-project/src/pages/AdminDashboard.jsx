@@ -108,10 +108,16 @@ const AdminDashboard = () => {
             });
             return;
         }
-
-        axios.post("http://localhost:5000/notifications/admin-notifications", { message }, { withCredentials: true })
-            .then(() => {
-                toast("Notification sent successfully!", {
+    
+        axios.post(
+            "http://localhost:5000/notifications/admin-notifications",
+            { message },
+            { withCredentials: true }
+        )
+        .then((response) => {
+            
+            if (response.data.success) {
+                toast(response.data.message || "Notification sent successfully!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -121,10 +127,9 @@ const AdminDashboard = () => {
                     style: getCustomToastStyle(theme),
                     className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
-                setMessage("");
-            })
-            .catch(() => {
-                toast("Failed to send notification!", {
+                setMessage(""); // Clear input field after success
+            } else {
+                toast(response.data.message || "Something went wrong!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -134,7 +139,20 @@ const AdminDashboard = () => {
                     style: getCustomToastStyle(theme),
                     className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
+            }
+        })
+        .catch((error) => {
+            toast(error.response?.data?.message || "Failed to send notification!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
             });
+        });
     };
 
     const handleLogout = () => {
