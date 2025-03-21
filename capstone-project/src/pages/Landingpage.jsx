@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "remixicon/fonts/remixicon.css";
 import { Helmet } from "react-helmet";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { CardContainer } from "../UI/3d-card";
@@ -9,6 +9,18 @@ import { CardContainer } from "../UI/3d-card";
 const Landingpage = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll events for navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -18,11 +30,14 @@ const Landingpage = () => {
     <>
       <Helmet>
         <title>DesignDeck - Landing Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
       <div className="overflow-x-hidden">
         <div>
           <nav
-            className={`fixed top-0 left-0 w-full backdrop-blur-2xl z-50 px-4 sm:px-6 md:px-10 py-3 flex justify-between items-center transition-all duration-300 ${
+            className={`fixed top-0 left-0 w-full backdrop-blur-2xl z-50 px-4 sm:px-6 md:px-10 lg:px-16 py-3 flex justify-between items-center transition-all duration-300 ${
+              scrolled ? "shadow-md" : ""
+            } ${
               theme === "dark"
                 ? "bg-[#000000c3] text-white"
                 : "bg-[#ffffffc3] text-black"
@@ -32,7 +47,7 @@ const Landingpage = () => {
             <div className="text-xl sm:text-2xl font-semibold">DesignDeck</div>
 
             {/* Mobile Menu Button */}
-            <button className="block md:hidden" onClick={toggleMobileMenu}>
+            <button className="block md:hidden" onClick={toggleMobileMenu} aria-label="Toggle menu">
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
@@ -40,7 +55,7 @@ const Landingpage = () => {
             <div className="hidden md:flex space-x-2 lg:space-x-6 text-base lg:text-lg">
               <a
                 href="#home"
-                className={`cursor-pointer relative after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
+                className={`cursor-pointer relative px-1 after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
                   theme === "dark"
                     ? "text-gray-300 after:bg-gray-300"
                     : "text-gray-700 after:bg-gray-700"
@@ -50,7 +65,7 @@ const Landingpage = () => {
               </a>
               <a
                 href="#features"
-                className={`cursor-pointer relative after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
+                className={`cursor-pointer relative px-1 after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
                   theme === "dark"
                     ? "text-gray-300 after:bg-gray-300"
                     : "text-gray-700 after:bg-gray-700"
@@ -60,7 +75,7 @@ const Landingpage = () => {
               </a>
               <a
                 href="#aboutus"
-                className={`cursor-pointer relative after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
+                className={`cursor-pointer relative px-1 after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
                   theme === "dark"
                     ? "text-gray-300 after:bg-gray-300"
                     : "text-gray-700 after:bg-gray-700"
@@ -70,7 +85,7 @@ const Landingpage = () => {
               </a>
               <a
                 href="#explore"
-                className={`cursor-pointer relative after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
+                className={`cursor-pointer relative px-1 after:block after:h-[2px] after:w-0 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full ${
                   theme === "dark"
                     ? "text-gray-300 after:bg-gray-300"
                     : "text-gray-700 after:bg-gray-700"
@@ -84,10 +99,10 @@ const Landingpage = () => {
             <div className="hidden md:block">
               <Link to="/signin">
                 <button
-                  className={`px-4 lg:px-6 py-2 rounded-full border-5 shadow-md border backdrop-blur-md cursor-pointer transition-all duration-300 ${
+                  className={`px-4 lg:px-6 py-2 rounded-full shadow-md border backdrop-blur-md cursor-pointer transition-all duration-300 text-sm lg:text-base ${
                     theme === "dark"
-                      ? "bg-purple-600 text-white border-white/50"
-                      : "bg-purple-500 text-white border-white/50"
+                      ? "bg-purple-600 text-white border-white/50 hover:bg-purple-700"
+                      : "bg-purple-500 text-white border-white/50 hover:bg-purple-600"
                   }`}
                 >
                   Login
@@ -99,7 +114,7 @@ const Landingpage = () => {
           {/* Mobile Menu */}
           {mobileMenuOpen && (
             <div
-              className={`fixed top-14 left-0 w-full z-40 py-4 px-4 flex flex-col space-y-4 md:hidden transition-all duration-300 ${
+              className={`fixed top-14 left-0 w-full z-40 py-4 px-4 flex flex-col space-y-4 md:hidden transition-all duration-300 shadow-lg ${
                 theme === "dark"
                   ? "bg-[#000000ee] text-white"
                   : "bg-[#ffffffee] text-black"
@@ -107,7 +122,7 @@ const Landingpage = () => {
             >
               <a
                 href="#home"
-                className={`cursor-pointer px-4 py-2 rounded-md ${
+                className={`cursor-pointer px-4 py-2 rounded-md transition-colors ${
                   theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
                 }`}
                 onClick={toggleMobileMenu}
@@ -116,7 +131,7 @@ const Landingpage = () => {
               </a>
               <a
                 href="#features"
-                className={`cursor-pointer px-4 py-2 rounded-md ${
+                className={`cursor-pointer px-4 py-2 rounded-md transition-colors ${
                   theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
                 }`}
                 onClick={toggleMobileMenu}
@@ -125,7 +140,7 @@ const Landingpage = () => {
               </a>
               <a
                 href="#aboutus"
-                className={`cursor-pointer px-4 py-2 rounded-md ${
+                className={`cursor-pointer px-4 py-2 rounded-md transition-colors ${
                   theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
                 }`}
                 onClick={toggleMobileMenu}
@@ -134,7 +149,7 @@ const Landingpage = () => {
               </a>
               <a
                 href="#explore"
-                className={`cursor-pointer px-4 py-2 rounded-md ${
+                className={`cursor-pointer px-4 py-2 rounded-md transition-colors ${
                   theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
                 }`}
                 onClick={toggleMobileMenu}
@@ -143,10 +158,10 @@ const Landingpage = () => {
               </a>
               <Link to="/signin" onClick={toggleMobileMenu}>
                 <button
-                  className={`w-full px-4 py-2 rounded-full border-5 shadow-md border backdrop-blur-md cursor-pointer transition-all duration-300 ${
+                  className={`w-full px-4 py-2 rounded-full shadow-md border backdrop-blur-md cursor-pointer transition-all duration-300 ${
                     theme === "dark"
-                      ? "bg-purple-600 text-white border-white/50"
-                      : "bg-purple-400 text-white border-white/50"
+                      ? "bg-purple-600 text-white border-white/50 hover:bg-purple-700"
+                      : "bg-purple-400 text-white border-white/50 hover:bg-purple-500"
                   }`}
                 >
                   Login
@@ -159,13 +174,13 @@ const Landingpage = () => {
         {/* Home Section */}
         <div
           id="home"
-          className={`py-20 sm:py-28 md:py-36 px-4 sm:px-6 md:px-16 flex flex-col items-center text-center transition-all duration-300 ${
+          className={`pt-24 pb-12 sm:pt-28 md:pt-36 lg:pt-40 px-4 sm:px-6 md:px-16 lg:px-20 flex flex-col items-center text-center transition-all duration-300 ${
             theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
           <div className="flex flex-col items-center">
             <h1
-              className={`text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight max-w-3xl drop-shadow-lg transition-all duration-300 ${
+              className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight max-w-3xl md:max-w-4xl lg:max-w-5xl drop-shadow-lg transition-all duration-300 ${
                 theme === "dark" ? "text-white" : "text-gray-900"
               }`}
             >
@@ -186,7 +201,7 @@ const Landingpage = () => {
             </h1>
 
             <p
-              className={`mt-4 max-w-xl px-4 transition-all duration-300 ${
+              className={`mt-4 max-w-xl px-4 md:max-w-2xl lg:text-lg transition-all duration-300 ${
                 theme === "dark" ? "text-gray-300" : "text-gray-700"
               }`}
             >
@@ -195,54 +210,54 @@ const Landingpage = () => {
           </div>
 
           {/* Buttons Container */}
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2">
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
             {/* Dark Mode Toggle Button */}
             <button
               onClick={toggleTheme}
-              className={`mt-2 transition-all duration-300 sm:mt-6 px-4 sm:px-5 py-2 sm:py-3 text-base sm:text-lg font-semibold rounded-full border-5 shadow-md 
+              className={`mt-2 transition-all duration-300 sm:mt-6 px-4 sm:px-5 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full shadow-md 
                                 ${
                                   theme === "dark"
-                                    ? "bg-white border-gray-300 text-black border-opacity-40 "
-                                    : "bg-black border-[#A0A0A0] border-opacity-40 text-white"
+                                    ? "bg-white border-gray-300 text-black border-opacity-40 hover:bg-gray-100"
+                                    : "bg-black border-[#A0A0A0] border-opacity-40 text-white hover:bg-gray-900"
                                 } 
                                 backdrop-blur-md cursor-pointer flex flex-row items-center`}
             >
               {theme === "dark" ? (
                 <>
-                  <Moon className="text-black mr-2" size={18} />
+                  <Moon className="text-black mr-2" size={16} />
                   Light Mode
                 </>
               ) : (
                 <>
-                  <Sun className="text-white mr-2" size={18} />
+                  <Sun className="text-white mr-2" size={16} />
                   Dark Mode
                 </>
               )}
             </button>
 
             <Link to="/signup">
-              <button className="mt-2 sm:mt-6 px-5 sm:px-7 py-2 sm:py-3 text-base sm:text-lg font-semibold bg-[#376CFF] text-white rounded-full border-5 shadow-md border border-white/50 backdrop-blur-md cursor-pointer">
+              <button className="mt-2 sm:mt-6 px-5 sm:px-7 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold bg-[#376CFF] text-white rounded-full shadow-md border border-white/50 backdrop-blur-md cursor-pointer hover:bg-[#2a5aed] transition-colors">
                 Get Started
               </button>
             </Link>
           </div>
 
           {/* Image Section */}
-          <div className="mt-6 sm:mt-6 flex flex-col md:flex-row gap-2 sm:gap-4 max-w-5xl">
-            <div className="w-full md:w-1/2 rounded-[30px] overflow-hidden">
+          <div className="mt-8 sm:mt-10 flex flex-col md:flex-row gap-4 sm:gap-6 max-w-5xl">
+            <div className="w-full md:w-1/2 rounded-[20px] sm:rounded-[30px] overflow-hidden">
               <img
                 src="./public/image.jpg"
                 alt="Creative Design Showcase"
-                className={`w-full rounded-lg shadow-lg transition-all duration-300 ${
+                className={`w-full h-auto rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.02] ${
                   theme === "dark" ? "brightness-90" : "brightness-100"
                 }`}
               />
             </div>
-            <div className="w-full md:w-1/2 mt-4 md:mt-0 rounded-[30px] overflow-hidden">
+            <div className="w-full md:w-1/2 mt-4 md:mt-0 rounded-[20px] sm:rounded-[30px] overflow-hidden">
               <img
                 src="./public/image-1.jpg"
                 alt="Growth Stats"
-                className={`w-full rounded-lg shadow-lg transition-all duration-300 ${
+                className={`w-full h-auto rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.02] ${
                   theme === "dark" ? "brightness-90" : "brightness-100"
                 }`}
               />
@@ -253,7 +268,7 @@ const Landingpage = () => {
         {/* Features Section */}
         <div
           id="features"
-          className={`py-10 sm:py-14 md:py-18 lg:py-22 text-center transition-all duration-300 ${
+          className={`py-10 sm:py-14 md:py-18 lg:py-20 text-center transition-all duration-300 ${
             theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
@@ -273,7 +288,7 @@ const Landingpage = () => {
               </span>
             </h2>
             <p
-              className={`mt-2 sm:mt-3 md:mt-4 px-4 transition-all duration-300 ${
+              className={`mt-2 sm:mt-3 md:mt-4 px-4 transition-all duration-300 max-w-2xl mx-auto ${
                 theme === "dark" ? "text-gray-400" : "text-gray-500"
               }`}
             >
@@ -284,99 +299,105 @@ const Landingpage = () => {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
             {/* Card 1 */}
-            <CardContainer>
-              <div
-                className={`rounded-xl h-[300px] w-[350px] flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${
-                  theme === "dark"
-                    ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                    : "bg-white hover:border-[#fff] hover:shadow-lg"
-                }`}
-              >
-                <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#FDE8CB] self-start">
-                  <i className="ri-gallery-line text-[24px] sm:text-[30px] text-[#ED9E29]"></i>
+            <div className="flex justify-center">
+              <CardContainer className="w-full sm:w-auto">
+                <div
+                  className={`rounded-xl h-[280px] sm:h-[300px] w-full sm:w-[320px] md:w-[350px] flex flex-col gap-3 p-4 sm:p-5 md:p-6 transition-all border-3 border-[#FDE8CB] ${
+                    theme === "dark"
+                      ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                      : "bg-white hover:border-[#fff] hover:shadow-lg"
+                  }`}
+                >
+                  <div className="flex items-center justify-center rounded-[10px] w-12 h-12 bg-[#FDE8CB] self-start">
+                    <i className="ri-gallery-line text-[24px] text-[#ED9E29]"></i>
+                  </div>
+                  <h3
+                    className={`font-semibold text-left text-lg sm:text-xl mt-2 sm:mt-3 transition-all ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Image & Video Upload
+                  </h3>
+                  <p
+                    className={`text-sm sm:text-base mt-1 sm:mt-2 text-left transition-all ${
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    DesignDeck empowers creators with Image & Video Upload for
+                    seamless media sharing, portfolio building, and high-quality
+                    project showcasing.
+                  </p>
                 </div>
-                <h3
-                  className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Image & Video Upload
-                </h3>
-                <p
-                  className={`text-sm sm:text-base mt-2 sm:mt-3 text-justify transition-all ${
-                    theme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  DesignDeck empowers creators with Image & Video Upload for
-                  seamless media sharing, portfolio building, and high-quality
-                  project showcasing.
-                </p>
-              </div>
-            </CardContainer>
+              </CardContainer>
+            </div>
 
             {/* Card 2 */}
-            <CardContainer>
-              <div
-                className={`rounded-xl h-[300px] w-[350px] flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${
-                  theme === "dark"
-                    ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                    : "bg-white hover:border-[#fff] hover:shadow-lg"
-                }`}
-              >
-                <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#DCE6FF] self-start">
-                  <i className="ri-live-line text-[24px] sm:text-[30px] text-[#4A4AFF]"></i>
+            <div className="flex justify-center">
+              <CardContainer className="w-full sm:w-auto">
+                <div
+                  className={`rounded-xl h-[280px] sm:h-[300px] w-full sm:w-[320px] md:w-[350px] flex flex-col gap-3 p-4 sm:p-5 md:p-6 transition-all border-3 border-[#DCE6FF] ${
+                    theme === "dark"
+                      ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                      : "bg-white hover:border-[#fff] hover:shadow-lg"
+                  }`}
+                >
+                  <div className="flex items-center justify-center rounded-[10px] w-12 h-12 bg-[#DCE6FF] self-start">
+                    <i className="ri-live-line text-[24px] text-[#4A4AFF]"></i>
+                  </div>
+                  <h3
+                    className={`font-semibold text-left text-lg sm:text-xl mt-2 sm:mt-3 transition-all ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                  >
+                    Live Preview
+                  </h3>
+                  <p
+                    className={`text-sm sm:text-base mt-1 sm:mt-2 text-left transition-all ${
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    DesignDeck empowers creators with Live Preview for real-time
+                    coding, instant feedback, interactive design testing, and
+                    enhanced development efficiency.
+                  </p>
                 </div>
-                <h3
-                  className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${
-                    theme === "dark" ? "text-white" : "text-black"
-                  }`}
-                >
-                  Live Preview
-                </h3>
-                <p
-                  className={`text-sm sm:text-base mt-2 sm:mt-3 text-justify transition-all ${
-                    theme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  DesignDeck empowers creators with Live Preview for real-time
-                  coding, instant feedback, interactive design testing, and
-                  enhanced development efficiency.
-                </p>
-              </div>
-            </CardContainer>
+              </CardContainer>
+            </div>
 
             {/* Card 3 */}
-            <CardContainer>
-              <div
-                className={`rounded-xl h-[300px] w-[350px] flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${
-                  theme === "dark"
-                    ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                    : "bg-white hover:border-[#fff] hover:shadow-lg"
-                }`}
-              >
-                <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#F4D9FF] self-start">
-                  <i className="ri-bard-line text-[24px] sm:text-[30px] text-[#A64CA6]"></i>
+            <div className="flex justify-center">
+              <CardContainer className="w-full sm:w-auto">
+                <div
+                  className={`rounded-xl h-[280px] sm:h-[300px] w-full sm:w-[320px] md:w-[350px] flex flex-col gap-3 p-4 sm:p-5 md:p-6 transition-all border-3 border-[#F4D9FF] ${
+                    theme === "dark"
+                      ? "bg-[#2a2a2a] hover:border-[#444] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                      : "bg-white hover:border-[#fff] hover:shadow-lg"
+                  }`}
+                >
+                  <div className="flex items-center justify-center rounded-[10px] w-12 h-12 bg-[#F4D9FF] self-start">
+                    <i className="ri-bard-line text-[24px] text-[#A64CA6]"></i>
+                  </div>
+                  <h3
+                    className={`font-semibold text-left text-lg sm:text-xl mt-2 sm:mt-3 transition-all ${
+                      theme === "dark" ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    Future of DesignDeck
+                  </h3>
+                  <p
+                    className={`text-sm sm:text-base mt-1 sm:mt-2 text-left transition-all ${
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    Future of DesignDeck to revolutionize creative possibilities,
+                    streamline workflows, boost collaboration, and unlock
+                    limitless innovation for designers and developers.
+                  </p>
                 </div>
-                <h3
-                  className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${
-                    theme === "dark" ? "text-white" : "text-gray-900"
-                  }`}
-                >
-                  Future of DesignDeck
-                </h3>
-                <p
-                  className={`text-sm sm:text-base mt-2 sm:mt-3 text-justify transition-all ${
-                    theme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  Future of DesignDeck to revolutionize creative possibilities,
-                  streamline workflows, boost collaboration, and unlock
-                  limitless innovation for designers and developers.
-                </p>
-              </div>
-            </CardContainer>
+              </CardContainer>
+            </div>
           </div>
         </div>
 
@@ -387,14 +408,21 @@ const Landingpage = () => {
             theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12 xl:px-6 flex flex-wrap items-center">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12 xl:px-6 flex flex-col md:flex-row items-center gap-8">
             {/* Image Section */}
             <div className="w-full md:w-1/2">
-              <video muted autoPlay loop src="/public/graph.mp4" className="rounded-lg"></video>
+              <video 
+                muted 
+                autoPlay 
+                loop 
+                src="/public/graph.mp4" 
+                className="rounded-lg w-full shadow-lg"
+                playsInline
+              ></video>
             </div>
 
             {/* Text Section */}
-            <div className="w-full md:w-1/2 mt-6 md:mt-0 md:pl-4 lg:pl-10">
+            <div className="w-full md:w-1/2 md:pl-4 lg:pl-8">
               <h2
                 className={`text-2xl sm:text-3xl md:text-4xl font-bold transition-all ${
                   theme === "dark" ? "text-white" : "text-gray-900"
@@ -415,9 +443,9 @@ const Landingpage = () => {
               </p>
 
               {/* Stats Cards */}
-              <div className="mt-4 sm:mt-5 flex flex-wrap gap-2 sm:gap-3">
+              <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
                 {/* Card 1 */}
-                <div className="border-4 rounded-xl px-4 sm:px-8 py-3 sm:py-4 text-center hover:cursor-pointer transition-all border-[#FDE8CB] hover:bg-[#FDE8CB]">
+                <div className="border-3 rounded-xl px-4 sm:px-6 py-2 sm:py-3 text-center hover:cursor-pointer transition-all border-[#FDE8CB] hover:bg-[#FDE8CB] hover:scale-105">
                   <span className="text-lg sm:text-xl font-semibold transition-all text-[#ED9E29]">
                     7000+
                   </span>
@@ -427,7 +455,7 @@ const Landingpage = () => {
                 </div>
 
                 {/* Card 2 */}
-                <div className="border-4 rounded-xl px-4 sm:px-8 py-3 sm:py-4 text-center hover:cursor-pointer transition-all border-[#DCE6FF] hover:bg-[#DCE6FF]">
+                <div className="border-3 rounded-xl px-4 sm:px-6 py-2 sm:py-3 text-center hover:cursor-pointer transition-all border-[#DCE6FF] hover:bg-[#DCE6FF] hover:scale-105">
                   <span className="text-lg sm:text-xl font-semibold transition-all text-[#9091FF]">
                     10,000+
                   </span>
@@ -437,7 +465,7 @@ const Landingpage = () => {
                 </div>
 
                 {/* Card 3 */}
-                <div className="border-4 rounded-xl px-3 sm:px-6 py-3 sm:py-4 text-center hover:cursor-pointer transition-all border-[#F4D9FF] hover:bg-[#F4D9FF]">
+                <div className="border-3 rounded-xl px-3 sm:px-5 py-2 sm:py-3 text-center hover:cursor-pointer transition-all border-[#F4D9FF] hover:bg-[#F4D9FF] hover:scale-105">
                   <span className="text-lg sm:text-xl font-semibold transition-all text-[#D87EF5]">
                     50+
                   </span>
@@ -453,34 +481,34 @@ const Landingpage = () => {
         {/* Explore Section */}
         <section
           id="explore"
-          className={`w-full relative py-14 px-4 md:px-20 lg:px-20 transition-all duration-300 ${
+          className={`w-full relative py-14 px-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-300 ${
             theme === "dark"
               ? "bg-black text-white"
               : "bg-white text-black"
           }`}
         >
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 md:gap-10">
             {/* Left Side - Title & Description */}
             <div className="flex-1 text-center md:text-left">
-              <h2 className="text-4xl sm:text-5xl font-extrabold mb-6 leading-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6 leading-tight">
                 Let's Connect
               </h2>
-              <p className="text-lg text-gray-400 md:w-[85%]">
+              <p className="text-base sm:text-lg text-gray-400 md:w-[85%]">
                 Got questions? Need help? We're here for you! Reach out to us
                 for anything related to admissions, courses, or assistance.
               </p>
             </div>
 
             {/* Right Side - Contact Card with Aesthetic Gradient */}
-            <div className="relative w-full md:w-auto p-6 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#d946ef] shadow-xl text-center">
-              <h3 className="text-2xl font-semibold mb-3 text-white">
+            <div className="relative w-full md:w-auto p-6 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#d946ef] shadow-xl text-center mt-6 md:mt-0">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-white">
                 Contact Us
               </h3>
-              <p className="text-base text-gray-200 mb-6">
-                We’re just a click away for your queries!
+              <p className="text-sm sm:text-base text-gray-200 mb-6">
+                We're just a click away for your queries!
               </p>
               <Link to="/contactus">
-                <button className="bg-white text-indigo-600 text-lg font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:bg-gray-200 hover:scale-105 shadow-md cursor-pointer">
+                <button className="bg-white text-indigo-600 text-base sm:text-lg font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:bg-gray-200 hover:scale-105 shadow-md cursor-pointer">
                   Get in Touch
                 </button>
               </Link>
@@ -496,7 +524,7 @@ const Landingpage = () => {
 
         {/* Footer Section */}
         <footer
-          className={`py-2 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0 transition-all ${
+          className={`py-4 sm:py-6 px-4 sm:px-6 lg:px-10 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 transition-all ${
             theme === "dark" ? "bg-black text-white" : "bg-white text-black"
           }`}
         >
@@ -506,28 +534,37 @@ const Landingpage = () => {
           </p>
 
           {/* Right Side - Social Media Links */}
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 sm:space-x-6">
             <a
-              href="www.github.com"
-              className={`hover:transition-all ${
+              href="https://www.github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`hover:transition-all hover:scale-110 ${
                 theme === "dark" ? "hover:text-gray-400" : "hover:text-gray-600"
               }`}
+              aria-label="GitHub"
             >
               <i className="ri-github-line text-lg sm:text-xl"></i>
             </a>
             <a
-              href="www.twitter.com"
-              className={`hover:transition-all ${
+              href="https://www.twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`hover:transition-all hover:scale-110 ${
                 theme === "dark" ? "hover:text-gray-400" : "hover:text-gray-600"
               }`}
+              aria-label="Twitter"
             >
               <i className="ri-twitter-x-line text-lg sm:text-xl"></i>
             </a>
             <a
-              href="www.instagram.com"
-              className={`hover:transition-all ${
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`hover:transition-all hover:scale-110 ${
                 theme === "dark" ? "hover:text-gray-400" : "hover:text-gray-600"
               }`}
+              aria-label="Instagram"
             >
               <i className="ri-instagram-line text-lg sm:text-xl"></i>
             </a>
@@ -539,9 +576,3 @@ const Landingpage = () => {
 };
 
 export default Landingpage;
-
-// Inside your return statement, add:
-<>
-    {/* Your existing content */}
-    {/* <DebugWidth /> */}
-</>
