@@ -19,19 +19,34 @@ const contactRoutes = require("./routes/contactRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
-const server = http.createServer(app); // ✅ Use HTTP server instance
+const server = http.createServer(app); // Use HTTP server instance
 
-// ✅ Configure Socket.io
+// ✅ CORS Configuration
+const allowedOrigins = [
+    "https://designdeck-frontend.onrender.com", // Frontend Deployment
+    "http://localhost:5173" // Local Development
+];
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("CORS policy does not allow this origin"), false);
+            }
+        },
+        credentials: true, // Allow cookies
+    })
+);
+
+// ✅ WebSocket Configuration
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Update to match your frontend
+        origin: allowedOrigins,
         credentials: true
     }
 });
-
-// ✅ Middleware Setup
-app.use(express.json());
-app.use(cookieParser());
 
 // ✅ WebSocket Events
 io.on("connection", (socket) => {
@@ -42,19 +57,10 @@ io.on("connection", (socket) => {
     });
 });
 
-// ✅ CORS Configuration
-app.use(
-    cors({
-        origin: (origin, callback) => {
-            if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
-                callback(null, true); // ✅ Allow any localhost port
-            } else {
-                callback(new Error("Not allowed by CORS"));
-            }
-        },
-        credentials: true,
-    })
-);
+// ✅ Middleware Setup
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 // ✅ MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI;
@@ -73,25 +79,24 @@ mongoose.connect(MONGO_URI, {
         process.exit(1);
     });
 
-// ✅ Session Configuration (For Google OAuth)
+// ✅ Session Configuration
 app.use(
     session({
-        secret: "your-secret-key",  // Change this to a secure random string
+        secret: process.env.SESSION_SECRET || "your-secret-key",
         resave: false,
         saveUninitialized: false,
         store: MongoStore.create({
-            mongoUrl: process.env.MONGO_URI,
+            mongoUrl: MONGO_URI,
             collectionName: "sessions",
         }),
         cookie: {
             httpOnly: true,
-            secure: false, // Set to true if using HTTPS
+            secure: process.env.NODE_ENV === "production", // Use HTTPS in production
             sameSite: "lax",
             maxAge: 1000 * 60 * 60 * 24, // 1 day
         },
     })
 );
-app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -100,7 +105,7 @@ app.use(passport.session());
 app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
 app.use("/auth", passwordResetRoutes);
-app.use('/auth', updateProfileRoutes);
+app.use("/auth", updateProfileRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/notifications", notificationRoutes);
 
@@ -113,6 +118,6 @@ app.get("/", (req, res) => {
     res.send("🚀 Backend is running & MongoDB connected!");
 });
 
-// ✅ Start Server (⚡ Fix: Use `server.listen()` instead of `app.listen()`)
+// ✅ Start Server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
