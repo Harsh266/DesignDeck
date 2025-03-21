@@ -18,7 +18,7 @@ const Navbar = () => {
   const fetchUser = async () => {
     console.log("🟡 Fetching user data...");
     try {
-      const res = await axios.get("https://designdeck-backend.onrender.com/auth/me", {
+      const res = await axios.get("http://localhost:5000/auth/me", {
         withCredentials: true, // Send cookies for authentication
       });
   
@@ -62,7 +62,7 @@ const Navbar = () => {
     console.log("🟡 Logging out...");
 
     try {
-      await axios.post("https://designdeck-backend.onrender.com/auth/logout", {}, { withCredentials: true });
+      await axios.post("http://localhost:5000/auth/logout", {}, { withCredentials: true });
       console.log("🟢 Logout successful");
 
       setUser(null);

@@ -61,7 +61,7 @@ const ChangePassword = () => {
     setIsProcessing(true);
 
     try {
-      const response = await fetch("https://designdeck-backend.onrender.com/auth/changepasswordwithtoken", {
+      const response = await fetch("http://localhost:5000/auth/changepasswordwithtoken", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

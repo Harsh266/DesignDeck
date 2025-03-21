@@ -48,7 +48,7 @@ const Profilepage = () => {
 
     const fetchUser = async () => {
         try {
-            const res = await axios.get("https://designdeck-backend.onrender.com/auth/me", {
+            const res = await axios.get("http://localhost:5000/auth/me", {
                 withCredentials: true,
             });
             console.log("🟢 User Data Received:", res.data);
@@ -118,7 +118,7 @@ const Profilepage = () => {
     
         try {
             const response = await axios.post(
-                "https://designdeck-backend.onrender.com/auth/updateprofile",
+                "http://localhost:5000/auth/updateprofile",
                 formData,
                 {
                     withCredentials: true,

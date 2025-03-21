@@ -23,7 +23,6 @@ const server = http.createServer(app); // Use HTTP server instance
 
 // ✅ CORS Configuration
 const allowedOrigins = [
-    "https://designdeck-frontend.onrender.com", // Frontend Deployment
     "http://localhost:5173" // Local Development
 ];
 
