@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import { ThemeContext } from "../context/ThemeContext";
 import { Sun, Moon, Menu, X } from "lucide-react";
 
@@ -13,6 +14,24 @@ const Navbar = () => {
   const fetchUserRan = useRef(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const popupRef = useRef(null);
+  
+  const getCustomToastStyle = (theme) => ({
+    borderRadius: "8px",
+    padding: "16px",
+    fontSize: "14px",
+    fontWeight: "500",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    boxShadow: theme === "dark"
+        ? "0px 4px 15px rgba(255, 255, 255, 0.15)"
+        : "0px 4px 15px rgba(0, 0, 0, 0.1)",
+    background: theme === "dark" ? "#222" : "#fff",
+    color: theme === "dark" ? "#fff" : "#333",
+    border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #eaeaea",
+    width: "320px",
+});
 
   // ✅ Fetch user data
   const fetchUser = async () => {
@@ -63,26 +82,55 @@ const Navbar = () => {
     try {
         const response = await axios.post(
             "http://localhost:5000/auth/logout",
-            {},
+            {}, 
             { withCredentials: true } // Ensure cookies are sent
         );
 
-        console.log("🟢 Logout successful:");
+        console.log("🟢 Logout successful:", response.data);
 
+        // Show success toast
+        toast("Logged out successfully!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+        });
+
+        // Clear user data
         setUser(null);
         localStorage.removeItem("user");
 
+        // Close UI elements
         setShowPopup(false);
         setMobileMenuOpen(false);
-        navigate("/landingpage");
-    } catch (error) {
-        console.error("❌ Logout failed:");
 
-        // Debug cookies in the browser
-        document.cookie.split(";").forEach((cookie) => {
+        // Redirect after delay
+        setTimeout(() => navigate("/landingpage"), 5000);
+
+    } catch (error) {
+        console.error("❌ Logout failed:", error.response?.data || error.message);
+
+        // Show error toast
+        toast("Logout failed!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
         });
+
+        // Debugging: Check browser cookies
+        console.log("Browser Cookies:", document.cookie);
     }
 };
+
   return (
     <nav
       className={`flex w-full justify-between items-center px-4 sm:px-6 py-3 fixed top-0 left-0 backdrop-blur-2xl z-50 ${theme === "dark" ? "bg-[#000000f3] text-white" : "bg-[#ffffffc3] text-black"

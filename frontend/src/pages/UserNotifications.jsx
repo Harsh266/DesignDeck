@@ -38,10 +38,6 @@ function UserNotifications() {
         } catch (error) {
             console.error("Error fetching notifications:", error);
         }
-
-        const interval = setInterval(fetchNotifications, 5000); // Auto-refresh every 5 sec
-    
-        return () => clearInterval(interval); // Cleanup on unmount
     };
 
     // ✅ Clear all notifications
@@ -81,7 +77,7 @@ function UserNotifications() {
                             <div className="mt-6 flex justify-center">
                                 <button
                                     onClick={clearNotifications}
-                                    className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 bg-red-500 text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-red-600 transition-all"
+                                    className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 bg-red-500 text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-red-600 transition-all cursor-pointer"
                                 >
                                     Clear Notifications
                                 </button>

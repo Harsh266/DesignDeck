@@ -1,7 +1,5 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { IoMdDoneAll } from "react-icons/io";
-import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 import { ThemeContext } from "../context/ThemeContext";
 import { toast, ToastContainer } from "react-toastify";
@@ -26,13 +24,13 @@ const ChangePassword = () => {
     justifyContent: "space-between", // Ensures proper spacing
     gap: "10px", // Adds space between text and close icon
     boxShadow: theme === "dark"
-        ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
-        : "0px 4px 10px rgba(0, 0, 0, 0.1)",
+      ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
+      : "0px 4px 10px rgba(0, 0, 0, 0.1)",
     background: theme === "dark" ? "#181818" : "#fff",
     color: theme === "dark" ? "#fff" : "#333",
     border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
     width: "320px", // Fixed width for consistency
-});
+  });
 
   useEffect(() => {
     console.log("Extracted token from URL:");
@@ -45,16 +43,16 @@ const ChangePassword = () => {
       toast(
         "Password do not match"
         , {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: getCustomToastStyle(theme),
-            className: theme === "dark" ? "dark-theme" : "light-theme",
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          style: getCustomToastStyle(theme),
+          className: theme === "dark" ? "dark-theme" : "light-theme",
         }
-    );
+      );
       return;
     }
 
@@ -73,38 +71,8 @@ const ChangePassword = () => {
 
       if (response.ok) {
         toast(
-            "Your password has been reset successfully. Please log in with your new password.",
-            {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: getCustomToastStyle(theme),
-                className: theme === "dark" ? "dark-theme" : "light-theme",
-            }
-        );
-        setTimeout(() => navigate(`/signin`), 5000);
-    } else {
-        toast(
-            data.message || "Something went wrong",
-            {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: getCustomToastStyle(theme),
-                className: theme === "dark" ? "dark-theme" : "light-theme",
-            }
-        );
-    }            
-} catch (error) {
-    toast(
-        "Failed to send request. Please try again"
-        , {
+          "Your password has been reset successfully. Please log in with your new password.",
+          {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -113,11 +81,41 @@ const ChangePassword = () => {
             draggable: true,
             style: getCustomToastStyle(theme),
             className: theme === "dark" ? "dark-theme" : "light-theme",
+          }
+        );
+        setTimeout(() => navigate(`/signin`), 5000);
+      } else {
+        toast(
+          data.message || "Something went wrong",
+          {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+          }
+        );
+      }
+    } catch (error) {
+      toast(
+        "Failed to send request. Please try again"
+        , {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          style: getCustomToastStyle(theme),
+          className: theme === "dark" ? "dark-theme" : "light-theme",
         }
-    );
-} finally {
-    setIsProcessing(false);
-}
+      );
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -148,8 +146,8 @@ const ChangePassword = () => {
             <div className="flex justify-center mb-4">
               <div
                 className={`h-12 w-12 flex items-center justify-center rounded-[12px] border ${theme === "dark"
-                    ? "bg-gray-700 border-gray-600"
-                    : "bg-white border-[#D9D9D9]"
+                  ? "bg-gray-700 border-gray-600"
+                  : "bg-white border-[#D9D9D9]"
                   }`}
               >
                 <i className={`ri-lock-password-line text-2xl ${theme === "dark" ? "text-gray-300" : "text-black"}`}></i>
@@ -172,8 +170,8 @@ const ChangePassword = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`border p-3 rounded w-full mt-1 focus:outline-none focus:ring-2 ${theme === "dark"
-                      ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
-                      : "border-gray-300 bg-white text-black focus:ring-blue-500"
+                    ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
+                    : "border-gray-300 bg-white text-black focus:ring-blue-500"
                     }`}
                   required
                   minLength={8}
@@ -187,8 +185,8 @@ const ChangePassword = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className={`border p-3 rounded w-full mt-1 focus:outline-none focus:ring-2 ${theme === "dark"
-                      ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
-                      : "border-gray-300 bg-white text-black focus:ring-blue-500"
+                    ? "border-gray-600 bg-gray-700 text-white focus:ring-blue-400"
+                    : "border-gray-300 bg-white text-black focus:ring-blue-500"
                     }`}
                   required
                   minLength={8}

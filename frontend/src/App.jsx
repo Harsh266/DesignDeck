@@ -14,13 +14,12 @@ import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";// Updated import
 import UserNotifications from "./pages/UserNotifications";
 import AdminDashboard from "./pages/AdminDashboard";
-import { useState, useEffect } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./App.css";
 import "./index.css";
-import axios from "axios";
 
 function App() {
+
   return (
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <HelmetProvider>

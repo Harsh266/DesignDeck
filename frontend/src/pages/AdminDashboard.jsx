@@ -87,10 +87,10 @@ const AdminDashboard = () => {
                 .then((res) => setUsers(res.data))
                 .catch((err) => console.error("Error fetching users:", err));
         };
-    
+
         fetchUsers(); // Fetch immediately on page load
         const interval = setInterval(fetchUsers, 5000); // Auto-refresh every 5 sec
-    
+
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);
 
@@ -108,16 +108,10 @@ const AdminDashboard = () => {
             });
             return;
         }
-    
-        axios.post(
-            "http://localhost:5000/notifications/admin-notifications",
-            { message },
-            { withCredentials: true }
-        )
-        .then((response) => {
-            
-            if (response.data.success) {
-                toast(response.data.message || "Notification sent successfully!", {
+
+        axios.post("http://localhost:5000/notifications/admin-notifications", { message }, { withCredentials: true })
+            .then(() => {
+                toast("Notification sent successfully!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -127,9 +121,10 @@ const AdminDashboard = () => {
                     style: getCustomToastStyle(theme),
                     className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
-                setMessage(""); // Clear input field after success
-            } else {
-                toast(response.data.message || "Something went wrong!", {
+                setMessage("");
+            })
+            .catch(() => {
+                toast("Failed to send notification!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -139,20 +134,7 @@ const AdminDashboard = () => {
                     style: getCustomToastStyle(theme),
                     className: theme === "dark" ? "dark-theme" : "light-theme",
                 });
-            }
-        })
-        .catch((error) => {
-            toast(error.response?.data?.message || "Failed to send notification!", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                style: getCustomToastStyle(theme),
-                className: theme === "dark" ? "dark-theme" : "light-theme",
             });
-        });
     };
 
     const handleLogout = () => {
@@ -186,13 +168,10 @@ const AdminDashboard = () => {
     };
 
     if (isAdmin === null) return (
-        <div className={`flex items-center justify-center h-screen w-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-black"}`}>
-            <div className="text-center">
-                <div className="w-16 h-16 border-4 border-t-blue-500 border-r-transparent border-b-blue-500 border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <h1 className="text-xl font-semibold tracking-wide bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                    Loading Dashboard...
-                </h1>
-            </div>
+        <div className={`flex items-center justify-center h-screen w-screen ${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}>
+            <h1 className="text-center text-xl font-semibold tracking-wide animate-bounce bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
+                Loading...
+            </h1>
         </div>
     );
 
@@ -214,10 +193,6 @@ const AdminDashboard = () => {
 
                             {/* Desktop menu */}
                             <div className="hidden md:flex items-center space-x-4">
-                                <div className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium">
-                                    <Users className="h-4 w-4 sm:h-5 sm:w-5" />
-                                    <span>Dashboard</span>
-                                </div>
 
                                 <button
                                     onClick={toggleTheme}
@@ -229,7 +204,7 @@ const AdminDashboard = () => {
 
                                 <button
                                     onClick={handleLogout}
-                                    className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-red-500 cursor-pointer ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition-colors`}
                                 >
                                     <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
                                     <span>Logout</span>
@@ -252,10 +227,6 @@ const AdminDashboard = () => {
                     {mobileMenuOpen && (
                         <div className="md:hidden w-full">
                             <div className={`px-2 pt-2 pb-3 space-y-1 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
-                                <div className={`flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium ${theme === "dark" ? "text-white bg-gray-700" : "text-gray-800 bg-gray-100"}`}>
-                                    <Users className="h-5 w-5" />
-                                    <span>Dashboard</span>
-                                </div>
 
                                 <button
                                     onClick={toggleTheme}
@@ -320,7 +291,7 @@ const AdminDashboard = () => {
                             />
                             <button
                                 onClick={sendNotification}
-                                className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 mt-3 sm:mt-0 rounded-lg ${theme === "dark"
+                                className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 mt-3 sm:mt-0 rounded-lg cursor-pointer ${theme === "dark"
                                     ? "bg-blue-600 hover:bg-blue-700"
                                     : "bg-blue-500 hover:bg-blue-600"
                                     } text-white font-medium transition-colors whitespace-nowrap flex-shrink-0`}
