@@ -96,24 +96,50 @@ router.get("/all-users", adminAuth, async (req, res) => {
 // ✅ Logout Route (Modified to update isLoggedIn)
 router.post("/logout", async (req, res) => {
     try {
-        // Get the token from cookies
+        let userId = null;
+        
+        // Try to get user ID from token
         const token = req.cookies.token;
-        if (!token) return res.status(400).json({ message: "No token found" });
-
-        // Verify the token to get user ID
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.id;
-
-        // Update the user status in the database
-        await User.findByIdAndUpdate(userId, { isLoggedIn: false });
-
-        // Clear the cookie and send response
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                userId = decoded.id;
+            } catch (tokenError) {
+                console.error("Token verification error:", tokenError);
+                // Continue to try other methods if token verification fails
+            }
+        }
+        
+        // If no user ID from token, try to get from session
+        if (!userId && req.session && req.session.user) {
+            userId = req.session.user._id;
+        }
+        
+        // If we found a user ID, update their login status
+        if (userId) {
+            await User.findByIdAndUpdate(userId, { isLoggedIn: false });
+        }
+        
+        // Clear cookie
         res.clearCookie("token", { httpOnly: true, sameSite: "lax" });
-        res.status(200).json({ message: "User logged out successfully" });
-
+        
+        // Destroy session if it exists
+        if (req.session) {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error("Logout Error:", err);
+                    return res.status(500).json({ message: "Logout failed" });
+                }
+                
+                res.status(200).json({ message: "Logged out successfully" });
+            });
+        } else {
+            // If no session exists, just send success response
+            res.status(200).json({ message: "Logged out successfully" });
+        }
     } catch (error) {
         console.error("Logout Error:", error);
-        res.status(500).json({ message: "Logout failed", error });
+        res.status(500).json({ message: "Logout failed", error: error.message });
     }
 });
 

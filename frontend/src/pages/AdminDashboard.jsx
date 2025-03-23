@@ -139,7 +139,6 @@ const AdminDashboard = () => {
 
     const handleLogout = () => {
         axios.post("http://localhost:5000/auth/logout", {}, { withCredentials: true })
-        axios.get("http://localhost:5000/auth/all-users", { withCredentials: true })
             .then(() => {
                 toast("Logged out successfully!", {
                     position: "top-right",
@@ -178,7 +177,7 @@ const AdminDashboard = () => {
     return (
         <>
             <ToastContainer />
-            <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-800"} transition-colors duration-300`}>
+            <div className={`min-h-screen ${theme === "dark" ? "bg-black text-gray-100" : "bg-gray-50 text-gray-800"} transition-colors duration-300`}>
                 {/* Navbar */}
                 <nav className={`flex flex-col w-full items-end px-4 sm:px-6 py-3 fixed top-0 left-0 backdrop-blur-2xl z-50 ${theme === "dark" ? "bg-[#000000f3] text-white" : "bg-[#ffffffc3] text-black"
                     }`}>

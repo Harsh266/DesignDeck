@@ -109,7 +109,7 @@ const Navbar = () => {
         setMobileMenuOpen(false);
 
         // Redirect after delay
-        setTimeout(() => navigate("/landingpage"), 5000);
+        setTimeout(() => navigate("/landingpage"), 3000);
 
     } catch (error) {
         console.error("❌ Logout failed:", error.response?.data || error.message);
