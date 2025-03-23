@@ -28,21 +28,32 @@ router.post("/register", async (req, res) => {
 // ✅ Login Route (Modified to update lastLogin and isLoggedIn)
 router.post("/login", async (req, res, next) => {
     passport.authenticate("local", async (err, user, info) => {
-        if (err) return res.status(500).json({ message: "Server error" });
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: "Server error" });
+        }
         if (!user) return res.status(400).json({ message: info.message });
 
         req.login(user, async (err) => {
             if (err) return res.status(500).json({ message: "Login failed" });
 
+            req.session.user = user; // ✅ Store user in session
+
             // Update isLoggedIn status to true
             await User.findByIdAndUpdate(user._id, { isLoggedIn: true });
 
-            res.cookie("token", jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" }), {
+            // Set JWT cookie
+            res.cookie("token", jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+                expiresIn: "1d"
+            }), {
                 httpOnly: true,
-                sameSite: "lax",
+                sameSite: "lax"
             });
 
-            res.status(200).json({ message: "Login successful", user });
+            req.session.save((err) => {
+                if (err) return res.status(500).json({ message: "Session error" });
+                res.status(200).json({ message: "Login successful", user });
+            });
         });
     })(req, res, next);
 });
