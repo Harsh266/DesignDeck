@@ -27,6 +27,16 @@ function UserNotifications() {
         };
     }, []);
 
+    useEffect(() => {
+        fetchNotifications(); // Initial fetch
+    
+        const interval = setInterval(() => {
+            fetchNotifications();
+        }, 5000); // Fetch every 5 seconds
+    
+        return () => clearInterval(interval); // Cleanup on unmount
+    }, []);
+
     // ✅ Fetch notifications from backend
     const fetchNotifications = async () => {
         try {
