@@ -306,6 +306,7 @@ const ImagePopup = ({
     description
 }) => {
     const [previewFiles, setPreviewFiles] = useState([]);
+    const { theme } = useContext(ThemeContext);
 
     // Generate image previews when tempFiles changes
     useEffect(() => {
@@ -319,32 +320,31 @@ const ImagePopup = ({
 
     return (
         <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
-            <div className="bg-white text-black rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center ">
+            <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
                 {/* Close Button */}
-                <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+                <button className={`absolute top-3 sm:top-4 right-3 sm:right-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"} cursor-pointer`} onClick={() => setPopup(null)}>✖</button>
 
                 {/* Title */}
                 <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
                     <i className="ri-file-upload-line"></i>
                     <p className="font-semibold">Upload Images</p>
                 </h2>
-                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your images here</p>
+                <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-[10px] sm:text-[11px] md:text-[12px]`}>Add your images here</p>
 
                 {/* File Upload Box */}
-                <label htmlFor="fileInput" className="mt-3 sm:mt-4 border border-2 border-[#ED9E29] bg-[#FDE8CB] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
-                    <i className="ri-file-image-line text-[#ED9E29] text-lg sm:text-xl md:text-[22px]"></i>
-                    <p className="text-[#ED9E29] font-medium mt-1 text-sm sm:text-base">Choose Files</p>
+                <label htmlFor="fileInput" className={`mt-3 sm:mt-4 border border-2 ${theme === "dark" ? "border-[#FFB74D] bg-[#FFE3BD]" : "border-[#ED9E29] bg-[#FDE8CB]"} p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center`}>
+                    <i className={`ri-file-image-line ${theme === "dark" ? "text-[#FFB74D]" : "text-[#ED9E29]"} text-lg sm:text-xl md:text-[22px]`}></i>
+                    <p className={`${theme === "dark" ? "text-[#FFB74D]" : "text-[#ED9E29]"} font-medium mt-1 text-sm sm:text-base`}>Choose Files</p>
                     <input type="file" id="fileInput" accept=".jpg,.png" className="hidden" onChange={handleFileChange} multiple />
                 </label>
-                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only .jpg and .png files. 50 MB max file size.</p>
-
+                <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-500"} text-[10px] sm:text-[11px] md:text-[12px] mt-1`}>Only .jpg and .png files. 50 MB max file size.</p>
 
                 {/* Project Name */}
                 <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
                 <input
                     type="text"
                     placeholder="Enter your project name"
-                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
+                    className={`w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 ${theme === "dark" ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white text-black"} text-xs sm:text-sm`}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
@@ -353,7 +353,7 @@ const ImagePopup = ({
                 <label className="mt-2 text-xs sm:text-sm font-medium">Project Description</label>
                 <textarea
                     placeholder="Enter your project description"
-                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
+                    className={`w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 ${theme === "dark" ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white text-black"} text-xs sm:text-sm`}
                     value={description}
                     rows={1}
                     onChange={(e) => setDescription(e.target.value)}
@@ -365,34 +365,43 @@ const ImagePopup = ({
                     {previewFiles.length > 0 ? (
                         <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
                             {previewFiles.map((preview, index) => (
-                                <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
+                                <div key={index} className={`flex items-center justify-between ${theme === "dark" ? "bg-gray-700 border-gray-600" : "bg-white border-gray-300"} p-1.5 sm:p-2 rounded border`}>
                                     <div className="flex items-center gap-1 sm:gap-2">
-                                        <i className="ri-image-2-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
+                                        <i className={`ri-image-2-line ${theme === "dark" ? "text-gray-300" : "text-[#9E9E9E]"} text-lg sm:text-xl md:text-[25px]`}></i>
                                         <div>
                                             <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
-                                            <p className="text-[10px] sm:text-xs text-gray-500">
+                                            <p className={`text-[10px] sm:text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                                                 {tempFiles[index]?.size
                                                     ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
                                                     : "0 MB"}
                                             </p>
                                         </div>
                                     </div>
-                                    <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
+                                    <button onClick={() => handleDeleteTempFile(index)} className={`${theme === "dark" ? "text-gray-300" : "text-[#9E9E9E]"} cursor-pointer`}>
                                         <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
                                     </button>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
+                        <p className={`text-xs sm:text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"} mt-1 sm:mt-2`}>No files selected</p>
                     )}
                 </div>
 
-
                 {/* Buttons */}
                 <div className="mt-3 sm:mt-4 flex justify-end gap-2">
-                    <button className="border border-[#ED9E29] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#ED9E29] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
-                    <button className="bg-[#ED9E29] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
+                    <button
+                        className={`border ${theme === "dark" ? "border-[#FFB74D] text-[#FFB74D]" : "border-[#ED9E29] text-[#ED9E29]"} px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm`}
+                        onClick={() => setPopup(null)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        className={`${theme === "dark" ? "bg-[#FFB74D]" : "bg-[#ED9E29]"} text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm`}
+                        onClick={handleUpload}
+                    >
+                        Upload
+                    </button>
                 </div>
             </div>
         </div>
@@ -412,6 +421,7 @@ const CodePopup = ({
     description
 }) => {
     const [previewFiles, setPreviewFiles] = useState([]);
+    const { theme } = useContext(ThemeContext);
 
     // Generate file previews when tempFiles changes
     useEffect(() => {
@@ -424,7 +434,7 @@ const CodePopup = ({
 
     return (
         <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
-            <div className="bg-white text-black rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center">
+            <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
                 {/* Close Button */}
                 <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
 
@@ -515,6 +525,7 @@ const VideoPopup = ({
     description
 }) => {
     const [previewFiles, setPreviewFiles] = useState([]);
+    const { theme } = useContext(ThemeContext);
 
     // Generate video previews when tempFiles changes
     useEffect(() => {
@@ -527,7 +538,7 @@ const VideoPopup = ({
 
     return (
         <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
-            <div className="bg-white text-black rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center">
+            <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
                 {/* Close Button */}
                 <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
 
@@ -604,7 +615,6 @@ const VideoPopup = ({
         </div>
     );
 };
-
 const FileDisplay = ({ files, type, handleDelete }) => {
     const { theme } = useContext(ThemeContext);
 
