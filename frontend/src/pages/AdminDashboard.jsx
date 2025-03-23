@@ -89,7 +89,7 @@ const AdminDashboard = () => {
         };
 
         fetchUsers(); // Fetch immediately on page load
-        const interval = setInterval(fetchUsers, 5000); // Auto-refresh every 5 sec
+        const interval = setInterval(fetchUsers, 2000); // Auto-refresh every 5 sec
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);

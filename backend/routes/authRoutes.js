@@ -39,8 +39,14 @@ router.post("/login", async (req, res, next) => {
 
             req.session.user = user; // ✅ Store user in session
 
-            // Update isLoggedIn status to true
-            await User.findByIdAndUpdate(user._id, { isLoggedIn: true });
+            // Get current timestamp
+            const currentTime = new Date();
+            
+            // Update isLoggedIn status to true and save last login timestamp
+            await User.findByIdAndUpdate(user._id, { 
+                isLoggedIn: true,
+                lastLogin: currentTime
+            });
 
             // Set JWT cookie
             res.cookie("token", jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -52,7 +58,13 @@ router.post("/login", async (req, res, next) => {
 
             req.session.save((err) => {
                 if (err) return res.status(500).json({ message: "Session error" });
-                res.status(200).json({ message: "Login successful", user });
+                res.status(200).json({ 
+                    message: "Login successful", 
+                    user: {
+                        ...user._doc,
+                        lastLogin: currentTime
+                    }
+                });
             });
         });
     })(req, res, next);
