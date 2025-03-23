@@ -88,18 +88,6 @@ const Navbar = () => {
 
         console.log("🟢 Logout successful:", response.data);
 
-        // Show success toast
-        toast("Logged out successfully!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: getCustomToastStyle(theme),
-            className: theme === "dark" ? "dark-theme" : "light-theme",
-        });
-
         // Clear user data
         setUser(null);
         localStorage.removeItem("user");
@@ -109,22 +97,10 @@ const Navbar = () => {
         setMobileMenuOpen(false);
 
         // Redirect after delay
-        setTimeout(() => navigate("/landingpage"), 1000);
+        navigate("/landingpage");
 
     } catch (error) {
         console.error("❌ Logout failed:", error.response?.data || error.message);
-
-        // Show error toast
-        toast("Logout failed!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: getCustomToastStyle(theme),
-            className: theme === "dark" ? "dark-theme" : "light-theme",
-        });
 
         // Debugging: Check browser cookies
         console.log("Browser Cookies:", document.cookie);
