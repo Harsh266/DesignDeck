@@ -471,6 +471,8 @@ const Landingpage = () => {
                         >
                             <i className="ri-instagram-line text-lg sm:text-xl"></i>
                         </a>
+                            <Link to="/document"><i className="ri-file-list-2-line text-lg sm:text-xl"></i></Link>
+                        
                     </div>
                 </footer>
             </div>
