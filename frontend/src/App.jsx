@@ -14,6 +14,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";// Updated import
 import UserNotifications from "./pages/UserNotifications";
 import AdminDashboard from "./pages/AdminDashboard";
+import Document from "./Document/Document";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./App.css";
 import "./index.css";
@@ -40,6 +41,7 @@ function App() {
               <Route path="/changepasswordwithtoken/:token" element={<ChangePassword />} />
               <Route path="/user-notifications" element={<UserNotifications />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/document" element={<Document />} />
               <Route path="*" element={<Landingpage />} />
             </Routes>
           </Router>
