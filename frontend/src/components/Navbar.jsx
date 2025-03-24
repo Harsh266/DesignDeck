@@ -140,8 +140,8 @@ const Navbar = () => {
             >
               <img
                 src={user.profilePicture || (theme === "dark"
-                  ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg"
-                  : "https://static.thenounproject.com/png/642902-200.png")}
+                  ? "./public/Profile-2.png"
+                  : "./public/Profile-1.png")}
                 alt="User"
                 className="object-cover object-top w-8 h-8 md:w-10 md:h-10 rounded-full"
               />
@@ -195,8 +195,8 @@ const Navbar = () => {
                 <div className="flex items-center gap-4">
                   <img
                     src={user.profilePicture || (theme === "dark"
-                      ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg"
-                      : "https://static.thenounproject.com/png/642902-200.png")}
+                      ? "./public/Profile-2.png"
+                      : "./public/Profile-1.png")}
                     alt="User"
                     className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover object-top"
                   />
@@ -266,8 +266,8 @@ const Navbar = () => {
                 <div className="flex flex-col items-center gap-2">
                   <img
                     src={user.profilePicture || (theme === "dark"
-                      ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg"
-                      : "https://static.thenounproject.com/png/642902-200.png")}
+                      ? "./public/Profile-2.png"
+                      : "./public/Profile-1.png")}
                     alt="User"
                     className="w-20 h-20 rounded-full object-cover object-top"
                   />
