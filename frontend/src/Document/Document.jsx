@@ -130,28 +130,29 @@ export default function Document() {
         <div className="flex flex-col md:flex-row w-full">
           {/* Sidebar*/}
           <aside className="hidden md:block w-[20%] mr-8 flex-shrink-0">
-            <div className="sticky top-24">
+  <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pr-2 custom-scrollbar">
+    <nav>
+      <ul className="space-y-1">
+        {sidebarSections.map((section) => (
+          <li key={section.id}>
+            <a
+              href={`#${section.id}`}
+              className={`block px-3 py-2 rounded-md ${
+                expandedSection === section.id
+                  ? styles.activeSection
+                  : `${styles.text} ${styles.hoverSection}`
+              }`}
+              onClick={() => toggleSection(section.id)}
+            >
+              {section.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</aside>
 
-              <nav>
-                <ul className="space-y-1">
-                  {sidebarSections.map(section => (
-                    <li key={section.id}>
-                      <a
-                        href={`#${section.id}`}
-                        className={`block px-3 py-2 rounded-md ${expandedSection === section.id
-                          ? styles.activeSection
-                          : `${styles.text} ${styles.hoverSection}`
-                          }`}
-                        onClick={() => toggleSection(section.id)}
-                      >
-                        {section.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-          </aside>
 
           {/* Documentation Content */}
           <main className={`flex-1 rounded-lg shadow-sm border w-[70%] ${styles.card} p-6 md:p-8 mt-5`}>
