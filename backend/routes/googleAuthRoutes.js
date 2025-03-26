@@ -4,6 +4,9 @@ const User = require("../models/User"); // Import User model
 
 const router = express.Router();
 
+// ✅ Admin Email List
+const adminEmails = ["harshvekriya441@gmail.com"];
+
 // ✅ Google OAuth Login Route
 router.get(
     "/google",
@@ -24,21 +27,30 @@ router.get(
         const currentTime = new Date();
 
         try {
-            // ✅ Update user in the database
-            await User.findOneAndUpdate(
-                { email: req.user.email },
-                {
+            // ✅ Find or Create User
+            let user = await User.findOne({ email: req.user.email });
+
+            if (!user) {
+                const isAdmin = adminEmails.includes(req.user.email); // Check if admin
+                user = new User({
+                    name: req.user.displayName,
+                    email: req.user.email,
+                    isAdmin,
                     isLoggedIn: true,
-                    lastLogin: currentTime
-                },
-                { new: true }
-            );
+                    lastLogin: currentTime,
+                });
+                await user.save();
+            } else {
+                user.isLoggedIn = true;
+                user.lastLogin = currentTime;
+                await user.save();
+            }
 
             // Store user in session
-            req.session.user = req.user;
+            req.session.user = user;
 
             // ✅ Redirect based on user role
-            if (req.user.email === "harshvekriya441@gmail.com") {
+            if (user.isAdmin) {
                 res.redirect("http://localhost:5173/admin-dashboard");
             } else {
                 res.redirect("http://localhost:5173/dashboard");

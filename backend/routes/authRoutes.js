@@ -6,6 +6,9 @@ const router = express.Router();
 const adminAuth = require("../middleware/adminAuth"); // Import adminAuth middleware
 const jwt = require("jsonwebtoken");
 
+// ✅ Define Admin Emails
+const adminEmails = ["harshvekriya441@gmail.com"];
+
 // ✅ Register Route
 router.post("/register", async (req, res) => {
     try {
@@ -15,23 +18,29 @@ router.post("/register", async (req, res) => {
         if (existingUser) return res.status(400).json({ message: "User already exists" });
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ name, email, password: hashedPassword });
+
+        // ✅ Assign Role Based on Email
+        const isAdmin = adminEmails.includes(email);
+        const role = isAdmin ? "admin" : "user";
+
+        const newUser = new User({ name, email, password: hashedPassword, isAdmin, role });
 
         await newUser.save();
-        res.status(201).json({ message: "User registered successfully", user: { name, email } });
+        res.status(201).json({ 
+            message: "User registered successfully", 
+            user: { name, email, isAdmin, role } 
+        });
+
     } catch (error) {
-        console.error("Register Error:", error);
+        console.error("❌ Register Error:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
 
-// ✅ Login Route (Modified to update lastLogin and isLoggedIn)
+// ✅ Login Route
 router.post("/login", async (req, res, next) => {
     passport.authenticate("local", async (err, user, info) => {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({ message: "Server error" });
-        }
+        if (err) return res.status(500).json({ message: "Server error" });
         if (!user) return res.status(400).json({ message: info.message });
 
         req.login(user, async (err) => {
@@ -39,29 +48,27 @@ router.post("/login", async (req, res, next) => {
 
             req.session.user = user; // ✅ Store user in session
 
-            // Get current timestamp
+            // ✅ Update Login Details
             const currentTime = new Date();
-            
-            // Update isLoggedIn status to true and save last login timestamp
             await User.findByIdAndUpdate(user._id, { 
-                isLoggedIn: true,
-                lastLogin: currentTime
+                isLoggedIn: true, 
+                lastLogin: currentTime 
             });
 
-            // Set JWT cookie
+            // ✅ Set JWT Cookie
             res.cookie("token", jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
-            }), {
-                httpOnly: true,
-                sameSite: "lax"
-            });
+            }), { httpOnly: true, sameSite: "lax" });
 
             req.session.save((err) => {
                 if (err) return res.status(500).json({ message: "Session error" });
                 res.status(200).json({ 
                     message: "Login successful", 
                     user: {
-                        ...user._doc,
+                        name: user.name,
+                        email: user.email,
+                        isAdmin: user.isAdmin, // ✅ Ensure isAdmin is returned
+                        role: user.isAdmin ? "admin" : "user", // ✅ Correct role assignment
                         lastLogin: currentTime
                     }
                 });

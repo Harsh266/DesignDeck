@@ -319,6 +319,7 @@ const AdminDashboard = () => {
                                             <tr className={`text-left ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"}`}>
                                                 <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Name</th>
                                                 <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Email</th>
+                                                <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Role</th>
                                                 <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium hidden sm:table-cell">Last Login</th>
                                                 <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Status</th>
                                             </tr>
@@ -328,6 +329,10 @@ const AdminDashboard = () => {
                                                 <tr key={user._id} className={`${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-50"} transition-colors`}>
                                                     <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">{user.name}</td>
                                                     <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[180px] md:max-w-none">{user.email}</td>
+                                                    <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[180px] md:max-w-none">
+                                                        {user.isAdmin === true ? "Admin" : "User"}
+                                                    </td>
+
                                                     <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm hidden sm:table-cell">{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "Never"}</td>
                                                     <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm">
                                                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${user.isLoggedIn
