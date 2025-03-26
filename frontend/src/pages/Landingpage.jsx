@@ -72,7 +72,7 @@ const Landingpage = () => {
                                 <button
                                     className={`px-4 lg:px-6 py-2 rounded-full border-5 shadow-md border backdrop-blur-md cursor-pointer transition-all duration-300 ${theme === "dark" ? "bg-purple-600 text-white border-white/50" : "bg-purple-400 text-white border-white/50"}`}
                                 >
-                                    Login
+                                    Log in
                                 </button>
                             </Link>
                         </div>
