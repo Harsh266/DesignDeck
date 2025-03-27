@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeContext } from "../context/ThemeContext";
-import { Sun, Moon, Bell, LogOut, Menu, Users, User as UserIcon, X, Link2, ExternalLink, Globe, Mail, Calendar, UserCheck } from "lucide-react"; // Added Menu icon
+import { Sun, Moon, Bell, LogOut, Menu, Users, User as UserIcon, X, Trash2 } from "lucide-react"; // Added Menu icon
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminDashboard = () => {
@@ -359,22 +359,41 @@ const AdminDashboard = () => {
                                                             {user.isLoggedIn ? "Online" : "Offline"}
                                                         </span>
                                                     </td>
-                                                    <td className="px-4 py-3">
+                                                    <td className="px-4 py-3 flex items-center space-x-2">
+                                                        {/* Profile Icon Button */}
                                                         <button
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 handleProfileIconClick(user);
                                                             }}
-                                                            className={`p-1 rounded-full ${isAdmin ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                                                            className={`p-1 rounded-full transition hover:scale-105`}
                                                             disabled={!isAdmin}
                                                         >
                                                             <UserIcon
                                                                 className={`h-5 w-5 ${theme === "dark"
-                                                                    ? "text-blue-400 hover:text-blue-300"
-                                                                    : "text-blue-500 hover:text-blue-600"}`}
+                                                                        ? "text-blue-400 hover:text-blue-300"
+                                                                        : "text-blue-500 hover:text-blue-600"
+                                                                    }`}
+                                                            />
+                                                        </button>
+
+                                                        {/* Delete Icon Button */}
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteUser(user._id);
+                                                            }}
+                                                            className="p-1 rounded-full transition cursor-pointer hover:scale-105"
+                                                        >
+                                                            <Trash2
+                                                                className={`h-5 w-5 ${theme === "dark"
+                                                                        ? "text-red-400 hover:text-red-300"
+                                                                        : "text-red-500 hover:text-red-600"
+                                                                    }`}
                                                             />
                                                         </button>
                                                     </td>
+
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -384,149 +403,29 @@ const AdminDashboard = () => {
 
                             {/* Profile Popup */}
                             {profilePopupUser && isAdmin && (
-                                <div className={`
-                                    fixed 
-                                    inset-0 
-                                    z-50 
-                                    flex 
-                                    items-center 
-                                    justify-center 
-                                    ${theme === "dark"
-                                        ? "bg-black/40 backdrop-blur-sm"
-                                        : "bg-white/40 backdrop-blur-md"}
-                                `}>
-                                    <div
-                                        className={`
-                                            w-full 
-                                            max-w-md 
-                                            relative 
-                                            rounded-2xl 
-                                            shadow-2xl 
-                                            overflow-hidden 
-                                            transform 
-                                            transition-all 
-                                            duration-300
-                                            ${theme === "dark"
-                                                ? "bg-gray-900 text-gray-200 border border-gray-800"
-                                                : "bg-white text-gray-900 border border-gray-200"}
-                                        `}
-                                    >
-                                        {/* Close Button */}
-                                        <button
-                                            onClick={() => setProfilePopupUser(null)}
-                                            className={`
-                                                absolute 
-                                                top-3 
-                                                right-3 
-                                                sm:top-4 
-                                                sm:right-4 
-                                                z-10 
-                                                p-1.5 
-                                                sm:p-2 
-                                                rounded-full 
-                                                transition-colors 
-                                                duration-200
-                                                text-gray-300 cursor-pointer
-                                            `}
-                                        >
-                                            <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                                <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${theme === "dark" ? "bg-black/40 backdrop-blur-sm" : "bg-white/40 backdrop-blur-md"}`}>
+                                    <div className={`w-full max-w-md relative rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ${theme === "dark" ? "bg-gray-900 text-gray-200 border border-gray-800" : "bg-white text-gray-900 border border-gray-200"}`}>
+                                        <button onClick={() => setProfilePopupUser(null)} className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-colors duration-200 text-gray-300 cursor-pointer `}>
+                                            <X className="w-6 h-6" />
                                         </button>
 
-                                        {/* Header Gradient */}
-                                        <div
-                                            className={`
-                                                h-20 
-                                                sm:h-24 
-                                                md:h-28 
-                                                ${theme === "dark"
-                                                    ? "bg-gradient-to-r from-blue-900 to-purple-900"
-                                                    : "bg-gradient-to-r from-blue-500 to-purple-600"
-                                                }
-                                            `}
-                                        />
+                                        <div className={`h-24 md:h-32 lg:h-36 ${theme === "dark" ? "bg-gradient-to-r from-blue-900 to-purple-900" : "bg-gradient-to-r from-blue-500 to-purple-600"}`} />
 
-                                        {/* Profile Avatar */}
-                                        <div className="relative -mt-8 sm:-mt-10 md:-mt-12 flex justify-center">
-                                            <div
-                                                className={`
-                                                    w-16 
-                                                    h-16 
-                                                    sm:w-20 
-                                                    sm:h-20 
-                                                    md:w-24 
-                                                    md:h-24 
-                                                    rounded-full 
-                                                    border-4 
-                                                    flex 
-                                                    items-center 
-                                                    justify-center 
-                                                    shadow-md
-                                                    ${theme === "dark"
-                                                        ? "border-gray-800 bg-gray-700"
-                                                        : "border-white bg-gray-200"
-                                                    }
-                                                `}
-                                            >
-                                                <UserIcon
-                                                    className={`
-                                                        w-8 
-                                                        h-8 
-                                                        sm:w-10 
-                                                        sm:h-10 
-                                                        md:w-12 
-                                                        md:h-12
-                                                        ${theme === "dark"
-                                                            ? "text-gray-300"
-                                                            : "text-gray-600"
-                                                        }
-                                                    `}
-                                                />
+                                        <div className="relative -mt-10 md:-mt-14 lg:-mt-16 flex justify-center">
+                                            <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full border-4 flex items-center justify-center shadow-md ${theme === "dark" ? "border-gray-800 bg-gray-700" : "border-white bg-gray-200"}`}>
+                                                <UserIcon className={`w-10 md:w-12 lg:w-14 h-10 md:h-12 lg:h-14 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`} />
                                             </div>
                                         </div>
 
-                                        {/* User Name and Role */}
-                                        <div className="text-center p-4 sm:p-5 md:p-6">
-                                            <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
-                                                {profilePopupUser.name}
-                                            </h2>
-                                            <span
-                                                className={`
-                                                    inline-block 
-                                                    mt-1.5 
-                                                    sm:mt-2 
-                                                    px-2.5 
-                                                    py-0.5 
-                                                    sm:px-3 
-                                                    sm:py-1 
-                                                    rounded-full 
-                                                    text-xs 
-                                                    font-medium
-                                                    ${theme === "dark"
-                                                        ? "bg-gray-700 text-gray-300"
-                                                        : "bg-gray-200 text-gray-700"
-                                                    }
-                                                `}
-                                            >
+                                        <div className="text-center p-4 md:p-5 lg:p-6">
+                                            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold">{profilePopupUser.name}</h2>
+                                            <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs md:text-sm font-medium ${theme === "dark" ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700"}`}>
                                                 {profilePopupUser.isAdmin ? "Admin" : "User"}
                                             </span>
                                         </div>
 
-                                        {/* User Details */}
-                                        <div
-                                            className={`
-                                                p-3 
-                                                sm:p-4 
-                                                mx-3 
-                                                sm:mx-4 
-                                                mb-4 
-                                                rounded-xl
-                                                ${theme === "dark"
-                                                    ? "bg-gray-800 text-gray-300"
-                                                    : "bg-gray-100 text-gray-800"
-                                                }
-                                            `}
-                                        >
-                                            <div className="space-y-1.5 sm:space-y-2">
+                                        <div className={`p-4 md:p-5 lg:p-6 mx-4 md:mx-5 mb-4 md:mb-5 rounded-xl ${theme === "dark" ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-800"}`}>
+                                            <div className="space-y-2 md:space-y-2.5">
                                                 {[
                                                     { label: "Email", value: profilePopupUser.email },
                                                     {
@@ -538,24 +437,11 @@ const AdminDashboard = () => {
                                                     {
                                                         label: "Status",
                                                         value: profilePopupUser.isLoggedIn ? "Online" : "Offline",
-                                                        className: profilePopupUser.isLoggedIn
-                                                            ? "text-green-500"
-                                                            : "text-red-500"
+                                                        className: profilePopupUser.isLoggedIn ? "text-green-500" : "text-red-500"
                                                     }
                                                 ].map(({ label, value, className = '' }, index) => (
-                                                    <p
-                                                        key={index}
-                                                        className={`
-                                                            text-xs 
-                                                            sm:text-sm 
-                                                            flex 
-                                                            items-center 
-                                                            ${className}
-                                                        `}
-                                                    >
-                                                        <strong className="mr-2 min-w-[70px] inline-block">
-                                                            {label}:
-                                                        </strong>
+                                                    <p key={index} className={`text-sm md:text-base flex items-center ${className}`}>
+                                                        <strong className="mr-2 min-w-[80px] md:min-w-[100px] inline-block">{label}:</strong>
                                                         {value}
                                                     </p>
                                                 ))}
