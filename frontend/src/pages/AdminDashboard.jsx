@@ -103,6 +103,28 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleDeleteUser = async (email) => {
+        // Step 1: Send DELETE request to the backend
+        const response = await axios.delete(`http://localhost:5000/admin/delete-user/${email}`, {
+            withCredentials: true,
+        });
+    
+        toast("User deleted successfully!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: getCustomToastStyle(theme),
+            className: theme === "dark" ? "dark-theme" : "light-theme",
+        });
+        setToastShown(true);
+    
+        // Step 2: Update UI immediately after deletion
+        setUsers(prevUsers => prevUsers.filter(user => user.email !== email));
+    };
+    
     const sendNotification = () => {
         if (!message.trim()) {
             toast("Message cannot be empty!", {
@@ -204,10 +226,9 @@ const AdminDashboard = () => {
 
                                 <button
                                     onClick={toggleTheme}
-                                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition-colors`}
+                                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition-colors`}
                                 >
                                     {theme === "dark" ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
-                                    <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
                                 </button>
 
                                 <button
@@ -366,7 +387,7 @@ const AdminDashboard = () => {
                                                                 e.stopPropagation();
                                                                 handleProfileIconClick(user);
                                                             }}
-                                                            className={`p-1 rounded-full transition hover:scale-105`}
+                                                            className={`p-1 rounded-full transition cursor-pointer hover:scale-105`}
                                                             disabled={!isAdmin}
                                                         >
                                                             <UserIcon
@@ -385,7 +406,7 @@ const AdminDashboard = () => {
                                                             }}
                                                             className="p-1 rounded-full transition cursor-pointer hover:scale-105"
                                                         >
-                                                            <Trash2
+                                                            <Trash2 onClick={() => handleDeleteUser(user.email)}
                                                                 className={`h-5 w-5 ${theme === "dark"
                                                                         ? "text-red-400 hover:text-red-300"
                                                                         : "text-red-500 hover:text-red-600"
