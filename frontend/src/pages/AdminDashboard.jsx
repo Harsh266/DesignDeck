@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeContext } from "../context/ThemeContext";
-import { Sun, Moon, Bell, Users, LogOut, Menu } from "lucide-react"; // Added Menu icon
+import { Sun, Moon, Bell, LogOut, Menu, Users, User as UserIcon, X, Link2, ExternalLink, Globe, Mail, Calendar, UserCheck } from "lucide-react"; // Added Menu icon
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminDashboard = () => {
@@ -12,6 +12,7 @@ const AdminDashboard = () => {
     const { theme, toggleTheme } = useContext(ThemeContext);
     const [users, setUsers] = useState([]);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [profilePopupUser, setProfilePopupUser] = useState(null);
     const navigate = useNavigate();
 
     const [toastShown, setToastShown] = useState(false);
@@ -93,6 +94,14 @@ const AdminDashboard = () => {
 
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);
+
+    // Fetch a specific user's details
+
+    const handleProfileIconClick = (user) => {
+        if (isAdmin) {
+            setProfilePopupUser(user);
+        }
+    };
 
     const sendNotification = () => {
         if (!message.trim()) {
@@ -301,7 +310,8 @@ const AdminDashboard = () => {
                     </div>
 
                     {/* Users Table */}
-                    <div className={`rounded-xl shadow-md overflow-hidden ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
+                    <div className={`rounded-xl shadow-md overflow-hidden ${theme === "dark" ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"}`}>
+                        {/* Header Section */}
                         <div className="p-4 sm:p-6 pb-3 sm:pb-4">
                             <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
                                 <Users className={`h-4 w-4 sm:h-5 sm:w-5 ${theme === "dark" ? "text-blue-400" : "text-blue-500"}`} />
@@ -311,36 +321,59 @@ const AdminDashboard = () => {
                                 All registered users and their current status
                             </p>
                         </div>
+
+                        {/* User Table */}
                         <div className="overflow-x-auto">
                             <div className="inline-block min-w-full align-middle">
                                 <div className="overflow-hidden">
                                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                         <thead>
-                                            <tr className={`text-left ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"}`}>
-                                                <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Name</th>
-                                                <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Email</th>
-                                                <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Role</th>
-                                                <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium hidden sm:table-cell">Last Login</th>
-                                                <th className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">Status</th>
+                                            <tr className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-100"} text-left`}>
+                                                <th className="px-4 py-3 text-sm font-medium">Name</th>
+                                                <th className="px-4 py-3 text-sm font-medium">Email</th>
+                                                <th className="px-4 py-3 text-sm font-medium">Role</th>
+                                                <th className="px-4 py-3 text-sm font-medium hidden sm:table-cell">Last Login</th>
+                                                <th className="px-4 py-3 text-sm font-medium">Status</th>
+                                                <th className="px-4 py-3 text-sm font-medium">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                                             {users.map((user) => (
-                                                <tr key={user._id} className={`${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-50"} transition-colors`}>
-                                                    <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm font-medium">{user.name}</td>
-                                                    <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[180px] md:max-w-none">{user.email}</td>
-                                                    <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-[180px] md:max-w-none">
-                                                        {user.isAdmin === true ? "Admin" : "User"}
+                                                <tr
+                                                    key={user._id}
+                                                    onClick={() => handleUserClick(user._id)}
+                                                    className={`cursor-pointer ${theme === "dark"
+                                                        ? "hover:bg-gray-700 text-gray-300"
+                                                        : "hover:bg-gray-50 text-gray-800"} transition`}
+                                                >
+                                                    <td className="px-4 py-3">{user.name}</td>
+                                                    <td className="px-4 py-3 truncate">{user.email}</td>
+                                                    <td className="px-4 py-3">{user.isAdmin ? "Admin" : "User"}</td>
+                                                    <td className="px-4 py-3 hidden sm:table-cell">
+                                                        {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "Never"}
                                                     </td>
-
-                                                    <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm hidden sm:table-cell">{user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "Never"}</td>
-                                                    <td className="px-3 py-3 sm:px-4 md:px-6 text-xs sm:text-sm">
-                                                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${user.isLoggedIn
-                                                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                                                            : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-                                                            }`}>
+                                                    <td className="px-4 py-3">
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.isLoggedIn
+                                                            ? "bg-green-500 text-white"
+                                                            : "bg-red-500 text-white"}`}>
                                                             {user.isLoggedIn ? "Online" : "Offline"}
                                                         </span>
+                                                    </td>
+                                                    <td className="px-4 py-3">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleProfileIconClick(user);
+                                                            }}
+                                                            className={`p-1 rounded-full ${isAdmin ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+                                                            disabled={!isAdmin}
+                                                        >
+                                                            <UserIcon
+                                                                className={`h-5 w-5 ${theme === "dark"
+                                                                    ? "text-blue-400 hover:text-blue-300"
+                                                                    : "text-blue-500 hover:text-blue-600"}`}
+                                                            />
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -348,6 +381,189 @@ const AdminDashboard = () => {
                                     </table>
                                 </div>
                             </div>
+
+                            {/* Profile Popup */}
+                            {profilePopupUser && isAdmin && (
+                                <div className={`
+                                    fixed 
+                                    inset-0 
+                                    z-50 
+                                    flex 
+                                    items-center 
+                                    justify-center 
+                                    ${theme === "dark"
+                                        ? "bg-black/40 backdrop-blur-sm"
+                                        : "bg-white/40 backdrop-blur-md"}
+                                `}>
+                                    <div
+                                        className={`
+                                            w-full 
+                                            max-w-md 
+                                            relative 
+                                            rounded-2xl 
+                                            shadow-2xl 
+                                            overflow-hidden 
+                                            transform 
+                                            transition-all 
+                                            duration-300
+                                            ${theme === "dark"
+                                                ? "bg-gray-900 text-gray-200 border border-gray-800"
+                                                : "bg-white text-gray-900 border border-gray-200"}
+                                        `}
+                                    >
+                                        {/* Close Button */}
+                                        <button
+                                            onClick={() => setProfilePopupUser(null)}
+                                            className={`
+                                                absolute 
+                                                top-3 
+                                                right-3 
+                                                sm:top-4 
+                                                sm:right-4 
+                                                z-10 
+                                                p-1.5 
+                                                sm:p-2 
+                                                rounded-full 
+                                                transition-colors 
+                                                duration-200
+                                                text-gray-300 cursor-pointer
+                                            `}
+                                        >
+                                            <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                                        </button>
+
+                                        {/* Header Gradient */}
+                                        <div
+                                            className={`
+                                                h-20 
+                                                sm:h-24 
+                                                md:h-28 
+                                                ${theme === "dark"
+                                                    ? "bg-gradient-to-r from-blue-900 to-purple-900"
+                                                    : "bg-gradient-to-r from-blue-500 to-purple-600"
+                                                }
+                                            `}
+                                        />
+
+                                        {/* Profile Avatar */}
+                                        <div className="relative -mt-8 sm:-mt-10 md:-mt-12 flex justify-center">
+                                            <div
+                                                className={`
+                                                    w-16 
+                                                    h-16 
+                                                    sm:w-20 
+                                                    sm:h-20 
+                                                    md:w-24 
+                                                    md:h-24 
+                                                    rounded-full 
+                                                    border-4 
+                                                    flex 
+                                                    items-center 
+                                                    justify-center 
+                                                    shadow-md
+                                                    ${theme === "dark"
+                                                        ? "border-gray-800 bg-gray-700"
+                                                        : "border-white bg-gray-200"
+                                                    }
+                                                `}
+                                            >
+                                                <UserIcon
+                                                    className={`
+                                                        w-8 
+                                                        h-8 
+                                                        sm:w-10 
+                                                        sm:h-10 
+                                                        md:w-12 
+                                                        md:h-12
+                                                        ${theme === "dark"
+                                                            ? "text-gray-300"
+                                                            : "text-gray-600"
+                                                        }
+                                                    `}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* User Name and Role */}
+                                        <div className="text-center p-4 sm:p-5 md:p-6">
+                                            <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
+                                                {profilePopupUser.name}
+                                            </h2>
+                                            <span
+                                                className={`
+                                                    inline-block 
+                                                    mt-1.5 
+                                                    sm:mt-2 
+                                                    px-2.5 
+                                                    py-0.5 
+                                                    sm:px-3 
+                                                    sm:py-1 
+                                                    rounded-full 
+                                                    text-xs 
+                                                    font-medium
+                                                    ${theme === "dark"
+                                                        ? "bg-gray-700 text-gray-300"
+                                                        : "bg-gray-200 text-gray-700"
+                                                    }
+                                                `}
+                                            >
+                                                {profilePopupUser.isAdmin ? "Admin" : "User"}
+                                            </span>
+                                        </div>
+
+                                        {/* User Details */}
+                                        <div
+                                            className={`
+                                                p-3 
+                                                sm:p-4 
+                                                mx-3 
+                                                sm:mx-4 
+                                                mb-4 
+                                                rounded-xl
+                                                ${theme === "dark"
+                                                    ? "bg-gray-800 text-gray-300"
+                                                    : "bg-gray-100 text-gray-800"
+                                                }
+                                            `}
+                                        >
+                                            <div className="space-y-1.5 sm:space-y-2">
+                                                {[
+                                                    { label: "Email", value: profilePopupUser.email },
+                                                    {
+                                                        label: "Last Login",
+                                                        value: profilePopupUser.lastLogin
+                                                            ? new Date(profilePopupUser.lastLogin).toLocaleString()
+                                                            : "Never"
+                                                    },
+                                                    {
+                                                        label: "Status",
+                                                        value: profilePopupUser.isLoggedIn ? "Online" : "Offline",
+                                                        className: profilePopupUser.isLoggedIn
+                                                            ? "text-green-500"
+                                                            : "text-red-500"
+                                                    }
+                                                ].map(({ label, value, className = '' }, index) => (
+                                                    <p
+                                                        key={index}
+                                                        className={`
+                                                            text-xs 
+                                                            sm:text-sm 
+                                                            flex 
+                                                            items-center 
+                                                            ${className}
+                                                        `}
+                                                    >
+                                                        <strong className="mr-2 min-w-[70px] inline-block">
+                                                            {label}:
+                                                        </strong>
+                                                        {value}
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
