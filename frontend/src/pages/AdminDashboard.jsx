@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeContext } from "../context/ThemeContext";
-import { Sun, Moon, Bell, LogOut, Menu, Users, User as UserIcon, X, Trash2 } from "lucide-react"; // Added Menu icon
+import { Sun, Moon, LogOut, Menu, Users, User as UserIcon, X, Trash2, Bell, Mail, Send } from "lucide-react"; // Added Menu icon
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminDashboard = () => {
@@ -13,9 +13,15 @@ const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [profilePopupUser, setProfilePopupUser] = useState(null);
+    const [activeSection, setActiveSection] = useState(null);
     const navigate = useNavigate();
 
     const [toastShown, setToastShown] = useState(false);
+
+    const toggleSection = (section) => {
+        // If clicking the same section, hide it; otherwise, show the new section
+        setActiveSection(activeSection === section ? null : section);
+    };
 
     const getCustomToastStyle = (theme) => ({
         borderRadius: "8px",
@@ -108,7 +114,7 @@ const AdminDashboard = () => {
         const response = await axios.delete(`http://localhost:5000/admin/delete-user/${email}`, {
             withCredentials: true,
         });
-    
+
         toast("User deleted successfully!", {
             position: "top-right",
             autoClose: 3000,
@@ -120,11 +126,11 @@ const AdminDashboard = () => {
             className: theme === "dark" ? "dark-theme" : "light-theme",
         });
         setToastShown(true);
-    
+
         // Step 2: Update UI immediately after deletion
         setUsers(prevUsers => prevUsers.filter(user => user.email !== email));
     };
-    
+
     const sendNotification = () => {
         if (!message.trim()) {
             toast("Message cannot be empty!", {
@@ -223,6 +229,17 @@ const AdminDashboard = () => {
 
                             {/* Desktop menu */}
                             <div className="hidden md:flex items-center space-x-4">
+                                <button onClick={() => toggleSection('notification')}
+                                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer relative ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition-colors`}
+                                >
+                                    <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
+                                </button>
+
+                                <button onClick={() => toggleSection('email')}
+                                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer relative ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition-colors`}
+                                >
+                                    <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
+                                </button>
 
                                 <button
                                     onClick={toggleTheme}
@@ -256,6 +273,19 @@ const AdminDashboard = () => {
                     {mobileMenuOpen && (
                         <div className="md:hidden w-full">
                             <div className={`px-2 pt-2 pb-3 space-y-1 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
+                                <button onClick={() => toggleSection('notification')}
+                                    className={`flex w-full items-center gap-2 px-3 py-2 rounded-md text-base font-medium relative ${theme === "dark" ? "text-gray-300 hover:bg-gray-700" : "text-gray-600 hover:bg-gray-100"} transition-colors`}
+                                >
+                                    <Bell className="h-5 w-5" />
+                                    <span>Notification System</span>
+                                </button>
+
+                                <button onClick={() => toggleSection('email')}
+                                    className={`flex w-full items-center gap-2 px-3 py-2 rounded-md text-base font-medium relative ${theme === "dark" ? "text-gray-300 hover:bg-gray-700" : "text-gray-600 hover:bg-gray-100"} transition-colors`}
+                                >
+                                    <Mail className="h-5 w-5" />
+                                    <span>Mail System</span>
+                                </button>
 
                                 <button
                                     onClick={toggleTheme}
@@ -301,37 +331,79 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    {/* Notification Section */}
-                    <div className={`mb-6 sm:mb-8 p-4 sm:p-6 rounded-xl shadow-md ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
-                        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                            <Bell className={`h-4 w-4 sm:h-5 sm:w-5 ${theme === "dark" ? "text-blue-400" : "text-blue-500"}`} />
-                            <h2 className="text-lg sm:text-xl font-semibold">Send Notification</h2>
-                        </div>
-                        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
-                            <input
-                                type="text"
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                placeholder="Enter notification message"
-                                className={`w-full p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${theme === "dark"
-                                    ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
-                                    : "border-gray-300 bg-white text-gray-800 placeholder-gray-400"
-                                    } transition-colors`}
-                            />
-                            <button
-                                onClick={sendNotification}
-                                className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 mt-3 sm:mt-0 rounded-lg cursor-pointer ${theme === "dark"
-                                    ? "bg-blue-600 hover:bg-blue-700"
-                                    : "bg-blue-500 hover:bg-blue-600"
-                                    } text-white font-medium transition-colors whitespace-nowrap flex-shrink-0`}
-                            >
-                                Send Notification
-                            </button>
-                        </div>
+                    <div className="space-y-6">
+                        {/* Notification Section */}
+                        {(activeSection === 'notification' || activeSection === null) && (
+                            <div className={`mb-6 sm:mb-8 p-4 sm:p-6 rounded-xl shadow-md ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
+                                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                                    <Bell className={`h-4 w-4 sm:h-5 sm:w-5 ${theme === "dark" ? "text-blue-400" : "text-blue-500"}`} />
+                                    <h2 className="text-lg sm:text-xl font-semibold">Send Notification</h2>
+                                </div>
+                                <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+                                    <input
+                                        type="text"
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        placeholder="Enter notification message"
+                                        className={`w-full p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${theme === "dark"
+                                            ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
+                                            : "border-gray-300 bg-white text-gray-800 placeholder-gray-400"
+                                            } transition-colors`}
+                                    />
+                                    <button
+                                        onClick={sendNotification}
+                                        className={`flex items-center gap-2 w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 mt-3 sm:mt-0 rounded-lg cursor-pointer ${theme === "dark"
+                                            ? "bg-blue-600 hover:bg-blue-700"
+                                            : "bg-blue-500 hover:bg-blue-600"
+                                            } text-white font-medium transition-colors whitespace-nowrap flex-shrink-0`}
+                                    >
+                                        <Send className="h-4 w-4" />
+                                        Send Notification
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Email Section */}
+                        {activeSection === 'email' && (
+                            <div className={`p-4 sm:p-6 rounded-xl shadow-md ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}>
+                                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                                    <Mail className={`h-4 w-4 sm:h-5 sm:w-5 ${theme === "dark" ? "text-blue-400" : "text-blue-500"}`} />
+                                    <h2 className="text-lg sm:text-xl font-semibold">Send Email</h2>
+                                </div>
+                                <div className="space-y-3">
+                                    <input
+                                        type="text"
+                                        placeholder="Email Subject"
+                                        className={`w-full p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${theme === "dark"
+                                            ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
+                                            : "border-gray-300 bg-white text-gray-800 placeholder-gray-400"
+                                            } transition-colors`}
+                                    />
+                                    <textarea
+                                        placeholder="Email Message"
+                                        rows={4}
+                                        className={`w-full p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${theme === "dark"
+                                            ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
+                                            : "border-gray-300 bg-white text-gray-800 placeholder-gray-400"
+                                            } transition-colors`}
+                                    />
+                                    <button
+                                        className={`w-full px-4 sm:px-6 py-2 sm:py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 ${theme === "dark"
+                                            ? "bg-blue-600 hover:bg-blue-700"
+                                            : "bg-blue-500 hover:bg-blue-600"
+                                            } text-white font-medium transition-colors`}
+                                    >
+                                        <Send className="h-4 w-4" />
+                                        Send Email
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Users Table */}
-                    <div className={`rounded-xl shadow-md overflow-hidden ${theme === "dark" ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"}`}>
+                    <div className={`rounded-xl mt-8 shadow-md overflow-hidden ${theme === "dark" ? "bg-gray-800 text-gray-200" : "bg-white text-gray-900"}`}>
                         {/* Header Section */}
                         <div className="p-4 sm:p-6 pb-3 sm:pb-4">
                             <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
@@ -392,8 +464,8 @@ const AdminDashboard = () => {
                                                         >
                                                             <UserIcon
                                                                 className={`h-5 w-5 ${theme === "dark"
-                                                                        ? "text-blue-400 hover:text-blue-300"
-                                                                        : "text-blue-500 hover:text-blue-600"
+                                                                    ? "text-blue-400 hover:text-blue-300"
+                                                                    : "text-blue-500 hover:text-blue-600"
                                                                     }`}
                                                             />
                                                         </button>
@@ -408,8 +480,8 @@ const AdminDashboard = () => {
                                                         >
                                                             <Trash2 onClick={() => handleDeleteUser(user.email)}
                                                                 className={`h-5 w-5 ${theme === "dark"
-                                                                        ? "text-red-400 hover:text-red-300"
-                                                                        : "text-red-500 hover:text-red-600"
+                                                                    ? "text-red-400 hover:text-red-300"
+                                                                    : "text-red-500 hover:text-red-600"
                                                                     }`}
                                                             />
                                                         </button>
