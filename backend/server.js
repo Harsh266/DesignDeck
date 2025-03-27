@@ -97,6 +97,7 @@ const passwordResetRoutes = require("./routes/passwordResetRoutes");
 const updateProfileRoutes = require("./routes/updateProfileRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
@@ -104,6 +105,7 @@ app.use("/auth", passwordResetRoutes);
 app.use("/auth", updateProfileRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/notifications", notificationRoutes);
+app.use("/admin", adminRoutes);
 
 // ✅ Static File Serving
 app.use("/uploads/profileImages", express.static(path.join(__dirname, "uploads/profileImages")));

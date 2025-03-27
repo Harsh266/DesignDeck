@@ -35,7 +35,7 @@ const AdminDashboard = () => {
     });
 
     useEffect(() => {
-        axios.get("http://localhost:5000/auth/admin-dashboard", { withCredentials: true })
+        axios.get("http://localhost:5000/admin/admin-dashboard", { withCredentials: true })
             .then((res) => {
                 if (res.data.isAdmin) {
                     setIsAdmin(true);
@@ -83,7 +83,7 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         const fetchUsers = () => {
-            axios.get("http://localhost:5000/auth/all-users", { withCredentials: true })
+            axios.get("http://localhost:5000/admin/all-users", { withCredentials: true })
                 .then((res) => setUsers(res.data))
                 .catch((err) => console.error("Error fetching users:", err));
         };
