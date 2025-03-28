@@ -1,6 +1,8 @@
 const express = require("express");
 const User = require("../models/User");
 const router = express.Router();
+const nodemailer = require("nodemailer");
+require("dotenv").config();
 const adminAuth = require("../middleware/adminAuth"); // Import adminAuth middleware
 
 // ✅ Admin Dashboard Route
@@ -11,7 +13,7 @@ router.get("/admin-dashboard", adminAuth, (req, res) => {
 // ✅ Get All Users for Admin Dashboard
 router.get("/all-users", adminAuth, async (req, res) => {
     try {
-        const users = await User.find().select("name email isLoggedIn lastLogin profileImage isAdmin"); 
+        const users = await User.find().select("name email isLoggedIn lastLogin profileImage isAdmin");
         res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -61,5 +63,54 @@ router.delete("/delete-user/:email", adminAuth, async (req, res) => {
     }
 });
 
+// ✅ Admin Send mail to all users
+
+router.post("/send-email", async (req, res) => {
+    try {
+        const { subject, email } = req.body;
+
+        // Fetch all user emails from the database
+        const users = await User.find({}, "email");
+
+        // If no users are found, return an error response
+        if (users.length === 0) {
+            return res.status(404).json({ success: false, message: "No users found in the database." });
+        }
+
+        // Extract email addresses
+        const emailList = users.map((user) => user.email);
+
+        // If emailList is empty for some reason, return an error
+        if (!emailList.length) {
+            return res.status(400).json({ success: false, message: "No valid emails found." });
+        }
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.MAIL_ID, // Your Gmail
+                pass: process.env.MAIL_PASS, // App Password
+            },
+        });
+
+        // Send emails individually to each user
+        for (const user of users) {
+            const mailOptions = {
+                from: process.env.MAIL_ID, // Sender email
+                to: user.email, // Send to the specific user's email
+                subject: subject,
+                text: email,
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(`Email sent to: ${user.email}`);
+        }
+
+        res.status(200).json({ success: true, message: "Emails sent successfully to all users." });
+    } catch (error) {
+        console.error("Error sending email:", error);
+        res.status(500).json({ success: false, message: "Failed to send emails.", error: error.message });
+    }
+});
 
 module.exports = router;

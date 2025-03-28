@@ -14,6 +14,8 @@ const AdminDashboard = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [profilePopupUser, setProfilePopupUser] = useState(null);
     const [activeSection, setActiveSection] = useState(null);
+    const [subject, setSubject] = useState("");
+    const [email, setEmail] = useState("");
     const navigate = useNavigate();
 
     const [toastShown, setToastShown] = useState(false);
@@ -173,6 +175,59 @@ const AdminDashboard = () => {
                 });
             });
     };
+
+    const sendEmail = async (e) => {
+        e.preventDefault();
+
+        if (!subject.trim() && !email.trim()) {
+            toast("Subject and Message cannot be empty!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+            return;
+        }
+
+        try {
+            const response = await axios.post("http://localhost:5000/admin/send-email", {
+                subject,
+                email,
+            });
+
+            if (response.data.success) {
+                toast("Email sent successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: getCustomToastStyle(theme),
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
+                });
+                setSubject("");
+                setEmail("");
+            }
+        } catch (error) {
+            toast("Failed to send email!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+        } finally {
+        }
+    };
+
 
     const handleLogout = () => {
         axios.post("http://localhost:5000/auth/logout", {}, { withCredentials: true })
@@ -375,6 +430,8 @@ const AdminDashboard = () => {
                                     <input
                                         type="text"
                                         placeholder="Email Subject"
+                                        value={subject}
+                                        onChange={(e) => setSubject(e.target.value)}
                                         className={`w-full p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${theme === "dark"
                                             ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
                                             : "border-gray-300 bg-white text-gray-800 placeholder-gray-400"
@@ -383,19 +440,22 @@ const AdminDashboard = () => {
                                     <textarea
                                         placeholder="Email Message"
                                         rows={4}
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                         className={`w-full p-2 sm:p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${theme === "dark"
                                             ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
                                             : "border-gray-300 bg-white text-gray-800 placeholder-gray-400"
                                             } transition-colors`}
                                     />
                                     <button
+                                    onClick={sendEmail}
                                         className={`w-full px-4 sm:px-6 py-2 sm:py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 ${theme === "dark"
                                             ? "bg-blue-600 hover:bg-blue-700"
                                             : "bg-blue-500 hover:bg-blue-600"
                                             } text-white font-medium transition-colors`}
                                     >
-                                        <Send className="h-4 w-4" />
-                                        Send Email
+                                        
+                                        <Send className="h-4 w-4" />Send Email
                                     </button>
                                 </div>
                             </div>

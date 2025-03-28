@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import {Menu, X, Moon, Sun } from 'lucide-react';
+import { Menu, X, Moon, Sun } from 'lucide-react';
 import { ThemeContext } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
 
@@ -69,7 +69,7 @@ export default function Document() {
 
               <button
                 onClick={toggleTheme}
-                className={styles.secondaryText + " hover:text-gray-700"}
+                className={styles.secondaryText + " hover:text-gray-700 cursor-pointer"}
               >
                 {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
               </button>
@@ -130,28 +130,27 @@ export default function Document() {
         <div className="flex flex-col md:flex-row w-full">
           {/* Sidebar*/}
           <aside className="hidden md:block w-[20%] mr-8 flex-shrink-0">
-  <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pr-2 custom-scrollbar">
-    <nav>
-      <ul className="space-y-1">
-        {sidebarSections.map((section) => (
-          <li key={section.id}>
-            <a
-              href={`#${section.id}`}
-              className={`block px-3 py-2 rounded-md ${
-                expandedSection === section.id
-                  ? styles.activeSection
-                  : `${styles.text} ${styles.hoverSection}`
-              }`}
-              onClick={() => toggleSection(section.id)}
-            >
-              {section.name}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
-</aside>
+            <div className="sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pr-2 custom-scrollbar">
+              <nav>
+                <ul className="space-y-1">
+                  {sidebarSections.map((section) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className={`block px-3 py-2 rounded-md ${expandedSection === section.id
+                            ? styles.activeSection
+                            : `${styles.text} ${styles.hoverSection}`
+                          }`}
+                        onClick={() => toggleSection(section.id)}
+                      >
+                        {section.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </aside>
 
 
           {/* Documentation Content */}
