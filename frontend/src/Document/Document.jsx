@@ -17,7 +17,6 @@ export default function Document() {
     { id: "how-it-works", name: "How DesignDeck Works" },
     { id: "react-libraries", name: "React Libraries & Components" },
     { id: "api-documentation", name: "API Documentation" },
-    { id: "database-schema", name: "Database Schema" },
     { id: "realtime-features", name: "Real-time Features" },
     { id: "security-authentication", name: "Security & Authentication" },
     { id: "deployment-guide", name: "Deployment Guide" },
@@ -498,66 +497,6 @@ export default function Document() {
                 </div>
               </div>
 
-              <div id="database-schema" className="mb-10">
-                <h2 className={`text-2xl font-bold ${styles.text} mb-4`}>Database Schema</h2>
-                <div className="prose max-w-none">
-                  <p className={`${styles.list} mb-4`}>
-                    DesignDeck uses MongoDB with Mongoose for data modeling and storage. Below are the primary data models:
-                  </p>
-
-                  <div className={`${styles.card} p-4 rounded-lg mb-4`}>
-                    <h4 className={`font-semibold mb-2 ${styles.text}`}>User Schema</h4>
-                    <pre className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'} p-3 rounded overflow-x-auto text-sm`}>
-                      <code className={theme === 'dark' ? 'text-gray-300' : 'text-gray-800'}>
-                        {`{
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  profilePicture: { type: String, default: '' },
-  bio: { type: String, default: '' },
-  skills: [{ type: String }],
-  socialLinks: {
-    github: { type: String, default: '' },
-    linkedin: { type: String, default: '' },
-    website: { type: String, default: '' }
-  },
-  createdAt: { type: Date, default: Date.now }
-}`}
-                      </code>
-                    </pre>
-                  </div>
-
-                  <div className={`${styles.card} p-4 rounded-lg mb-4`}>
-                    <h4 className={`font-semibold mb-2 ${styles.text}`}>Project Schema</h4>
-                    <pre className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'} p-3 rounded overflow-x-auto text-sm`}>
-                      <code className={theme === 'dark' ? 'text-gray-300' : 'text-gray-800'}>
-                        {`{
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  htmlCode: { type: String, default: '' },
-  cssCode: { type: String, default: '' },
-  jsCode: { type: String, default: '' },
-  images: [{ type: String }],
-  videoUrl: { type: String, default: '' },
-  tags: [{ type: String }],
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  views: { type: Number, default: 0 },
-  comments: [{
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    text: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
-  }],
-  isPublic: { type: Boolean, default: true },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-}`}
-                      </code>
-                    </pre>
-                  </div>
-                </div>
-              </div>
-
               <div id="realtime-features" className="mb-10">
                 <h2 className={`text-2xl font-bold ${styles.text} mb-4`}>Real-time Features</h2>
                 <div className="prose max-w-none">
@@ -710,7 +649,7 @@ export default function Document() {
 
               <div className={`border-t ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'} pt-6 mt-6`}>
                 <p className={`${styles.secondaryText} text-sm`}>
-                  Documentation last updated: March 24, 2025
+                  Documentation last updated: {new Date().toLocaleDateString()}
                 </p>
               </div>
             </main>
