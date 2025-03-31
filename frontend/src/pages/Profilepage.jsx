@@ -20,6 +20,8 @@ const Profilepage = () => {
     const [dribbbleProfile, setDribbbleProfile] = useState('');
     const [behanceProfile, setBehanceProfile] = useState('');
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(null);
     const { theme } = useContext(ThemeContext);
     const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const Profilepage = () => {
         border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
         width: "400px"
     });
-    
+
     useEffect(() => {
         fetchUser();
     }, [navigate]);
@@ -65,6 +67,35 @@ const Profilepage = () => {
         }
     };
 
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/projects/user-projects", {
+                    withCredentials: true,  // Ensure you're sending the cookie with the request
+                });
+
+                if (response.data.success) {
+                    setProjects(response.data.projects);  // Set the projects data
+                } else {
+                    console.error("Error: ", response.data.message);
+                }
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+            } finally {
+                setLoading(false);  // Stop loading
+            }
+        };
+
+        fetchProjects();
+
+        const intervalId = setInterval(fetchProjects, 5000);
+
+        // Clean up the interval on component unmount
+        return () => clearInterval(intervalId);
+    }, []);
+
+
+
     if (!user) {
         return <div className={`flex items-center justify-center h-screen w-screen ${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}>
             <h1 className="text-center text-xl font-semibold tracking-wide animate-bounce bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
@@ -84,16 +115,16 @@ const Profilepage = () => {
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
-    
-        const isValidDribbble = (url) => 
+
+        const isValidDribbble = (url) =>
             /^https?:\/\/(www\.)?dribbble\.com\/[a-zA-Z0-9_-]+\/?$/.test(url);
-    
-        const isValidBehance = (url) => 
+
+        const isValidBehance = (url) =>
             /^https?:\/\/(www\.)?behance\.net\/[a-zA-Z0-9_-]+\/?$/.test(url);
-    
+
         const isDribbbleValid = !dribbbleProfile || isValidDribbble(dribbbleProfile);
         const isBehanceValid = !behanceProfile || isValidBehance(behanceProfile);
-    
+
         if (!isDribbbleValid || !isBehanceValid) {
             toast("Please enter valid Dribbble and Behance links!", {
                 position: "top-right",
@@ -108,14 +139,14 @@ const Profilepage = () => {
             });
             return;
         }
-    
+
         const formData = new FormData();
         if (profileImage) formData.append("profileImage", profileImage);
         if (coverImage) formData.append("coverImage", coverImage);
         formData.append("bio", bio);
         if (dribbbleProfile) formData.append("dribbbleProfile", dribbbleProfile);
         if (behanceProfile) formData.append("behanceProfile", behanceProfile);
-    
+
         try {
             const response = await axios.post(
                 "http://localhost:5000/auth/updateprofile",
@@ -127,7 +158,7 @@ const Profilepage = () => {
                     },
                 }
             );
-    
+
             if (response.status === 200) {
                 toast("Profile updated successfully!", {
                     position: "top-right",
@@ -147,8 +178,8 @@ const Profilepage = () => {
             console.error("Upload error:", error.response?.data || error.message);
         }
     };
-    
-    
+
+
 
     return (
         <>
@@ -252,35 +283,44 @@ const Profilepage = () => {
 
                     {/* Projects Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
-                        {/* Sample Project Cards */}
-                        {[
-                            { title: "Fitme app", img: "https://cdn.dribbble.com/userupload/36848296/file/original-8f9bf66f9b3c64857e1c49d26dfc1a5d.jpg?format=webp&resize=450x338&vertical=center" },
-                            { title: "NFM Group", img: "https://cdn.dribbble.com/userupload/36937294/file/original-7c320687d1da9efc6cfd636b7a7fe0d5.jpg?format=webp&resize=450x338&vertical=center" },
-                            { title: "Block13 Promo Board Design", img: "https://cdn.dribbble.com/userupload/36999634/file/original-8300df08add332e47113859ad01fc95a.jpg?format=webp&resize=1200x900&vertical=center" },
-                            { title: "Minimalist Duck Logo", img: "https://cdn.dribbble.com/userupload/36992766/file/original-fcb25abdaa6f3ab9ab7d043aa93c0256.jpg?resize=1200x900&vertical=center" },
-                            { title: "Solar Gate-Investing Dashboard", img: "https://cdn.dribbble.com/userupload/36931891/file/original-d7f77534f6e882cc40a418e261314863.jpg?format=webp&resize=450x338&vertical=center" },
-                        ].map((project, index) => (
-                            <div key={index} className={`rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}>
-                                <img src={project.img} alt={project.title} className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover" />
-                                <div className="flex items-center justify-between mt-1">
-                                    <p className="mt-2 text-base sm:text-lg font-medium truncate">{project.title}</p>
-                                    <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
-                                        <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
+                        {loading ? (
+                            <p>Loading...</p>
+                        ) : (
+                            <>
+                                {projects?.length > 0 ? (
+                                    projects?.map((project, index) => (
+                                        <div key={index} className={`rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}>
+                                            <img
+                                                src={`http://localhost:5000${project.firstImage}`}  // Assuming the image is stored on your server
+                                                alt={project.title}
+                                                className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
+                                            />
+                                            <div className="flex items-center justify-between mt-1">
+                                                <p className="mt-2 text-base sm:text-lg font-medium truncate">{project.title}</p>
+                                                <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
+                                                    <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="col-span-3 text-center p-4">
+                                        <p className="text-lg font-semibold text-gray-500">No projects found</p>
                                     </div>
-                                </div>
-                            </div>
-                        ))}
+                                )}
 
-                        {/* Upload Project Card */}
-                        <div className={`shadow-lg rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center w-full h-40 sm:h-48 md:h-56 lg:h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                            <div className={`rounded-full w-12 h-12 sm:w-15 sm:h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
-                                <Link to="/upload"><i className="ri-function-add-fill text-2xl sm:text-3xl"></i></Link>
-                            </div>
-                            <p className="mt-3 text-xl sm:text-2xl font-medium">Upload Project</p>
-                            <p className="text-xs sm:text-sm text-center w-full sm:w-[80%] md:w-[70%]">
-                                Show your creativity by uploading it to world.
-                            </p>
-                        </div>
+                                {/* Upload Project Card */}
+                                <div className={`shadow-lg rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center w-full h-40 sm:h-48 md:h-56 lg:h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                                    <div className={`rounded-full w-12 h-12 sm:w-15 sm:h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
+                                        <Link to="/upload"><i className="ri-function-add-fill text-2xl sm:text-3xl"></i></Link>
+                                    </div>
+                                    <p className="mt-3 text-xl sm:text-2xl font-medium">Upload Project</p>
+                                    <p className="text-xs sm:text-sm text-center w-full sm:w-[80%] md:w-[70%]">
+                                        Show your creativity by uploading it to the world.
+                                    </p>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
 

@@ -112,6 +112,8 @@ app.use("/admin", adminRoutes);
 // ✅ Static File Serving
 app.use("/uploads/profileImages", express.static(path.join(__dirname, "uploads/profileImages")));
 app.use("/uploads/coverImages", express.static(path.join(__dirname, "uploads/coverImages")));
+app.use("/uploads/projects/images", express.static(path.join(__dirname, "/uploads/projects/images")));
+app.use("/uploads/projects/videos", express.static(path.join(__dirname, "/uploads/projects/videos")));
 
 // ✅ Root Route
 app.get("/", (req, res) => {
