@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import { Helmet } from "react-helmet";
 import { ThemeContext } from "../context/ThemeContext";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 const UploadProjectPage = () => {
@@ -133,25 +134,69 @@ const UploadProjectPage = () => {
         }
     };
 
-    const handleUpload = () => {
-        toast("Project successfully uploaded!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: getCustomToastStyle(theme),
-            className: theme === "dark" ? "dark-theme" : "light-theme",
-        });
-        // Clear files and project details after upload
-        setImageFiles([]);
-        setVideoFiles([]);
-        setCodeFiles([]);
-        setGlobalTitle("");
-        setGlobalDescription("");
-        setPopup(null);
+    const handleUpload = async () => {
+        const formData = new FormData();
+        formData.append("title", globalTitle);
+        formData.append("description", globalDescription);
+
+        // ✅ Extract File from object
+        if (imageFiles.length > 0) {
+            imageFiles.forEach((file, index) => {
+                if (file.file instanceof File) {
+                    formData.append("projectImage", file.file, file.file.name);
+                } else {
+                    console.error(`❌ Skipping invalid image file at index ${index}:`, file);
+                }
+            });
+        }
+
+        if (videoFiles.length > 0) {
+            videoFiles.forEach((file, index) => {
+                if (file.file instanceof File) {
+                    formData.append("projectVideo", file.file, file.file.name);
+                } else {
+                    console.error(`❌ Skipping invalid video file at index ${index}:`, file);
+                }
+            });
+        }
+
+        try {
+            const response = await axios.post("http://localhost:5000/api/projects/upload", formData, {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            toast("Project Upload successfully", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+
+            // ✅ Clear state after successful upload
+            setImageFiles([]);
+            setVideoFiles([]);
+            setCodeFiles([]);
+            setGlobalTitle("");
+            setGlobalDescription("");
+        } catch (error) {
+            toast("Error uploading project", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+        }
     };
+
 
     const handleCancel = () => {
         toast("Upload canceled", {
@@ -239,7 +284,7 @@ const UploadProjectPage = () => {
                     />
                 )}
 
-                {popupType === "code" && (
+                {/* {popupType === "code" && (
                     <CodePopup
                         setPopup={setPopupType}
                         handleFileChange={handleFileChange}
@@ -251,7 +296,7 @@ const UploadProjectPage = () => {
                         title={title}
                         description={description}
                     />
-                )}
+                )} */}
 
                 {popupType === "video" && (
                     <VideoPopup
@@ -280,7 +325,7 @@ const UploadProjectPage = () => {
 
                             {imageFiles.length > 0 && <FileDisplay files={imageFiles} type="image" handleDelete={handleDeleteFile} />}
                             {videoFiles.length > 0 && <FileDisplay files={videoFiles} type="video" handleDelete={handleDeleteFile} />}
-                            {codeFiles.length > 0 && <FileDisplay files={codeFiles} type="code" handleDelete={handleDeleteFile} />}
+                            {/* {codeFiles.length > 0 && <FileDisplay files={codeFiles} type="code" handleDelete={handleDeleteFile} />} */}
                         </div>
                         <div className="mt-6 flex justify-end mb-5 sm:mb-8">
                             <button className="bg-gray-500 text-white px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 text-xs sm:text-sm rounded-lg mr-2 cursor-pointer" onClick={handleCancel}>Cancel</button>
@@ -409,108 +454,108 @@ const ImagePopup = ({
 };
 
 // Code Popup Component
-const CodePopup = ({
-    setPopup,
-    handleFileChange,
-    handleUpload,
-    tempFiles,
-    handleDeleteTempFile,
-    setTitle,
-    setDescription,
-    title,
-    description
-}) => {
-    const [previewFiles, setPreviewFiles] = useState([]);
-    const { theme } = useContext(ThemeContext);
+// const CodePopup = ({
+//     setPopup,
+//     handleFileChange,
+//     handleUpload,
+//     tempFiles,
+//     handleDeleteTempFile,
+//     setTitle,
+//     setDescription,
+//     title,
+//     description
+// }) => {
+//     const [previewFiles, setPreviewFiles] = useState([]);
+//     const { theme } = useContext(ThemeContext);
 
-    // Generate file previews when tempFiles changes
-    useEffect(() => {
-        if (tempFiles.length > 0) {
-            setPreviewFiles(tempFiles.map(file => file?.name || "Unknown File"));
-        } else {
-            setPreviewFiles([]);
-        }
-    }, [tempFiles]);
+//     // Generate file previews when tempFiles changes
+//     useEffect(() => {
+//         if (tempFiles.length > 0) {
+//             setPreviewFiles(tempFiles.map(file => file?.name || "Unknown File"));
+//         } else {
+//             setPreviewFiles([]);
+//         }
+//     }, [tempFiles]);
 
-    return (
-        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
-            <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
-                {/* Close Button */}
-                <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+//     return (
+//         <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
+//             <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
+//                 {/* Close Button */}
+//                 <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
 
-                {/* Title */}
-                <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
-                    <i className="ri-file-upload-line"></i>
-                    <p className="font-semibold">Upload Embedded Code</p>
-                </h2>
-                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your code files here</p>
+//                 {/* Title */}
+//                 <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
+//                     <i className="ri-file-upload-line"></i>
+//                     <p className="font-semibold">Upload Embedded Code</p>
+//                 </h2>
+//                 <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your code files here</p>
 
-                {/* File Upload Box */}
-                <label htmlFor="codeFileInput" className="mt-3 sm:mt-4 border border-2 border-[#376CFF] bg-[#DCE6FF] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
-                    <i className="ri-file-code-line text-[#376CFF] text-lg sm:text-xl md:text-[22px]"></i>
-                    <p className="text-[#376CFF] font-medium mt-1 text-sm sm:text-base">Choose Files</p>
-                    <input type="file" id="codeFileInput" accept=".html,.css,.js" className="hidden" onChange={handleFileChange} multiple />
-                </label>
-                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only .html, .css, .js files. 100 MB max per file.</p>
+//                 {/* File Upload Box */}
+//                 <label htmlFor="codeFileInput" className="mt-3 sm:mt-4 border border-2 border-[#376CFF] bg-[#DCE6FF] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
+//                     <i className="ri-file-code-line text-[#376CFF] text-lg sm:text-xl md:text-[22px]"></i>
+//                     <p className="text-[#376CFF] font-medium mt-1 text-sm sm:text-base">Choose Files</p>
+//                     <input type="file" id="codeFileInput" accept=".html,.css,.js" className="hidden" onChange={handleFileChange} multiple />
+//                 </label>
+//                 <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only .html, .css, .js files. 100 MB max per file.</p>
 
-                {/* Project Name */}
-                <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
-                <input
-                    type="text"
-                    placeholder="Enter your project name"
-                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
+//                 {/* Project Name */}
+//                 <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
+//                 <input
+//                     type="text"
+//                     placeholder="Enter your project name"
+//                     className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
+//                     value={title}
+//                     onChange={(e) => setTitle(e.target.value)}
+//                 />
 
-                {/* Project Description */}
-                <label className="mt-2 text-xs sm:text-sm font-medium">Project Description</label>
-                <textarea
-                    placeholder="Enter your project description"
-                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
-                    rows={1}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
+//                 {/* Project Description */}
+//                 <label className="mt-2 text-xs sm:text-sm font-medium">Project Description</label>
+//                 <textarea
+//                     placeholder="Enter your project description"
+//                     className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
+//                     rows={1}
+//                     value={description}
+//                     onChange={(e) => setDescription(e.target.value)}
+//                 />
 
-                {/* Uploaded Files Section */}
-                <div className="mt-1 sm:mt-2">
-                    <label className="text-xs sm:text-sm font-medium">Uploaded Files</label>
-                    {previewFiles.length > 0 ? (
-                        <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
-                            {previewFiles.map((preview, index) => (
-                                <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
-                                    <div className="flex items-center gap-1 sm:gap-2">
-                                        <i className="ri-file-zip-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
-                                        <div>
-                                            <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
-                                            <p className="text-[10px] sm:text-xs text-gray-500">
-                                                {tempFiles[index]?.size
-                                                    ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
-                                                    : "0 MB"}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
-                                        <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
-                    )}
-                </div>
+//                 {/* Uploaded Files Section */}
+//                 <div className="mt-1 sm:mt-2">
+//                     <label className="text-xs sm:text-sm font-medium">Uploaded Files</label>
+//                     {previewFiles.length > 0 ? (
+//                         <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
+//                             {previewFiles.map((preview, index) => (
+//                                 <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
+//                                     <div className="flex items-center gap-1 sm:gap-2">
+//                                         <i className="ri-file-zip-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
+//                                         <div>
+//                                             <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
+//                                             <p className="text-[10px] sm:text-xs text-gray-500">
+//                                                 {tempFiles[index]?.size
+//                                                     ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
+//                                                     : "0 MB"}
+//                                             </p>
+//                                         </div>
+//                                     </div>
+//                                     <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
+//                                         <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
+//                                     </button>
+//                                 </div>
+//                             ))}
+//                         </div>
+//                     ) : (
+//                         <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
+//                     )}
+//                 </div>
 
-                {/* Buttons */}
-                <div className="mt-3 sm:mt-4 flex justify-end gap-2">
-                    <button className="border border-[#376CFF] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#376CFF] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
-                    <button className="bg-[#376CFF] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
-                </div>
-            </div>
-        </div>
-    );
-};
+//                 {/* Buttons */}
+//                 <div className="mt-3 sm:mt-4 flex justify-end gap-2">
+//                     <button className="border border-[#376CFF] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#376CFF] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
+//                     <button className="bg-[#376CFF] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
 
 // Video Popup Component
 const VideoPopup = ({
@@ -626,7 +671,7 @@ const FileDisplay = ({ files, type, handleDelete }) => {
                     <div key={index} className={`relative p-2 rounded-lg border ${theme === 'dark' ? 'border-gray-600 bg-black' : 'border-gray-300 bg-white'}`}>
                         {type === "image" && <img src={file.url} alt={file.name} className="w-full h-64 rounded-lg object-cover pt-10" />}
                         {type === "video" && <video src={file.url} controls className="w-full h-64 rounded-lg object-cover pt-10" />}
-                        {type === "code" && <p className={`truncate h-8 flex flex-col justify-center pl-2 rounded-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{file.name}</p>}
+                        {/* {type === "code" && <p className={`truncate h-8 flex flex-col justify-center pl-2 rounded-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{file.name}</p>} */}
                         <button className={`absolute top-2 right-2.5 cursor-pointer ${theme === 'dark' ? 'text-white' : 'text-black'}`} onClick={() => handleDelete(type, index)}>✖</button>
                     </div>
                 ))}

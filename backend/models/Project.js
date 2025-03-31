@@ -1,35 +1,16 @@
 const mongoose = require("mongoose");
 
-const ProjectSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to the User model
-      required: true,
+const projectSchema = new mongoose.Schema({
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User", 
+        required: true 
     },
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    images: {
-      type: [String], // Array of image URLs
-      required: true,
-    },
-    videos: {
-      type: [String], // Array of video URLs
-      default: [], // Videos are optional
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now, // Auto-set the timestamp
-    },
-  },
-  { timestamps: true } // Adds `createdAt` and `updatedAt` timestamps
-);
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    images: [{ type: String }],
+    videos: [{ type: String }],
+}, { timestamps: true });
 
-module.exports = mongoose.model("Project", ProjectSchema);
+const Project = mongoose.model("Project", projectSchema);
+module.exports = Project;
