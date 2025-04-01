@@ -147,7 +147,7 @@ const Dashboard = () => {
                                     {/* User Info at Bottom */}
                                     <div className="py-2 flex items-center gap-2 sm:gap-3">
                                         <img
-                                            src={`http://localhost:5000${project.userId?.profileImage || "/uploads/default-profile.png"}`} // Use fallback image if not available
+                                            src={`http://localhost:5000${project.userId?.profilePicture || "/uploads/default-profile.jpg"}`} // Use fallback image if not available
                                             alt={project.userId?.name || "Unknown"}
                                             className="w-10 h-10 rounded-full object-cover"
                                         />

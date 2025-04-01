@@ -210,9 +210,7 @@ const Profilepage = () => {
                             {/* Profile Image Container */}
                             <div className={`w-28 h-28 sm:w-40 sm:h-40 ${theme === "dark" ? "bg-black" : "bg-white"} rounded-2xl p-1 relative border-4 border-transparent`}>
                                 <img
-                                    src={user.profilePicture || (theme === "dark"
-                                        ? "https://i.pinimg.com/736x/07/66/d1/0766d183119ff92920403eb7ae566a85.jpg"
-                                        : "https://static.thenounproject.com/png/642902-200.png")}
+                                    src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
                                     alt="User"
                                     className="w-full h-full object-cover rounded-2xl"
                                 />

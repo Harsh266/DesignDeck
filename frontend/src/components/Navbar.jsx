@@ -14,7 +14,7 @@ const Navbar = () => {
   const fetchUserRan = useRef(false);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const popupRef = useRef(null);
-  
+
   const getCustomToastStyle = (theme) => ({
     borderRadius: "8px",
     padding: "16px",
@@ -25,13 +25,13 @@ const Navbar = () => {
     alignItems: "center",
     gap: "10px",
     boxShadow: theme === "dark"
-        ? "0px 4px 15px rgba(255, 255, 255, 0.15)"
-        : "0px 4px 15px rgba(0, 0, 0, 0.1)",
+      ? "0px 4px 15px rgba(255, 255, 255, 0.15)"
+      : "0px 4px 15px rgba(0, 0, 0, 0.1)",
     background: theme === "dark" ? "#222" : "#fff",
     color: theme === "dark" ? "#fff" : "#333",
     border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #eaeaea",
     width: "320px",
-});
+  });
 
   // ✅ Fetch user data
   const fetchUser = async () => {
@@ -40,9 +40,9 @@ const Navbar = () => {
       const res = await axios.get("http://localhost:5000/auth/me", {
         withCredentials: true, // Send cookies for authentication
       });
-  
+
       console.log("🟢 User Data Received:");
-  
+
       if (res.data && res.data._id) {
         setUser(res.data); // ✅ Update user state
         console.log("🟣 User state updated:");
@@ -80,32 +80,32 @@ const Navbar = () => {
     console.log("🟡 Logging out...");
 
     try {
-        const response = await axios.post(
-            "http://localhost:5000/auth/logout",
-            {}, 
-            { withCredentials: true } // Ensure cookies are sent
-        );
+      const response = await axios.post(
+        "http://localhost:5000/auth/logout",
+        {},
+        { withCredentials: true } // Ensure cookies are sent
+      );
 
-        console.log("🟢 Logout successful:", response.data);
+      console.log("🟢 Logout successful:", response.data);
 
-        // Clear user data
-        setUser(null);
-        localStorage.removeItem("user");
+      // Clear user data
+      setUser(null);
+      localStorage.removeItem("user");
 
-        // Close UI elements
-        setShowPopup(false);
-        setMobileMenuOpen(false);
+      // Close UI elements
+      setShowPopup(false);
+      setMobileMenuOpen(false);
 
-        // Redirect after delay
-        navigate("/landingpage");
+      // Redirect after delay
+      navigate("/landingpage");
 
     } catch (error) {
-        console.error("❌ Logout failed:", error.response?.data || error.message);
+      console.error("❌ Logout failed:", error.response?.data || error.message);
 
-        // Debugging: Check browser cookies
-        console.log("Browser Cookies:", document.cookie);
+      // Debugging: Check browser cookies
+      console.log("Browser Cookies:", document.cookie);
     }
-};
+  };
 
   return (
     <nav
@@ -139,9 +139,7 @@ const Navbar = () => {
               onClick={() => setShowPopup(!showPopup)}
             >
               <img
-                src={user.profilePicture || (theme === "dark"
-                  ? "./public/Profile-2.png"
-                  : "./public/Profile-1.png")}
+                src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
                 alt="User"
                 className="object-cover object-top w-8 h-8 md:w-10 md:h-10 rounded-full"
               />
@@ -194,9 +192,7 @@ const Navbar = () => {
                 {/* Profile Section */}
                 <div className="flex items-center gap-4">
                   <img
-                    src={user.profilePicture || (theme === "dark"
-                      ? "./public/Profile-2.png"
-                      : "./public/Profile-1.png")}
+                    src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
                     alt="User"
                     className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover object-top"
                   />
@@ -265,9 +261,7 @@ const Navbar = () => {
                 {/* User Profile Info */}
                 <div className="flex flex-col items-center gap-2">
                   <img
-                    src={user.profilePicture || (theme === "dark"
-                      ? "./public/Profile-2.png"
-                      : "./public/Profile-1.png")}
+                    src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
                     alt="User"
                     className="w-20 h-20 rounded-full object-cover object-top"
                   />
