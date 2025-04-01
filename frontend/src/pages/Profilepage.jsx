@@ -288,13 +288,38 @@ const Profilepage = () => {
                                 {projects?.length > 0 ? (
                                     projects?.map((project, index) => (
                                         <div key={index} className={`rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}>
-                                            <img
-                                                src={`http://localhost:5000${project.firstImage}`}  // Assuming the image is stored on your server
-                                                alt={project.title}
-                                                className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
-                                            />
+                                            {/* Media Handling */}
+                                            {project.firstImage ? (
+                                                // If there's an image, display it
+                                                <img
+                                                    src={`http://localhost:5000${project.firstImage}`}
+                                                    alt={project.title}
+                                                    className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
+                                                />
+                                            ) : project.videos && project.videos.length > 0 ? (
+                                                // If only video (no image), show video without playing
+                                                <video
+                                                    className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
+                                                    muted
+                                                    playsInline
+                                                    preload="metadata"
+                                                    controls={false}
+                                                >
+                                                    <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            ) : (
+                                                // Fallback if neither image nor video is available
+                                                <div className={`rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
+                                                    <span className="text-gray-500">No preview available</span>
+                                                </div>
+                                            )}
+
                                             <div className="flex items-center justify-between mt-1">
-                                                <p className="mt-2 text-base sm:text-lg font-medium truncate">{project.title}</p>
+                                                <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
+                                                    {project.title}
+                                                </p>
+
                                                 <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
                                                     <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
                                                 </div>

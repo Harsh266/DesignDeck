@@ -58,6 +58,7 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
         const projectDetails = projects.map(project => ({
             title: project.title,
             firstImage: project.images && project.images[0] ? project.images[0] : null,
+            videos: project.videos,
             category: project.category,
             description: project.description,
         }));
@@ -69,9 +70,6 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
     }
 });
 
-function shuffleArray(array) {
-    return array.sort(() => Math.random() - 0.5);
-}
 
 // Fetch all projects and shuffle them randomly
 router.get("/all-projects", async (req, res) => {
