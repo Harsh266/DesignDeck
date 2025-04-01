@@ -10,6 +10,7 @@ const projectSchema = new mongoose.Schema({
     description: { type: String, required: true },
     images: [{ type: String }],
     videos: [{ type: String }],
+    category: [{ type: String, required: true }],
 }, { timestamps: true });
 
 const Project = mongoose.model("Project", projectSchema);

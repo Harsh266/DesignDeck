@@ -16,8 +16,10 @@ const UploadProjectPage = () => {
     const [tempFiles, setTempFiles] = useState([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [category, setCategory] = useState([]);
     const [globalTitle, setGlobalTitle] = useState("");
     const [globalDescription, setGlobalDescription] = useState("");
+    const [globalCategory, setGlobalCategory] = useState([]);
 
     // Custom toast styles
     const getCustomToastStyle = (theme) => ({
@@ -38,6 +40,7 @@ const UploadProjectPage = () => {
         border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
         width: "320px", // Fixed width for consistency
     });
+
 
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
@@ -81,8 +84,9 @@ const UploadProjectPage = () => {
         if (!globalTitle && !globalDescription) {
             setGlobalTitle(title);
             setGlobalDescription(description);
-        } else if (globalTitle !== title || globalDescription !== description) {
-            toast("Title and description must be the same for all uploads.", {
+            setGlobalCategory(category);
+        } else if (globalTitle !== title || globalDescription !== description || globalCategory !== category) {
+            toast("Title, Description and Category must be the same for all uploads.", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -117,6 +121,7 @@ const UploadProjectPage = () => {
         setTempFiles([]);
         setTitle("");
         setDescription("");
+        setCategory("");
         setPopupType(null);
     };
 
@@ -138,6 +143,7 @@ const UploadProjectPage = () => {
         const formData = new FormData();
         formData.append("title", globalTitle);
         formData.append("description", globalDescription);
+        formData.append("category", globalCategory);
 
         // ✅ Extract File from object
         if (imageFiles.length > 0) {
@@ -183,6 +189,8 @@ const UploadProjectPage = () => {
             setCodeFiles([]);
             setGlobalTitle("");
             setGlobalDescription("");
+            setGlobalCategory([]);
+
         } catch (error) {
             toast("Error uploading project", {
                 position: "top-right",
@@ -215,6 +223,7 @@ const UploadProjectPage = () => {
         setCodeFiles([]);
         setGlobalTitle("");
         setGlobalDescription("");
+        setGlobalCategory([]);
         setPopup(null);
     };
     return (
@@ -281,6 +290,8 @@ const UploadProjectPage = () => {
                         setDescription={setDescription}
                         title={title}
                         description={description}
+                        setCategory={setCategory}
+                        category={category}
                     />
                 )}
 
@@ -295,6 +306,8 @@ const UploadProjectPage = () => {
                         setDescription={setDescription}
                         title={title}
                         description={description}
+                        setCategory={setCategory}
+                        category={category}
                     />
                 )} */}
 
@@ -309,6 +322,8 @@ const UploadProjectPage = () => {
                         setDescription={setDescription}
                         title={title}
                         description={description}
+                        setCategory={setCategory}
+                        category={category}
                     />
                 )}
 
@@ -321,6 +336,15 @@ const UploadProjectPage = () => {
                             <div className="mt-4 sm:mt-6 py-3 sm:py-4 rounded-lg">
                                 <h2 className="text-lg sm:text-xl font-medium">Project Title: {globalTitle}</h2>
                                 <p className="text-gray-600 text-xs sm:text-sm mt-1 sm:mt-2">Project Description: {globalDescription}</p>
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    <span className="text-gray-600 text-xs sm:text-sm">Categories:</span>
+                                    {globalCategory.map((cat) => (
+                                        <span key={cat} className={`px-2 py-1 text-xs rounded-full ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"
+                                            }`}>
+                                            {cat}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
 
                             {imageFiles.length > 0 && <FileDisplay files={imageFiles} type="image" handleDelete={handleDeleteFile} />}
@@ -348,10 +372,28 @@ const ImagePopup = ({
     setTitle,
     setDescription,
     title,
-    description
+    description,
+    setCategory,
+    category
 }) => {
     const [previewFiles, setPreviewFiles] = useState([]);
     const { theme } = useContext(ThemeContext);
+
+    const handleCategoryChange = (value) => {
+        setCategory((prev) =>
+            prev.includes(value) ? prev.filter((cat) => cat !== value) : [...prev, value]
+        );
+    };
+    
+    const availableCategories = [
+        "UI/UX",
+        "Motion Graphics",
+        "Web Design",
+        "App Design",
+        "Graphic Design",
+        "Fashion Design",
+        "Other",
+    ];
 
     // Generate image previews when tempFiles changes
     useEffect(() => {
@@ -364,7 +406,7 @@ const ImagePopup = ({
     }, [tempFiles]);
 
     return (
-        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8 ">
             <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
                 {/* Close Button */}
                 <button className={`absolute top-3 sm:top-4 right-3 sm:right-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"} cursor-pointer`} onClick={() => setPopup(null)}>✖</button>
@@ -403,6 +445,25 @@ const ImagePopup = ({
                     rows={1}
                     onChange={(e) => setDescription(e.target.value)}
                 />
+
+                <label className="mt-2 text-xs sm:text-sm font-medium">Categories</label>
+                <div className="mt-1 grid grid-cols-2 gap-2">
+                    {availableCategories.map((cat) => (
+                        <div key={cat} className="flex items-center">
+                            <input
+                                type="checkbox"
+                                id={cat}
+                                checked={category.includes(cat)}
+                                onChange={() => handleCategoryChange(cat)}
+                                className="w-4 h-4 text-blue-600 rounded border-gray-300"
+                            />
+                            <label htmlFor={cat} className={`ml-2 text-xs sm:text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>
+                                {cat}
+                            </label>
+                        </div>
+                    ))}
+                </div>
+
 
                 {/* Uploaded Files Section */}
                 <div className="mt-1 sm:mt-2">
@@ -454,108 +515,145 @@ const ImagePopup = ({
 };
 
 // Code Popup Component
-// const CodePopup = ({
-//     setPopup,
-//     handleFileChange,
-//     handleUpload,
-//     tempFiles,
-//     handleDeleteTempFile,
-//     setTitle,
-//     setDescription,
-//     title,
-//     description
-// }) => {
-//     const [previewFiles, setPreviewFiles] = useState([]);
-//     const { theme } = useContext(ThemeContext);
+const CodePopup = ({
+    setPopup,
+    handleFileChange,
+    handleUpload,
+    tempFiles,
+    handleDeleteTempFile,
+    setTitle,
+    setDescription,
+    title,
+    description,
+    setCategory,
+    category
+}) => {
+    const [previewFiles, setPreviewFiles] = useState([]);
+    const { theme } = useContext(ThemeContext);
 
-//     // Generate file previews when tempFiles changes
-//     useEffect(() => {
-//         if (tempFiles.length > 0) {
-//             setPreviewFiles(tempFiles.map(file => file?.name || "Unknown File"));
-//         } else {
-//             setPreviewFiles([]);
-//         }
-//     }, [tempFiles]);
+    const handleCategoryChange = (value) => {
+        setCategory((prev) =>
+            prev.includes(value) ? prev.filter((cat) => cat !== value) : [...prev, value]
+        );
+    };
+    
+    const availableCategories = [
+        "UI/UX",
+        "Motion Graphics",
+        "Web Design",
+        "App Design",
+        "Graphic Design",
+        "Fashion Design",
+        "Other",
+    ];
 
-//     return (
-//         <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
-//             <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
-//                 {/* Close Button */}
-//                 <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
+    // Generate file previews when tempFiles changes
+    useEffect(() => {
+        if (tempFiles.length > 0) {
+            setPreviewFiles(tempFiles.map(file => file?.name || "Unknown File"));
+        } else {
+            setPreviewFiles([]);
+        }
+    }, [tempFiles]);
 
-//                 {/* Title */}
-//                 <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
-//                     <i className="ri-file-upload-line"></i>
-//                     <p className="font-semibold">Upload Embedded Code</p>
-//                 </h2>
-//                 <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your code files here</p>
+    return (
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
+            <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
+                {/* Close Button */}
+                <button className="absolute top-3 sm:top-4 right-3 sm:right-4 text-gray-600 cursor-pointer" onClick={() => setPopup(null)}>✖</button>
 
-//                 {/* File Upload Box */}
-//                 <label htmlFor="codeFileInput" className="mt-3 sm:mt-4 border border-2 border-[#376CFF] bg-[#DCE6FF] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
-//                     <i className="ri-file-code-line text-[#376CFF] text-lg sm:text-xl md:text-[22px]"></i>
-//                     <p className="text-[#376CFF] font-medium mt-1 text-sm sm:text-base">Choose Files</p>
-//                     <input type="file" id="codeFileInput" accept=".html,.css,.js" className="hidden" onChange={handleFileChange} multiple />
-//                 </label>
-//                 <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only .html, .css, .js files. 100 MB max per file.</p>
+                {/* Title */}
+                <h2 className="text-base sm:text-lg md:text-[20px] flex items-center gap-2">
+                    <i className="ri-file-upload-line"></i>
+                    <p className="font-semibold">Upload Embedded Code</p>
+                </h2>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px]">Add your code files here</p>
 
-//                 {/* Project Name */}
-//                 <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
-//                 <input
-//                     type="text"
-//                     placeholder="Enter your project name"
-//                     className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
-//                     value={title}
-//                     onChange={(e) => setTitle(e.target.value)}
-//                 />
+                {/* File Upload Box */}
+                <label htmlFor="codeFileInput" className="mt-3 sm:mt-4 border border-2 border-[#376CFF] bg-[#DCE6FF] p-4 sm:p-5 md:p-6 text-center rounded-lg cursor-pointer h-20 sm:h-24 md:h-28 flex flex-col justify-center">
+                    <i className="ri-file-code-line text-[#376CFF] text-lg sm:text-xl md:text-[22px]"></i>
+                    <p className="text-[#376CFF] font-medium mt-1 text-sm sm:text-base">Choose Files</p>
+                    <input type="file" id="codeFileInput" accept=".html,.css,.js" className="hidden" onChange={handleFileChange} multiple />
+                </label>
+                <p className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] mt-1">Only .html, .css, .js files. 100 MB max per file.</p>
 
-//                 {/* Project Description */}
-//                 <label className="mt-2 text-xs sm:text-sm font-medium">Project Description</label>
-//                 <textarea
-//                     placeholder="Enter your project description"
-//                     className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
-//                     rows={1}
-//                     value={description}
-//                     onChange={(e) => setDescription(e.target.value)}
-//                 />
+                {/* Project Name */}
+                <label className="text-xs sm:text-sm font-medium mt-2 sm:mt-3 block">Project Name</label>
+                <input
+                    type="text"
+                    placeholder="Enter your project name"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
 
-//                 {/* Uploaded Files Section */}
-//                 <div className="mt-1 sm:mt-2">
-//                     <label className="text-xs sm:text-sm font-medium">Uploaded Files</label>
-//                     {previewFiles.length > 0 ? (
-//                         <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
-//                             {previewFiles.map((preview, index) => (
-//                                 <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
-//                                     <div className="flex items-center gap-1 sm:gap-2">
-//                                         <i className="ri-file-zip-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
-//                                         <div>
-//                                             <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
-//                                             <p className="text-[10px] sm:text-xs text-gray-500">
-//                                                 {tempFiles[index]?.size
-//                                                     ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
-//                                                     : "0 MB"}
-//                                             </p>
-//                                         </div>
-//                                     </div>
-//                                     <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
-//                                         <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
-//                                     </button>
-//                                 </div>
-//                             ))}
-//                         </div>
-//                     ) : (
-//                         <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
-//                     )}
-//                 </div>
+                {/* Project Description */}
+                <label className="mt-2 text-xs sm:text-sm font-medium">Project Description</label>
+                <textarea
+                    placeholder="Enter your project description"
+                    className="w-full border rounded-md p-2 sm:p-2.5 mt-1 focus:outline-none focus:ring-2 border-gray-300 bg-white text-black text-xs sm:text-sm"
+                    rows={1}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
 
-//                 {/* Buttons */}
-//                 <div className="mt-3 sm:mt-4 flex justify-end gap-2">
-//                     <button className="border border-[#376CFF] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#376CFF] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
-//                     <button className="bg-[#376CFF] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
+                <label className="mt-2 text-xs sm:text-sm font-medium">Categories</label>
+                <div className="mt-1 grid grid-cols-2 gap-2">
+                    {availableCategories.map((cat) => (
+                        <div key={cat} className="flex items-center">
+                            <input
+                                type="checkbox"
+                                id={cat}
+                                checked={category.includes(cat)}
+                                onChange={() => handleCategoryChange(cat)}
+                                className="w-4 h-4 text-blue-600 rounded border-gray-300"
+                            />
+                            <label htmlFor={cat} className={`ml-2 text-xs sm:text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>
+                                {cat}
+                            </label>
+                        </div>
+                    ))}
+                </div>
+
+
+                {/* Uploaded Files Section */}
+                <div className="mt-1 sm:mt-2">
+                    <label className="text-xs sm:text-sm font-medium">Uploaded Files</label>
+                    {previewFiles.length > 0 ? (
+                        <div className={`mt-1 sm:mt-2 ${tempFiles.length > 1 ? 'max-h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300' : ''} space-y-1 sm:space-y-2`}>
+                            {previewFiles.map((preview, index) => (
+                                <div key={index} className="flex items-center justify-between bg-white p-1.5 sm:p-2 rounded border border-gray-300">
+                                    <div className="flex items-center gap-1 sm:gap-2">
+                                        <i className="ri-file-zip-line text-[#9E9E9E] text-lg sm:text-xl md:text-[25px]"></i>
+                                        <div>
+                                            <p className="text-xs sm:text-sm md:text-[14px] font-medium">{tempFiles[index]?.name}</p>
+                                            <p className="text-[10px] sm:text-xs text-gray-500">
+                                                {tempFiles[index]?.size
+                                                    ? `${(Number(tempFiles[index].size) / (1024 * 1024)).toFixed(2)} MB`
+                                                    : "0 MB"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleDeleteTempFile(index)} className="text-[#9E9E9E] cursor-pointer">
+                                        <i className="ri-delete-bin-line text-lg sm:text-xl md:text-[22px]"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">No files selected</p>
+                    )}
+                </div>
+
+                {/* Buttons */}
+                <div className="mt-3 sm:mt-4 flex justify-end gap-2">
+                    <button className="border border-[#376CFF] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[#376CFF] cursor-pointer text-xs sm:text-sm" onClick={() => setPopup(null)}>Cancel</button>
+                    <button className="bg-[#376CFF] text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm" onClick={handleUpload}>Upload</button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 // Video Popup Component
 const VideoPopup = ({
@@ -567,10 +665,28 @@ const VideoPopup = ({
     setTitle,
     setDescription,
     title,
-    description
+    description,
+    setCategory,
+    category
 }) => {
     const [previewFiles, setPreviewFiles] = useState([]);
     const { theme } = useContext(ThemeContext);
+
+    const handleCategoryChange = (value) => {
+        setCategory((prev) =>
+            prev.includes(value) ? prev.filter((cat) => cat !== value) : [...prev, value]
+        );
+    };
+    
+    const availableCategories = [
+        "UI/UX",
+        "Motion Graphics",
+        "Web Design",
+        "App Design",
+        "Graphic Design",
+        "Fashion Design",
+        "Other",
+    ];
 
     // Generate video previews when tempFiles changes
     useEffect(() => {
@@ -622,6 +738,25 @@ const VideoPopup = ({
                     onChange={(e) => setDescription(e.target.value)}
                 />
 
+                <label className="mt-2 text-xs sm:text-sm font-medium">Categories</label>
+                <div className="mt-1 grid grid-cols-2 gap-2">
+                    {availableCategories.map((cat) => (
+                        <div key={cat} className="flex items-center">
+                            <input
+                                type="checkbox"
+                                id={cat}
+                                checked={category.includes(cat)}
+                                onChange={() => handleCategoryChange(cat)}
+                                className="w-4 h-4 text-blue-600 rounded border-gray-300"
+                            />
+                            <label htmlFor={cat} className={`ml-2 text-xs sm:text-sm ${theme === "dark" ? "text-white" : "text-black"}`}>
+                                {cat}
+                            </label>
+                        </div>
+                    ))}
+                </div>
+
+
                 {/* Uploaded Videos Section */}
                 <div className="mt-1 sm:mt-2">
                     <label className="text-xs sm:text-sm font-medium">Uploaded Videos</label>
@@ -660,6 +795,7 @@ const VideoPopup = ({
         </div>
     );
 };
+
 const FileDisplay = ({ files, type, handleDelete }) => {
     const { theme } = useContext(ThemeContext);
 

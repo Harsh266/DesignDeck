@@ -15,14 +15,15 @@ router.post("/upload", authMiddleware, uploadProject.fields([
             return res.status(400).json({ message: "Files are missing!" });
         }
 
-        const { title, description } = req.body;
-        if (!title || !description) {
+        const { title, description, category } = req.body;
+        if (!title || !description || !category) {
             return res.status(400).json({ message: "Title and description are required" });
         }
 
         const newProject = new Project({
             title,
             description,
+            category,
             images: req.files["projectImage"] ? req.files["projectImage"].map(file => `/uploads/projects/images/${file.filename}`) : [],
             videos: req.files["projectVideo"] ? req.files["projectVideo"].map(file => `/uploads/projects/videos/${file.filename}`) : [],
             userId: req.user._id,
