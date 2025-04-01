@@ -16,14 +16,16 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/projects/all-projects");
-    
-                console.log("API Response:", response.data); // Debugging: Log the response
-    
-                if (response.data.success && response.data.projects.length > 0) {
-                    setProjects(response.data.projects);
+                const response = await axios.get("http://localhost:5000/api/projects/all-projects", {
+                    withCredentials: true, // Ensures cookies are sent
+                });
+
+                console.log("Fetched Projects:", response.data.projects); // Debugging
+
+                if (response.data.success) {
+                    setProjects(response.data.projects); // Store projects in state
                 } else {
-                    console.warn("No projects found.");
+                    console.error("Error: ", response.data.message);
                 }
             } catch (error) {
                 console.error("Error fetching projects:", error);
@@ -31,13 +33,12 @@ const Dashboard = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchProjects();
-        const interval = setInterval(fetchProjects, 5000);
-    
-        return () => clearInterval(interval);
     }, []);
-    
+
+
+
 
     return (
         <>
@@ -101,36 +102,50 @@ const Dashboard = () => {
 
                 {/* Image & Video Grid */}
                 {/* <Link to="/"> */}
-                    <div className="max-w-full mx-auto p-4 sm:p-6 bg-white text-black">
-                        <h3 className="text-xl font-semibold border-b-2 pb-2 w-[30%] sm:w-[20%] md:w-[15%] lg:w-[10%] border-gray-300">
-                            All Projects
-                        </h3>
+                <div className={`max-w-full mx-auto p-4 sm:p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                    <h3 className={`text-xl font-semibold border-b-2 pb-2 w-[30%] sm:w-[20%] md:w-[15%] lg:w-[10%] ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
+                        All Projects
+                    </h3>
 
-                        {/* Projects Grid */}
+                    {loading ? (
+                        <p>Loading...</p>
+                    ) : projects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
-                            {loading ? (
-                                <p>Loading...</p>
-                            ) : projects.length > 0 ? (
-                                projects.map((project, index) => (
-                                    <div key={index} className="rounded-lg p-3 text-center bg-white">
+                            {projects.map((project, index) => (
+                                <div key={index} className={`rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}>
+
+                                    {/* User Profile Section */}
+                                    <div className="flex items-center gap-2 mb-2">
                                         <img
-                                            src={`http://localhost:5000${project.images[0]}`} // Assuming 'images' is an array
+                                            src={`http://localhost:5000${project.userId?.profileImage || "/uploads/default-profile.png"}`}  // Use fallback image if not available
+                                            alt={project.userId?.name || "Unknown"}
+                                            className="w-10 h-10 rounded-full object-cover"
+                                        />
+                                        <p className="text-sm font-medium">{project.userId?.name || "Unknown User"}</p>
+                                    </div>
+
+                                    {/* Project Image */}
+                                    {project.images && project.images.length > 0 ? (
+                                        <img
+                                            src={`http://localhost:5000${project.images[0]}`}  // Assuming the first image is stored on the server
                                             alt={project.title}
                                             className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
                                         />
-                                        <div className="flex items-center justify-between mt-1">
-                                            <p className="mt-2 text-base sm:text-lg font-medium truncate">{project.title}</p>
-                                            <div className="text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full bg-[#D5E0FF] text-blue-500">
-                                                <i className="ri-heart-fill text-blue-500"></i> 582
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No projects found</p>
-                            )}
+                                    ) : (
+                                        <p>No image available</p>
+                                    )}
+
+                                    {/* Project Title */}
+                                    <p className="mt-2 text-base sm:text-lg font-medium truncate">{project.title}</p>
+                                </div>
+                            ))}
                         </div>
-                    </div>
+                    ) : (
+                        <p>No projects found</p>
+                    )}
+                </div>
+
+
                 {/* </Link> */}
 
                 {/* Load More Button */}

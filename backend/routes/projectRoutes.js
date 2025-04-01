@@ -66,18 +66,20 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
     }
 });
 
+function shuffleArray(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+// Fetch all projects and shuffle them randomly
 router.get("/all-projects", async (req, res) => {
     try {
-        const projects = await Project.find();
+        // Fetch all projects from the database
+        const projects = await Project.find()
+            .populate("userId", "name profileImage")  // Populate the userId field with user name and profileImage
+            .exec();  // Execute the query
 
-        console.log("Fetched Projects:", projects); // Debugging: Check if projects are retrieved
-
-        if (!projects.length) {
-            return res.status(200).json({ success: true, message: "No projects found", projects: [] });
-        }
-
-        // Shuffle projects randomly
-        const shuffledProjects = projects.sort(() => Math.random() - 0.5);
+        // Shuffle projects array randomly
+        const shuffledProjects = shuffleArray(projects);
 
         res.status(200).json({ success: true, projects: shuffledProjects });
     } catch (error) {
@@ -85,7 +87,5 @@ router.get("/all-projects", async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
-
-
 
 module.exports = router;
