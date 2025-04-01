@@ -85,7 +85,7 @@ const UploadProjectPage = () => {
             setGlobalTitle(title);
             setGlobalDescription(description);
             setGlobalCategory(category);
-        } else if (globalTitle !== title || globalDescription !== description || globalCategory !== category) {
+        } else if (globalTitle !== title || globalDescription !== description) {
             toast("Title, Description and Category must be the same for all uploads.", {
                 position: "top-right",
                 autoClose: 3000,

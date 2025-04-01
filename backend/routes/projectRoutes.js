@@ -78,13 +78,10 @@ router.get("/all-projects", async (req, res) => {
     try {
         // Fetch all projects from the database
         const projects = await Project.find()
-            .populate("userId", "name profileImage")  // Populate the userId field with user name and profileImage
+            .populate("userId", "name profilePicture")  // Populate the userId field with user name and profileImage
             .exec();  // Execute the query
 
-        // Shuffle projects array randomly
-        const shuffledProjects = shuffleArray(projects);
-
-        res.status(200).json({ success: true, projects: shuffledProjects });
+        res.status(200).json({ success: true, projects: projects });
     } catch (error) {
         console.error("Error fetching projects:", error);
         res.status(500).json({ success: false, message: "Server error" });

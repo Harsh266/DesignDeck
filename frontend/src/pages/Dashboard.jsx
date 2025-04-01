@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 const Dashboard = () => {
-    const categories = ["All","UI/UX","Motion Graphics","Web Design","App Design","Graphic Design","Fashion Design","Other",];
+    const categories = ["All", "UI/UX", "Motion Graphics", "Web Design", "App Design", "Graphic Design", "Fashion Design", "Other",];
     const [activeCategory, setActiveCategory] = useState("Explore");
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -115,7 +115,7 @@ const Dashboard = () => {
                                 <div key={index} className={`rounded-xl overflow-hidden group cursor-pointer ${theme === "dark" ? "bg-black" : "bg-white"}`}>
                                     {/* Media Handling */}
                                     <div className="relative w-full h-48 sm:h-52 md:h-60 rounded-xl overflow-hidden">
-                                        {project.videos && project.videos.length > 0 ? (
+                                        {project.images && project.images.length > 0 ? (
                                             <>
                                                 {/* Show Image by Default */}
                                                 <img
@@ -123,7 +123,41 @@ const Dashboard = () => {
                                                     alt={project.title}
                                                     className="w-full h-full object-cover rounded-xl group-hover:hidden"
                                                 />
-                                                {/* Show Video on Hover */}
+                                                {/* Show Video on Hover if available, otherwise show same image */}
+                                                {project.videos && project.videos.length > 0 ? (
+                                                    <video
+                                                        className="w-full h-full object-cover rounded-xl hidden group-hover:block"
+                                                        autoPlay
+                                                        loop
+                                                        muted
+                                                        playsInline
+                                                    >
+                                                        <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                ) : (
+                                                    <img
+                                                        src={`http://localhost:5000${project.images[0]}` || "/default-thumbnail.jpg"}
+                                                        alt={project.title}
+                                                        className="w-full h-full object-cover rounded-xl hidden group-hover:block"
+                                                    />
+                                                )}
+                                            </>
+                                        ) : project.videos && project.videos.length > 0 ? (
+                                            <>
+                                                {/* For video-only projects: Show first frame of video as static thumbnail */}
+                                                <div className="w-full h-full group-hover:hidden">
+                                                    <video
+                                                        className="w-full h-full object-cover rounded-xl"
+                                                        muted
+                                                        playsInline
+                                                        preload="metadata"
+                                                    >
+                                                        <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
+                                                {/* Play video on hover */}
                                                 <video
                                                     className="w-full h-full object-cover rounded-xl hidden group-hover:block"
                                                     autoPlay
@@ -131,13 +165,13 @@ const Dashboard = () => {
                                                     muted
                                                     playsInline
                                                 >
-                                                    <source src={`http://localhost:5000${project.videos[0]}`} type="video/mp4" />
+                                                    <source src={`http://localhost:5000${project.videos[0]}`} />
                                                     Your browser does not support the video tag.
                                                 </video>
                                             </>
                                         ) : (
                                             <img
-                                                src={`http://localhost:5000${project.images[0]}`}
+                                                src="/default-thumbnail.jpg"
                                                 alt={project.title}
                                                 className="w-full h-full object-cover rounded-xl"
                                             />
@@ -147,14 +181,15 @@ const Dashboard = () => {
                                     {/* User Info at Bottom */}
                                     <div className="py-2 flex items-center gap-2 sm:gap-3">
                                         <img
-                                            src={`http://localhost:5000${project.userId?.profilePicture || "/uploads/default-profile.jpg"}`} // Use fallback image if not available
+                                            src={`${project.userId?.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}`}
                                             alt={project.userId?.name || "Unknown"}
                                             className="w-10 h-10 rounded-full object-cover"
                                         />
                                         <div className="flex flex-col">
-                                            <h2 className={`font-semibold text-sm sm:text-base truncate max-w-[180px] sm:max-w-[220px] md:max-w-full ${theme === "dark" ? "text-white" : "text-black"}`}>
+                                            <h2 className={`font-semibold text-sm sm:text-base break-words max-w-[180px] sm:max-w-[220px] md:max-w-full ${theme === "dark" ? "text-white" : "text-black"}`}>
                                                 {project.title}
                                             </h2>
+
                                             <p className={`text-xs sm:text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                                                 {project.userId?.name || "Unknown User"}
                                             </p>
