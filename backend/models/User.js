@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String }, // Optional for Google users
-    profilePicture: { type: String }, // Stores the profile picture URL
+    profilePicture: { type: String, default: "/uploads/default-profile.jpg" },// Stores the profile picture URL
     bannerImage: { type: String }, // Stores the banner image URL
     bio: { type: String, maxlength: 500 }, // User bio with a max length
     dribbbleProfile: { type: String }, // Instagram profile link
