@@ -406,8 +406,8 @@ const ImagePopup = ({
     }, [tempFiles]);
 
     return (
-        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8 ">
-            <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center`}>
+        <div className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 md:px-8">
+            <div className={`${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"} rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-xs sm:max-w-sm md:max-w-md lg:w-[90%] shadow-lg relative flex flex-col justify-center overflow-y-auto max-h-[90%]`}>
                 {/* Close Button */}
                 <button className={`absolute top-3 sm:top-4 right-3 sm:right-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"} cursor-pointer`} onClick={() => setPopup(null)}>✖</button>
 
