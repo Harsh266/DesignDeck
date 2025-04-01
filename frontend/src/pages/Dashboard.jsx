@@ -35,10 +35,13 @@ const Dashboard = () => {
         };
 
         fetchProjects();
+
+        // Fetch every 2 seconds
+        const interval = setInterval(fetchProjects, 2000);
+
+        // Cleanup on unmount
+        return () => clearInterval(interval);
     }, []);
-
-
-
 
     return (
         <>
