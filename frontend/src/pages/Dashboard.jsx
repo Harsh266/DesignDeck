@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
@@ -8,16 +9,35 @@ import { ThemeContext } from "../context/ThemeContext";
 const Dashboard = () => {
     const categories = ["Explore", "UI/UX", "Poster", "Logo Design", "App Design"];
     const [activeCategory, setActiveCategory] = useState("Explore");
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { theme } = useContext(ThemeContext);
 
-    const cards = [
-        { title: "Portfolio / Animation", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/14090638/file/original-8bb2193fbab4f9b1cac096f86b611e99.mp4", type: "video", thumbnail: "https://cdn.dribbble.com/userupload/14090637/file/still-f1c0df70f1c15486b88334c0bda65b61.png?format=webp&resize=450x338&vertical=center", userImage: "https://randomuser.me/api/portraits/men/3.jpg" },
-        { title: "Tecnology Mobile App UI Design", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36060013/file/original-2aa7a89ad7453a979c3e096fb73a9be7.jpeg?resize=1200x900&vertical=center", type: "image", userImage: "https://randomuser.me/api/portraits/women/2.jpg" },
-        { title: "AIR1-07", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36368152/file/original-f2d9372b4ed87813ef10eea93953b31d.mp4", type: "video", thumbnail: "https://cdn.dribbble.com/userupload/36368151/file/still-0ae21d5de367235c8618fb3acfa5c2cc.png?format=webp&resize=450x338&vertical=center", userImage: "https://randomuser.me/api/portraits/men/3.jpg" },
-        { title: "Perchi Logo Design", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36162633/file/original-e8e53f0e5656a06b27050423d21ffaee.jpg?resize=1200x900&vertical=center", type: "image", userImage: "https://randomuser.me/api/portraits/women/4.jpg" },
-        { title: "CGPT Tap Game — Explainer Video", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/16763108/file/original-4c38aa030b4337fbb5d1114efa245e34.mp4", type: "video", thumbnail: "https://cdn.dribbble.com/userupload/16763107/file/still-3de5994da3cac2d4170eb51b7c0bb6b1.png?format=webp&resize=450x338&vertical=center", userImage: "https://randomuser.me/api/portraits/men/3.jpg" },
-        { title: "Music Festival", user: "Unknown User", media: "https://cdn.dribbble.com/userupload/36238146/file/original-00f3a3bb4248a233f7c5b9ac092f4d2c.jpg?resize=1200x1434&vertical=center", type: "image", userImage: "https://randomuser.me/api/portraits/women/6.jpg" }
-    ];
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/projects/all-projects");
+    
+                console.log("API Response:", response.data); // Debugging: Log the response
+    
+                if (response.data.success && response.data.projects.length > 0) {
+                    setProjects(response.data.projects);
+                } else {
+                    console.warn("No projects found.");
+                }
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchProjects();
+        const interval = setInterval(fetchProjects, 5000);
+    
+        return () => clearInterval(interval);
+    }, []);
+    
 
     return (
         <>
@@ -80,68 +100,38 @@ const Dashboard = () => {
                 </div>
 
                 {/* Image & Video Grid */}
-                <Link to="/view">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-6 sm:mt-8">
-                        {cards.map((card, index) => (
-                            <div
-                                key={index}
-                                className={`rounded-xl overflow-hidden group cursor-pointer ${theme === "dark" ? "bg-black" : "bg-white"}`}
-                            >
-                                {/* Media Handling */}
-                                <div className="relative w-full h-48 sm:h-52 md:h-60 rounded-xl overflow-hidden">
-                                    {card.type === "video" ? (
-                                        <>
-                                            {/* Show Image by Default */}
-                                            <img
-                                                src={card.thumbnail || "/default-thumbnail.jpg"}
-                                                alt={card.title}
-                                                className="w-full h-full object-cover rounded-xl group-hover:hidden"
-                                            />
-                                            {/* Show Video on Hover */}
-                                            <video
-                                                className="w-full h-full object-cover rounded-xl hidden group-hover:block"
-                                                autoPlay
-                                                loop
-                                                muted
-                                                playsInline
-                                            >
-                                                <source src={card.media} type="video/mp4" />
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        </>
-                                    ) : (
-                                        <img
-                                            src={card.media}
-                                            alt={card.title}
-                                            className="w-full h-full object-cover rounded-xl"
-                                        />
-                                    )}
-                                </div>
+                {/* <Link to="/"> */}
+                    <div className="max-w-full mx-auto p-4 sm:p-6 bg-white text-black">
+                        <h3 className="text-xl font-semibold border-b-2 pb-2 w-[30%] sm:w-[20%] md:w-[15%] lg:w-[10%] border-gray-300">
+                            All Projects
+                        </h3>
 
-                                {/* User Info at Bottom */}
-                                <div className="py-2 flex items-center gap-2 sm:gap-3">
-                                    <img
-                                        src={card.userImage}
-                                        alt={card.user}
-                                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
-                                    />
-                                    <div className="flex flex-col">
-                                        <h2
-                                            className={`font-semibold text-sm sm:text-base truncate max-w-[180px] sm:max-w-[220px] md:max-w-full ${theme === "dark" ? "text-white" : "text-black"}`}
-                                        >
-                                            {card.title}
-                                        </h2>
-                                        <p
-                                            className={`text-xs sm:text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
-                                        >
-                                            {card.user}
-                                        </p>
+                        {/* Projects Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
+                            {loading ? (
+                                <p>Loading...</p>
+                            ) : projects.length > 0 ? (
+                                projects.map((project, index) => (
+                                    <div key={index} className="rounded-lg p-3 text-center bg-white">
+                                        <img
+                                            src={`http://localhost:5000${project.images[0]}`} // Assuming 'images' is an array
+                                            alt={project.title}
+                                            className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
+                                        />
+                                        <div className="flex items-center justify-between mt-1">
+                                            <p className="mt-2 text-base sm:text-lg font-medium truncate">{project.title}</p>
+                                            <div className="text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full bg-[#D5E0FF] text-blue-500">
+                                                <i className="ri-heart-fill text-blue-500"></i> 582
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        ))}
+                                ))
+                            ) : (
+                                <p>No projects found</p>
+                            )}
+                        </div>
                     </div>
-                </Link>
+                {/* </Link> */}
 
                 {/* Load More Button */}
                 <div className="flex justify-center mt-6 sm:mt-8 pb-8">

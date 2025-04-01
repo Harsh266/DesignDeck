@@ -114,6 +114,7 @@ app.use("/uploads/profileImages", express.static(path.join(__dirname, "uploads/p
 app.use("/uploads/coverImages", express.static(path.join(__dirname, "uploads/coverImages")));
 app.use("/uploads/projects/images", express.static(path.join(__dirname, "/uploads/projects/images")));
 app.use("/uploads/projects/videos", express.static(path.join(__dirname, "/uploads/projects/videos")));
+app.use("/uploads/projects", express.static("uploads/projects"));
 
 // ✅ Root Route
 app.get("/", (req, res) => {

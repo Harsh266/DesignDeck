@@ -66,6 +66,26 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
     }
 });
 
+router.get("/all-projects", async (req, res) => {
+    try {
+        const projects = await Project.find();
+
+        console.log("Fetched Projects:", projects); // Debugging: Check if projects are retrieved
+
+        if (!projects.length) {
+            return res.status(200).json({ success: true, message: "No projects found", projects: [] });
+        }
+
+        // Shuffle projects randomly
+        const shuffledProjects = projects.sort(() => Math.random() - 0.5);
+
+        res.status(200).json({ success: true, projects: shuffledProjects });
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
 
 
 module.exports = router;
