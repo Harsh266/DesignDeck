@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 const Dashboard = () => {
-    const categories = ["Explore", "UI/UX", "Poster", "Logo Design", "App Design"];
+    const categories = ["All","UI/UX","Motion Graphics","Web Design","App Design","Graphic Design","Fashion Design","Other",];
     const [activeCategory, setActiveCategory] = useState("Explore");
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);

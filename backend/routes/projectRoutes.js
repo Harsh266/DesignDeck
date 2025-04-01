@@ -57,7 +57,9 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
         // Prepare a response with title and first image of each project
         const projectDetails = projects.map(project => ({
             title: project.title,
-            firstImage: project.images && project.images[0] ? project.images[0] : null
+            firstImage: project.images && project.images[0] ? project.images[0] : null,
+            category: project.category,
+            description: project.description,
         }));
 
         res.status(200).json({ success: true, projects: projectDetails });
