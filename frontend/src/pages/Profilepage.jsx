@@ -287,33 +287,72 @@ const Profilepage = () => {
                             <>
                                 {projects?.length > 0 ? (
                                     projects?.map((project, index) => (
-                                        <div key={index} className={`rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}>
-                                            {/* Media Handling */}
-                                            {project.firstImage ? (
-                                                // If there's an image, display it
-                                                <img
-                                                    src={`http://localhost:5000${project.firstImage}`}
-                                                    alt={project.title}
-                                                    className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
-                                                />
-                                            ) : project.videos && project.videos.length > 0 ? (
-                                                // If only video (no image), show video without playing
-                                                <video
-                                                    className="rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 object-cover"
-                                                    muted
-                                                    playsInline
-                                                    preload="metadata"
-                                                    controls={false}
-                                                >
-                                                    <source src={`http://localhost:5000${project.videos[0]}`} />
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                            ) : (
-                                                // Fallback if neither image nor video is available
-                                                <div className={`rounded-lg w-full h-40 sm:h-48 md:h-56 lg:h-65 flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
-                                                    <span className="text-gray-500">No preview available</span>
-                                                </div>
-                                            )}
+                                        <div
+                                            key={index}
+                                            className={`group rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}
+                                        >
+                                            {/* Media Handling - Using the new logic */}
+                                            <div className="relative w-full h-40 sm:h-48 md:h-56 lg:h-65 rounded-lg overflow-hidden cursor-pointer">
+                                                {project.firstImage || (project.images && project.images.length > 0) ? (
+                                                    <>
+                                                        {/* Show Image by Default */}
+                                                        <img
+                                                            src={`http://localhost:5000${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
+                                                            alt={project.title}
+                                                            className="w-full h-full object-cover rounded-lg group-hover:hidden"
+                                                        />
+                                                        {/* Show Video on Hover if available, otherwise show same image */}
+                                                        {project.videos && project.videos.length > 0 ? (
+                                                            <video
+                                                                className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                                autoPlay
+                                                                loop
+                                                                muted
+                                                                playsInline
+                                                            >
+                                                                <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                                Your browser does not support the video tag.
+                                                            </video>
+                                                        ) : (
+                                                            <img
+                                                                src={`http://localhost:5000${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
+                                                                alt={project.title}
+                                                                className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : project.videos && project.videos.length > 0 ? (
+                                                    <>
+                                                        {/* For video-only projects: Show first frame of video as static thumbnail */}
+                                                        <div className="w-full h-full group-hover:hidden">
+                                                            <video
+                                                                className="w-full h-full object-cover rounded-lg"
+                                                                muted
+                                                                playsInline
+                                                                preload="metadata"
+                                                            >
+                                                                <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                                Your browser does not support the video tag.
+                                                            </video>
+                                                        </div>
+                                                        {/* Play video on hover */}
+                                                        <video
+                                                            className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                            autoPlay
+                                                            loop
+                                                            muted
+                                                            playsInline
+                                                        >
+                                                            <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </>
+                                                ) : (
+                                                    <div className={`rounded-lg w-full h-full flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
+                                                        <span className="text-gray-500">No preview available</span>
+                                                    </div>
+                                                )}
+                                            </div>
 
                                             <div className="flex items-center justify-between mt-1">
                                                 <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
