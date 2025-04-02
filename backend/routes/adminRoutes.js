@@ -13,7 +13,7 @@ router.get("/admin-dashboard", adminAuth, (req, res) => {
 // ✅ Get All Users for Admin Dashboard
 router.get("/all-users", adminAuth, async (req, res) => {
     try {
-        const users = await User.find().select("name email isLoggedIn lastLogin profileImage isAdmin");
+        const users = await User.find().select("name email isLoggedIn lastLogin profilePicture bannerImage isAdmin");
         res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching users:", error);

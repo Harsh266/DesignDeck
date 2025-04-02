@@ -562,11 +562,11 @@ const AdminDashboard = () => {
                                             <X className="w-6 h-6" />
                                         </button>
 
-                                        <div className={`h-24 md:h-32 lg:h-36 ${theme === "dark" ? "bg-gradient-to-r from-blue-900 to-purple-900" : "bg-gradient-to-r from-blue-500 to-purple-600"}`} />
+                                        <div className={`h-24 md:h-32 lg:h-36 ${profilePopupUser.bannerImage}`} />
 
                                         <div className="relative -mt-10 md:-mt-14 lg:-mt-16 flex justify-center">
                                             <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full border-4 flex items-center justify-center shadow-md ${theme === "dark" ? "border-gray-800 bg-gray-700" : "border-white bg-gray-200"}`}>
-                                                <UserIcon className={`w-10 md:w-12 lg:w-14 h-10 md:h-12 lg:h-14 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`} />
+                                                <div className={`w-10 md:w-12 lg:w-14 h-10 md:h-12 lg:h-14 ${profilePopupUser.profilePicture}`} />
                                             </div>
                                         </div>
 
