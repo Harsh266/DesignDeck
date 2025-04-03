@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User"); // Import User model
 const uploadProject = require("../config/uploadProject"); // Import Multer configuration
 const Project = require("../models/Project");
+const nodemailer = require("nodemailer"); // Import nodemailer for sending emails
 const authMiddleware = require("../middleware/currentUserMiddleware"); // Import authentication middleware
 
 // ✅ Route to upload a new project with images & videos
@@ -209,6 +210,85 @@ router.get('/projects/user/:userId', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Server error while fetching user projects'
+        });
+    }
+});
+
+// Create email transporter
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.MAIL_ID, // Using your existing env variable
+        pass: process.env.MAIL_PASS // Using your existing env variable
+    }
+});
+
+// Verify transporter configuration
+transporter.verify(function (error, success) {
+    if (error) {
+        console.error('SMTP connection error:', error);
+    } else {
+        console.log('SMTP server is ready to send messages');
+    }
+});
+
+// Contact route with authentication middleware
+router.post("/users/contact", async (req, res) => {
+    try {
+        const { recipientId, subject, message, projectDetails, timeline, budget } = req.body;
+
+        // Find the sender (current logged-in user)
+        const sender = await User.findById(req.user.id).select("-password");
+
+        // Find the recipient
+        const recipient = await User.findById(recipientId);
+
+        if (!recipient || !recipient.email) {
+            return res.status(404).json({
+                success: false,
+                message: "Recipient not found or has no email address"
+            });
+        }
+
+        // Simple email content with plain text or minimal HTML
+        const mailOptions = {
+            from: `"DesignDeck"`,
+            to: recipient.email,
+            subject: subject || `New message from ${sender.name} on DesignDeck`,
+            text: `
+  New Contact Request from DesignDeck
+  
+  From: ${sender.name}
+  
+  Message: ${message}
+  
+  Project Details:
+  Description: ${projectDetails || 'Not provided'}
+  Timeline: ${timeline || 'Not specified'}
+  Budget: ${budget ? `$${budget}` : 'Not specified'}
+  
+  You can reply directly to the sender at: ${sender.email}
+  
+  This message was sent through DesignDeck. Please do not reply to this email.
+        `
+        };
+
+        // Send the email
+        await transporter.sendMail(mailOptions);
+
+        return res.status(200).json({
+            success: true,
+            message: "Message sent successfully"
+        });
+
+    } catch (error) {
+        console.error("Error sending email:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error sending message",
+            error: error.message
         });
     }
 });

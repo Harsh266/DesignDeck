@@ -5,6 +5,7 @@ import axios from "axios";
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+import { toast } from "react-toastify"; // Make sure to install react-toastify
 
 const API_BASE_URL = "http://localhost:5000";
 
@@ -14,8 +15,16 @@ const Profilepageothers = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isSending, setIsSending] = useState(false);
     const { theme } = useContext(ThemeContext);
     const { userId } = useParams();
+    
+    // Form data state
+    const [contactForm, setContactForm] = useState({
+        projectDetails: "",
+        timeline: "",
+        budget: ""
+    });
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -63,6 +72,58 @@ const Profilepageothers = () => {
 
     const getDefaultImage = (type) => {
         return `${API_BASE_URL}/uploads/default-${type}.jpg`;
+    };
+
+    // Handle form input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setContactForm({
+            ...contactForm,
+            [name]: value
+        });
+    };
+
+    // Handle form submission
+    const handleSendMessage = async (e) => {
+        e.preventDefault();
+        
+        if (!contactForm.projectDetails.trim()) {
+            toast.error("Please provide project details");
+            return;
+        }
+        
+        setIsSending(true);
+        
+        try {
+            const response = await axios.post(
+                `${API_BASE_URL}/api/projects/users/contact`,
+                {
+                    recipientId: userId,
+                    message: "I'm interested in working with you!",
+                    projectDetails: contactForm.projectDetails,
+                    timeline: contactForm.timeline,
+                    budget: contactForm.budget
+                },
+                { withCredentials: true }
+            );
+            
+            if (response.data.success) {
+                toast.success("Message sent successfully!");
+                setContactForm({
+                    projectDetails: "",
+                    timeline: "",
+                    budget: ""
+                });
+                setIsPopupOpen(false);
+            } else {
+                toast.error(response.data.message || "Failed to send message");
+            }
+        } catch (error) {
+            console.error("Error sending message:", error);
+            toast.error(error.response?.data?.message || "Error sending message. Please try again.");
+        } finally {
+            setIsSending(false);
+        }
     };
 
     if (error || !user) {
@@ -271,7 +332,7 @@ const Profilepageothers = () => {
                     </div>
                 </div>
 
-                {/* Popup */}
+                {/* Contact Popup */}
                 {isPopupOpen && (
                     <div
                         className={`fixed h-screen w-screen inset-0 ${theme === "dark" ? "bg-black/60" : "bg-black/40"} backdrop-blur-sm flex items-center justify-center z-50`}
@@ -313,34 +374,54 @@ const Profilepageothers = () => {
                             <hr className={`border-t-2 w-full sm:w-72 mt-1 ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
 
                             {/* Form */}
-                            <div className="mt-4">
+                            <form onSubmit={handleSendMessage} className="mt-4">
                                 <label className="font-medium text-xs sm:text-sm">Project Details</label>
                                 <textarea
+                                    name="projectDetails"
+                                    value={contactForm.projectDetails}
+                                    onChange={handleInputChange}
                                     className={`w-full p-2 border rounded-lg mt-2 text-xs sm:text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Please describe your project"
                                     rows="4"
+                                    required
                                 ></textarea>
 
                                 <label className="font-medium text-xs sm:text-sm mt-2 block">Project Timeline</label>
                                 <input
+                                    name="timeline"
+                                    value={contactForm.timeline}
+                                    onChange={handleInputChange}
                                     className={`w-full p-2 border rounded-lg mt-1 sm:mt-2 text-xs sm:text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Please write your project timeline"
                                 />
 
                                 <label className="font-medium text-xs sm:text-sm mt-2 block">Project Budget</label>
                                 <input
+                                    name="budget"
+                                    value={contactForm.budget}
+                                    onChange={handleInputChange}
                                     className={`w-full p-2 border rounded-lg mt-1 sm:mt-2 text-xs sm:text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Enter amount"
                                     type="number"
                                 />
-                            </div>
-
-                            {/* Send Message Button */}
-                            <button
-                                className={`text-sm sm:text-md font-medium w-full py-2 sm:py-3 mt-4 rounded-full cursor-pointer transition-all ${theme === "dark" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-[#376CFF] hover:bg-[#2C5CFF] text-white"}`}
-                            >
-                                <i className="ri-send-plane-line"></i> Send Message
-                            </button>
+                                
+                                {/* Send Message Button */}
+                                <button
+                                    type="submit"
+                                    disabled={isSending}
+                                    className={`text-sm sm:text-md font-medium w-full py-2 sm:py-3 mt-4 rounded-full cursor-pointer transition-all ${
+                                        isSending 
+                                            ? `${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-gray-300 text-gray-500"}`
+                                            : `${theme === "dark" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-[#376CFF] hover:bg-[#2C5CFF] text-white"}`
+                                    }`}
+                                >
+                                    {isSending ? (
+                                        <span>Sending...</span>
+                                    ) : (
+                                        <><i className="ri-send-plane-line"></i> Send Message</>
+                                    )}
+                                </button>
+                            </form>
                         </div>
                     </div>
                 )}
