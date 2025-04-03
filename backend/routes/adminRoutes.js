@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const router = express.Router();
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const adminAuth = require("../middleware/adminAuth"); // Import adminAuth middleware
 
@@ -13,24 +14,10 @@ router.get("/admin-dashboard", adminAuth, (req, res) => {
 // ✅ Get All Users for Admin Dashboard
 router.get("/all-users", adminAuth, async (req, res) => {
     try {
-        const users = await User.find().select("name email isLoggedIn lastLogin profilePicture bannerImage isAdmin");
+        const users = await User.find().select("name email isLoggedIn lastLogin profilePicture isAdmin");
         res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching users:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
-
-// ✅ Get Specific User by ID
-router.get("/user/:id", adminAuth, async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id).select("name email isLoggedIn lastLogin profileImage isAdmin");
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        res.status(200).json(user);
-    } catch (error) {
-        console.error("Error fetching user details:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
@@ -110,6 +97,49 @@ router.post("/send-email", async (req, res) => {
     } catch (error) {
         console.error("Error sending email:", error);
         res.status(500).json({ success: false, message: "Failed to send emails.", error: error.message });
+    }
+});
+
+router.post("/logout", adminAuth, async (req, res) => {
+    try {
+        const token = req.cookies.token;
+        let userId = null;
+
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                userId = decoded.id;
+            } catch (tokenError) {
+                console.error("Token verification failed:", tokenError);
+            }
+        }
+
+        // If no user ID from token, try to get from session
+        if (!userId && req.session && req.session.user) {
+            userId = req.session.user._id;
+        }
+
+        if (userId) {
+            await User.findByIdAndUpdate(userId, { isLoggedIn: false });
+        }
+
+        // Clear the admin auth token
+        res.clearCookie("token", { httpOnly: true, sameSite: "lax" });
+
+        if (req.session) {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error("Session destruction error:", err);
+                    return res.status(500).json({ message: "Logout failed" });
+                }
+                return res.status(200).json({ message: "Admin logged out successfully" });
+            });
+        } else {
+            return res.status(200).json({ message: "Admin logged out successfully" });
+        }
+    } catch (error) {
+        console.error("Admin Logout Error:", error);
+        res.status(500).json({ message: "Logout failed", error: error.message });
     }
 });
 

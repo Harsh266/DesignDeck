@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeContext } from "../context/ThemeContext";
-import { Sun, Moon, LogOut, Menu, Users, User as UserIcon, X, Trash2, Bell, Mail, Send } from "lucide-react"; // Added Menu icon
+import { Sun, Moon, LogOut, Menu, Users, User as UserIcon, X, Trash2, Bell, Mail, Send, Clock, Shield, MoreHorizontal, Calendar } from "lucide-react"; // Added Menu icon
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminDashboard = () => {
@@ -104,12 +104,6 @@ const AdminDashboard = () => {
     }, []);
 
     // Fetch a specific user's details
-
-    const handleProfileIconClick = (user) => {
-        if (isAdmin) {
-            setProfilePopupUser(user);
-        }
-    };
 
     const handleDeleteUser = async (email) => {
         // Step 1: Send DELETE request to the backend
@@ -230,9 +224,9 @@ const AdminDashboard = () => {
 
 
     const handleLogout = () => {
-        axios.post("http://localhost:5000/auth/logout", {}, { withCredentials: true })
+        axios.post("http://localhost:5000/admin/logout", {}, { withCredentials: true })
             .then(() => {
-                toast("Logged out successfully!", {
+                toast("Admin logged out successfully!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -245,7 +239,7 @@ const AdminDashboard = () => {
                 setTimeout(() => navigate("/"), 3000);
             })
             .catch(() => {
-                toast("Logout failed!", {
+                toast("Admin Logout failed!", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -475,156 +469,98 @@ const AdminDashboard = () => {
                             </p>
                         </div>
 
-                        {/* User Table */}
-                        <div className="overflow-x-auto">
-                            <div className="inline-block min-w-full align-middle">
-                                <div className="overflow-hidden">
-                                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                        <thead>
-                                            <tr className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-100"} text-left`}>
-                                                <th className="px-4 py-3 text-sm font-medium">Name</th>
-                                                <th className="px-4 py-3 text-sm font-medium">Email</th>
-                                                <th className="px-4 py-3 text-sm font-medium">Role</th>
-                                                <th className="px-4 py-3 text-sm font-medium hidden sm:table-cell">Last Login</th>
-                                                <th className="px-4 py-3 text-sm font-medium">Status</th>
-                                                <th className="px-4 py-3 text-sm font-medium">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                            {users.map((user) => (
-                                                <tr
-                                                    key={user._id}
-                                                    onClick={() => handleUserClick(user._id)}
-                                                    className={`cursor-pointer ${theme === "dark"
-                                                        ? "hover:bg-gray-700 text-gray-300"
-                                                        : "hover:bg-gray-50 text-gray-800"} transition`}
-                                                >
-                                                    <td className="px-4 py-3">{user.name}</td>
-                                                    <td className="px-4 py-3 truncate">{user.email}</td>
-                                                    <td className="px-4 py-3">{user.isAdmin ? "Admin" : "User"}</td>
-                                                    <td className="px-4 py-3 hidden sm:table-cell">
-                                                        {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "Never"}
-                                                    </td>
-                                                    <td className="px-4 py-3">
-                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${user.isLoggedIn
-                                                            ? "bg-green-500 text-white"
-                                                            : "bg-red-500 text-white"}`}>
-                                                            {user.isLoggedIn ? "Online" : "Offline"}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-4 py-3 flex items-center space-x-2">
-                                                        {/* Profile Icon Button */}
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleProfileIconClick(user);
-                                                            }}
-                                                            className={`p-1 rounded-full transition cursor-pointer hover:scale-105`}
-                                                            disabled={!isAdmin}
-                                                        >
-                                                            <UserIcon
-                                                                className={`h-5 w-5 ${theme === "dark"
-                                                                    ? "text-blue-400 hover:text-blue-300"
-                                                                    : "text-blue-500 hover:text-blue-600"
-                                                                    }`}
-                                                            />
-                                                        </button>
+                        {/* User Cards Grid */}
+                        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {users.map((user) => (
+                                <div
+                                    key={user._id}
+                                    onClick={() => handleUserClick(user._id)}
+                                    className={`cursor-pointer rounded-lg overflow-hidden flex flex-col ${theme === "dark"
+                                            ? "bg-gray-700"
+                                            : "bg-white"
+                                        } transition-all duration-200 ${theme === "dark" ? "shadow-lg shadow-gray-900/30" : "shadow-lg shadow-gray-200/50"} hover:shadow-xl`}
+                                >
 
-                                                        {/* Delete Icon Button */}
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleDeleteUser(user._id);
-                                                            }}
-                                                            className="p-1 rounded-full transition cursor-pointer hover:scale-105"
-                                                        >
-                                                            <Trash2 onClick={() => handleDeleteUser(user.email)}
-                                                                className={`h-5 w-5 ${theme === "dark"
-                                                                    ? "text-red-400 hover:text-red-300"
-                                                                    : "text-red-500 hover:text-red-600"
-                                                                    }`}
-                                                            />
-                                                        </button>
-                                                    </td>
-
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            {/* Profile Popup */}
-                            {profilePopupUser && isAdmin && (
-                                <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${theme === "dark" ? "bg-black/40 backdrop-blur-sm" : "bg-white/40 backdrop-blur-md"}`}>
-                                    <div className={`w-full max-w-md relative rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ${theme === "dark" ? "bg-gray-900 text-gray-200 border border-gray-800" : "bg-white text-gray-900 border border-gray-200"}`}>
-                                        <button
-                                            onClick={() => setProfilePopupUser(null)}
-                                            className="absolute top-3 right-3 z-10 p-2 rounded-full transition-colors duration-200 cursor-pointer text-gray-500 hover:text-gray-700"
-                                        >
-                                            <X className="w-6 h-6" />
-                                        </button>
-
-
-                                        <div className={`h-24 md:h-32 lg:h-36`}>
-                                            {profilePopupUser.bannerImage && (
-                                                <img
-                                                    src={profilePopupUser.bannerImage}
-                                                    alt="Banner"
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            )}
-                                        </div>
-
-                                        <div className="relative -mt-10 md:-mt-14 lg:-mt-16 flex justify-center">
-                                            <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full border-2 flex items-center justify-center shadow-md ${theme === "dark" ? "border-gray-800 bg-gray-700" : "border-white bg-gray-200"}`}>
-                                                {profilePopupUser.profilePicture && (
+                                    {/* Card Content */}
+                                    <div className="px-5 pt-5 pb-3 flex-grow">
+                                        {/* Status & Avatar Row */}
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div className={`relative w-12 h-12 rounded-full flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-100"
+                                                } ring-2 ${theme === "dark" ? "ring-gray-600" : "ring-gray-200"}`}>
+                                                {user.profilePicture ? (
                                                     <img
-                                                        src={`${profilePopupUser?.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}`}
-                                                        alt="Profile"
+                                                        src={user.profilePicture}
+                                                        alt={user.name}
                                                         className="w-full h-full object-cover rounded-full"
                                                     />
-
+                                                ) : (
+                                                    <span className={`text-lg font-semibold ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                                                        {user.name.charAt(0).toUpperCase()}
+                                                    </span>
                                                 )}
+
+                                                {/* Status Dot */}
+                                                <span className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${theme === "dark" ? "border-gray-700" : "border-white"
+                                                    } ${user.isLoggedIn ? "bg-green-500" : "bg-red-500"
+                                                    }`}></span>
+                                            </div>
+
+                                            <div className="flex">
+                                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${user.isAdmin
+                                                        ? theme === "dark" ? "bg-blue-900/40 text-blue-300" : "bg-blue-100 text-blue-700"
+                                                        : theme === "dark" ? "bg-purple-900/40 text-purple-300" : "bg-purple-100 text-purple-700"
+                                                    }`}>
+                                                    <Shield className="w-3 h-3 mr-1" />
+                                                    {user.isAdmin ? "Admin" : "User"}
+                                                </span>
                                             </div>
                                         </div>
 
-
-                                        <div className="text-center p-4 md:p-5 lg:p-6">
-                                            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold">{profilePopupUser.name}</h2>
-                                            <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs md:text-sm font-medium ${theme === "dark" ? "bg-gray-700 text-gray-300" : "bg-gray-200 text-gray-700"}`}>
-                                                {profilePopupUser.isAdmin ? "Admin" : "User"}
-                                            </span>
-                                        </div>
-
-                                        <div className={`p-4 md:p-5 lg:p-6 mx-4 md:mx-5 mb-4 md:mb-5 rounded-xl ${theme === "dark" ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-800"}`}>
-                                            <div className="space-y-2 md:space-y-2.5">
-                                                {[
-                                                    { label: "Email", value: profilePopupUser.email },
-                                                    {
-                                                        label: "Last Login",
-                                                        value: profilePopupUser.lastLogin
-                                                            ? new Date(profilePopupUser.lastLogin).toLocaleString()
-                                                            : "Never"
-                                                    },
-                                                    {
-                                                        label: "Status",
-                                                        value: profilePopupUser.isLoggedIn ? "Online" : "Offline",
-                                                        className: profilePopupUser.isLoggedIn ? "text-green-500" : "text-red-500"
-                                                    }
-                                                ].map(({ label, value, className = '' }, index) => (
-                                                    <p key={index} className={`text-sm md:text-base flex items-center ${className}`}>
-                                                        <strong className="mr-2 min-w-[80px] md:min-w-[100px] inline-block">{label}:</strong>
-                                                        {value}
-                                                    </p>
-                                                ))}
+                                        {/* User Info */}
+                                        <div className="mb-4">
+                                            <h3 className={`font-semibold text-lg mb-1 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>{user.name}</h3>
+                                            <div className={`flex items-center text-sm mb-2 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                                                <Mail className={`h-3.5 w-3.5 mr-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                                                <span className="truncate">{user.email}</span>
+                                            </div>
+                                            <div className={`flex items-center text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                                                <Calendar className="h-3.5 w-3.5 mr-2" />
+                                                <span className="truncate text-xs">
+                                                    {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : "Never logged in"}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
+
+                                    {/* Card Footer with Actions */}
+                                    <div className={`px-5 py-3 flex justify-between items-center ${theme === "dark" ? "border-t border-gray-600" : "border-t border-gray-200"}`}>
+                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                                            {user.isLoggedIn ? "Currently Active" : "Currently Inactive"}
+                                        </span>
+
+                                        <div className="flex space-x-1">
+
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteUser(user._id);
+                                                }}
+                                                className={`p-1.5 rounded-full transition ${theme === "dark"
+                                                        ? "hover:bg-gray-600"
+                                                        : "hover:bg-gray-100"
+                                                    }`}
+                                            >
+                                                <Trash2 className={`h-4 w-4 ${theme === "dark" ? "text-red-400" : "text-red-500"}`} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            )}
+                            ))}
                         </div>
+
+
                     </div>
+
                 </div>
             </div>
         </>

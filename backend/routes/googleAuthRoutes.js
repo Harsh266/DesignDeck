@@ -53,7 +53,7 @@ router.get(
             if (user.isAdmin) {
                 res.redirect("http://localhost:5173/admin-dashboard");
             } else {
-                res.redirect("http://localhost:5173/landingpage");
+                res.redirect("http://localhost:5173/dashboard");
             }
         } catch (error) {
             console.error("❌ Error updating user login status:", error);
