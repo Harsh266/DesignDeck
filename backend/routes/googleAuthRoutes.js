@@ -16,7 +16,7 @@ router.get(
 // ✅ Google OAuth Callback Route
 router.get(
     "/google/callback",
-    passport.authenticate("google", { failureRedirect: "/" }),
+    passport.authenticate("google", { failureRedirect: "/login" }),
     async (req, res) => {
         console.log("✅ Google Login Success. User:", req.user);
 
@@ -43,21 +43,25 @@ router.get(
             } else {
                 user.isLoggedIn = true;
                 user.lastLogin = currentTime;
+                user.isAdmin = adminEmails.includes(user.email); // Ensure isAdmin is updated
                 await user.save();
             }
 
             // Store user in session
             req.session.user = user;
+            console.log("✅ Session User:", req.session.user);
 
             // ✅ Redirect based on user role
             if (user.isAdmin) {
-                res.redirect("http://localhost:5173/admin-dashboard");
+                console.log("🔹 Redirecting to Admin Dashboard");
+                return res.redirect("http://localhost:5173/admin-dashboard");
             } else {
-                res.redirect("http://localhost:5173/dashboard");
+                console.log("🔹 Redirecting to User Dashboard");
+                return res.redirect("http://localhost:5173/dashboard");
             }
         } catch (error) {
             console.error("❌ Error updating user login status:", error);
-            res.redirect("/error");
+            return res.redirect("/error");
         }
     }
 );
