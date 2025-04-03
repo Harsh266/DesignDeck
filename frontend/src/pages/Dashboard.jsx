@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api"; // Adjust the import based on your project structure
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
@@ -20,14 +20,14 @@ const Dashboard = () => {
         const fetchProjectsByCategory = async () => {
             setLoading(true);
             try {
-                const apiUrl = "http://localhost:5000/api/projects/all-projects";
+                const apiUrl = "api/projects/all-projects";
 
                 // Important change: For "All" category, explicitly pass null or undefined to ensure backend doesn't use previous value
                 const params = activeCategory === "All"
                     ? { category: null }
                     : { category: activeCategory };
 
-                const response = await axios.get(apiUrl, {
+                const response = await api.get(apiUrl, {
                     params: params,
                     withCredentials: true,
                 });
