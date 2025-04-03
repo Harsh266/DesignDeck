@@ -7,7 +7,7 @@ const adminAuth = require("../middleware/adminAuth"); // Import adminAuth middle
 const jwt = require("jsonwebtoken");
 
 // ✅ Define Admin Emails
-const adminEmails = ["harshvekriya441@gmail.com"];
+const adminEmails = ["harshvekriya441@gmail.com", "ptwinkle837@gmail.com"];
 
 // ✅ Register Route
 router.post("/register", async (req, res) => {

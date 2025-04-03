@@ -23,7 +23,7 @@ passport.use(
                         googleId: profile.id,
                         email: profile.emails[0].value,
                         name: profile.displayName,
-                        role: profile.emails[0].value === "harshvekariya441@gmail.com" ? "admin" : "user", // Assign admin role if email matches
+                        role: profile.emails[0].value === "harshvekariya441@gmail.com" || "ptwinkle837@gmail.com" ? "admin" : "user", // Assign admin role if email matches
                     });
                     await user.save();
                 }

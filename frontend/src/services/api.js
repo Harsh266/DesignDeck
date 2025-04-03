@@ -1,12 +1,8 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000";
-
-export const getMessage = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/`);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching message", error);
-    }
-};
+const api = axios.create({
+    baseURL: "http://localhost:5000/",
+    headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+    },
+    withCredentials: true,  // Add this to include cookies by default
+});
