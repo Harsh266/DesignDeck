@@ -48,9 +48,15 @@ const Dashboard = () => {
                 setLoading(false);
             }
         };
+        setSearchQuery(""); // Reset search query when changing categories
 
         fetchProjectsByCategory();
-        setSearchQuery(""); // Reset search query when changing categories
+
+        // Set interval for every 2 seconds
+        const interval = setInterval(fetchProjectsByCategory, 5000);
+
+        // Cleanup function to clear interval on unmount or category change
+        return () => clearInterval(interval);
     }, [activeCategory]);
 
     // Apply search filter whenever searchQuery changes
@@ -178,11 +184,7 @@ const Dashboard = () => {
                         {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
                     </h3>
 
-                    {loading ? (
-                        <div className="flex justify-center items-center h-40">
-                            <p className="text-lg">Loading projects...</p>
-                        </div>
-                    ) : filteredProjects.length > 0 ? (
+                    {filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                             {filteredProjects.map((project, index) => (
                                 <Link to={`/project/${project._id}`} key={index} className="no-underline">
