@@ -34,7 +34,7 @@ function App() {
               <Route path="/profilepage" element={<Profilepage />} />
               <Route path="/contactus" element={<Contactus />} />
               <Route path="/logout" element={<Landingpage />} />
-              <Route path="/view" element={<Projectview />} />
+              <Route path="/view/:projectId" element={<Projectview />} />
               <Route path="/upload" element={<Uploadprojectpage />} />
               <Route path="/otheruser" element={<Profilepageothers />} />
               <Route path="/resetpassword" element={<ResetPassword />} />

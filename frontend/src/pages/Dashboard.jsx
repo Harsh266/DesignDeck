@@ -52,7 +52,7 @@ const Dashboard = () => {
 
         fetchProjectsByCategory();
 
-        // Set interval for every 2 seconds
+        // Set interval for every 5 seconds
         const interval = setInterval(fetchProjectsByCategory, 5000);
 
         // Cleanup function to clear interval on unmount or category change
@@ -85,8 +85,10 @@ const Dashboard = () => {
         // The useEffect will handle fetching new data
     };
 
-
-
+    // Reset search
+    const resetSearch = () => {
+        setSearchQuery("");
+    };
 
     return (
         <>
@@ -170,11 +172,10 @@ const Dashboard = () => {
                         {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
                     </h3>
 
-
                     {filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                             {filteredProjects.map((project, index) => (
-                                <Link to="/view" key={index} className="no-underline">
+                                <Link to={`/view/${project._id}`} key={project._id || index} className="no-underline">
                                     <div className={`rounded-xl overflow-hidden group cursor-pointer ${theme === "dark" ? "bg-black" : "bg-white"}`}>
                                         {/* Media Handling */}
                                         <div className="relative w-full h-48 sm:h-52 md:h-60 rounded-xl overflow-hidden">
@@ -283,7 +284,7 @@ const Dashboard = () => {
                 </div>
 
                 {/* Load More Button - Only show if there are projects */}
-                {filteredProjects.length > 0 && (
+                {filteredProjects.length > 0 && !loading && (
                     <div className="flex justify-center mt-6 sm:mt-8 pb-8">
                         <button
                             className={`px-4 py-2 sm:px-6 sm:py-2 rounded-full text-sm sm:text-base font-medium cursor-pointer ${theme === "dark" ? "bg-purple-600 text-white" : "bg-purple-200 text-purple-600"}`}

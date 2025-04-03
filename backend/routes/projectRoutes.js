@@ -89,7 +89,7 @@ router.get("/all-projects", async (req, res) => {
         if (!req.session[sessionKey]) {
             // First time viewing this category, shuffle and store
             projects = projects.sort(() => Math.random() - 0.5);
-            
+
             // Store project IDs in session for this category
             req.session[sessionKey] = projects.map(p => p._id.toString());
         } else {
@@ -98,16 +98,16 @@ router.get("/all-projects", async (req, res) => {
             req.session[sessionKey].forEach((id, index) => {
                 orderMap[id] = index;
             });
-            
+
             // Sort based on saved order
             projects.sort((a, b) => {
                 const idA = a._id.toString();
                 const idB = b._id.toString();
-                
+
                 // Handle new projects (not in the stored order)
                 if (orderMap[idA] === undefined) return 1;
                 if (orderMap[idB] === undefined) return -1;
-                
+
                 return orderMap[idA] - orderMap[idB];
             });
         }
@@ -118,6 +118,40 @@ router.get("/all-projects", async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
+
+router.get('/:id', async (req, res) => {
+    try {
+        // Using populate to get the user data along with the project
+        // This assumes your Project model has a userId field referencing the User model
+        const project = await Project.findById(req.params.id)
+            .populate({
+                path: 'userId',
+                select: 'name profilePicture title' // Select the user fields you need
+            });
+
+        if (!project) {
+            return res.status(404).json({
+                success: false,
+                message: 'Project not found'
+            });
+        }
+
+        // Return the project with success flag
+        return res.json({
+            success: true,
+            project
+        });
+    } catch (error) {
+        console.error('Error fetching project details:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Server error while fetching project details',
+            error: error.message
+        });
+    }
+});
+
+module.exports = router;
 
 
 module.exports = router;
