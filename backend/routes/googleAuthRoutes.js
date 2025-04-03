@@ -5,7 +5,7 @@ const User = require("../models/User"); // Import User model
 const router = express.Router();
 
 // ✅ Admin Email List
-const adminEmails = ["harshvekriya441@gmail.com"];
+const adminEmails = ["harshvekriya441@gmail.com", "ptwinkle837@gmail.com"];
 
 // ✅ Google OAuth Login Route
 router.get(

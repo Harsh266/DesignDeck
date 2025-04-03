@@ -2,7 +2,7 @@ const User = require("../models/User"); // Import User model
 
 const adminAuth = async (req, res, next) => {
     try {
-        if (req.user && req.user.email === "harshvekriya441@gmail.com") {
+        if (req.user && req.user.email === "harshvekriya441@gmail.com" || "ptwinkle837@gmail.com") {
             // ✅ Only update `isAdmin` if it's not already true
             const adminUser = await User.findOne({ email: req.user.email });
 
