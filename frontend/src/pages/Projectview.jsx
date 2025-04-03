@@ -123,7 +123,7 @@ const ProjectView = () => {
                                         )}
                                         <div className="flex gap-1 sm:gap-2 flex-shrink-0">
                                             {/* Profile Button */}
-                                            {/* <Link to={`/profile/${project.userId?._id}`}> */}
+                                            <Link to={`/profile/${project.userId?._id}`}>
                                             <button
                                                 className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
                                                     ? "bg-gray-700 hover:bg-gray-600"
@@ -135,7 +135,7 @@ const ProjectView = () => {
                                                         }`}
                                                 ></i>
                                             </button>
-                                            {/* </Link> */}
+                                            </Link>
 
                                             {/* Three-dot Button (Reopen Profile Section) */}
                                             {isCollapsed ? (

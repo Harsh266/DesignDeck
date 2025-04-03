@@ -1,19 +1,92 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
+const API_BASE_URL = "http://localhost:5000";
+
 const Profilepageothers = () => {
+    const [user, setUser] = useState(null);
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const { theme } = useContext(ThemeContext);
+    const { userId } = useParams();
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`${API_BASE_URL}/api/projects/users/${userId}`, {
+                    withCredentials: true,
+                });
+
+                if (response.data.success) {
+                    setUser(response.data.user);
+                } else {
+                    console.error("Failed to fetch user profile");
+                    setError("Failed to fetch user profile");
+                }
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
+                setError("Error loading user profile");
+            }
+        };
+
+        const fetchUserProjects = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/api/projects/projects/user/${userId}`, {
+                    withCredentials: true,
+                });
+
+                if (response.data.success) {
+                    setProjects(response.data.projects);
+                } else {
+                    console.error("Failed to fetch user projects");
+                }
+            } catch (error) {
+                console.error("Error fetching user projects:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (userId) {
+            fetchUserProfile();
+            fetchUserProjects();
+        }
+    }, [userId]);
+
+    const getDefaultImage = (type) => {
+        return `${API_BASE_URL}/uploads/default-${type}.jpg`;
+    };
+
+    if (error || !user) {
+        return (
+            <>
+                <Navbar />
+                <div className={`min-h-screen flex flex-col items-center justify-center px-4 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                    <h1 className="text-2xl font-bold mb-4">User Not Found</h1>
+                    <p className="text-center">{error || "The user profile you're looking for doesn't exist or has been removed."}</p>
+                    <button
+                        onClick={() => window.history.back()}
+                        className={`mt-6 px-4 py-2 rounded-full text-sm font-medium ${theme === "dark" ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-purple-200 hover:bg-purple-300 text-purple-600"} transition-colors`}
+                    >
+                        Go Back
+                    </button>
+                </div>
+            </>
+        );
+    }
 
     return (
         <>
             <Helmet>
-                <title>DesignDeck - Profile Page</title>
+                <title>{user.name} - DesignDeck Profile</title>
             </Helmet>
             <Navbar />
             <div className={`min-h-screen ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} mt-13`}>
@@ -22,9 +95,13 @@ const Profilepageothers = () => {
                     {/* Banner Section */}
                     <div className="w-full max-w-full h-40 sm:h-48 md:h-60">
                         <img
-                            src="/public/image.png"
-                            alt="Gradient Banner"
+                            src={user.bannerImage || getDefaultImage("banner")}
+                            alt="Profile Banner"
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = getDefaultImage("banner");
+                            }}
                         />
                     </div>
 
@@ -38,9 +115,13 @@ const Profilepageothers = () => {
                             {/* Profile Image Container */}
                             <div className={`w-28 h-28 sm:w-40 sm:h-40 ${theme === "dark" ? "bg-black" : "bg-white"} rounded-2xl p-1 relative border-4 border-transparent`}>
                                 <img
-                                    src="https://www.shutterstock.com/image-photo/portrait-one-young-happy-cheerful-600nw-1980856400.jpg"
-                                    alt="User"
+                                    src={user.profilePicture || getDefaultImage("profile")}
+                                    alt={user.name}
                                     className="w-full h-full object-cover rounded-2xl"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = getDefaultImage("profile");
+                                    }}
                                 />
                             </div>
                         </div>
@@ -48,9 +129,9 @@ const Profilepageothers = () => {
                         {/* User Details */}
                         <div className="pl-2 sm:pl-48 w-full pt-16 sm:pt-0 flex flex-col gap-3 sm:gap-5">
                             <div className="flex flex-col gap-1">
-                                <h2 className="text-xl sm:text-2xl font-semibold">User name</h2>
+                                <h2 className="text-xl sm:text-2xl font-semibold">{user.name}</h2>
                                 <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                                    A user biodata is a collection of personal details about an individual. It can be used for job applications.
+                                    {user.bio || "No bio provided"}
                                 </p>
                             </div>
                         </div>
@@ -67,40 +148,124 @@ const Profilepageothers = () => {
                     </div>
                 </div>
 
-                {/* My Projects Section */}
+                {/* Projects Section */}
                 <div className={`max-w-full mx-auto p-4 sm:p-6 ${theme === "dark" ? "bg-black" : "bg-white"}`}>
-                    <h3 className={`text-lg sm:text-xl font-semibold border-b-2 pb-2 w-20 sm:w-24 md:w-28 ${theme === "dark" ? "border-gray-600" : "border-black"}`}>Projects</h3>
+                    <h3 className={`text-lg sm:text-xl font-semibold border-b-2 pb-2 w-20 sm:w-24 md:w-28 ${theme === "dark" ? "border-gray-600" : "border-black"}`}>
+                        Projects
+                    </h3>
 
-                    {/* Projects Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
-                        {[
-                            { title: "Fitme app", img: "https://cdn.dribbble.com/userupload/36848296/file/original-8f9bf66f9b3c64857e1c49d26dfc1a5d.jpg?format=webp&resize=450x338&vertical=center" },
-                            { title: "NFM Group", img: "https://cdn.dribbble.com/userupload/36937294/file/original-7c320687d1da9efc6cfd636b7a7fe0d5.jpg?format=webp&resize=450x338&vertical=center" },
-                            { title: "Block13 Promo Board Design", img: "https://cdn.dribbble.com/userupload/36999634/file/original-8300df08add332e47113859ad01fc95a.jpg?format=webp&resize=1200x900&vertical=center" },
-                            { title: "Minimalist Duck Logo", img: "https://cdn.dribbble.com/userupload/36992766/file/original-fcb25abdaa6f3ab9ab7d043aa93c0256.jpg?resize=1200x900&vertical=center" },
-                            { title: "Solar Gate-Investing Dashboard", img: "https://cdn.dribbble.com/userupload/36931891/file/original-d7f77534f6e882cc40a418e261314863.jpg?format=webp&resize=450x338&vertical=center" },
-                            { title: "Flying Cows Canned Cocktail", img: "https://cdn.dribbble.com/userupload/36982782/file/original-1e6d5b23b751f8d6cd140b2c4705b330.jpg?format=webp&resize=450x338&vertical=center" },
-                        ].map((project, index) => (
-                            <div key={index} className={`rounded-lg p-2 sm:p-3 text-center ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} `}>
-                                <img src={project.img} alt={project.title} className="rounded-lg w-full h-48 sm:h-56 md:h-64 object-cover" />
-                                <div className="flex items-center justify-between mt-1">
-                                    <p className="mt-2 text-sm sm:text-base md:text-lg font-medium truncate">{project.title}</p>
-                                    <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"
-                                        }`}>
-                                        <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
+                    {projects?.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
+                            {projects.map((project, index) => (
+                                <Link to={`/view/${project._id}`} key={project._id || index} className="block">
+                                    <div
+                                        className={`group rounded-lg p-2 sm:p-3 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
+                                    >
+                                        {/* Media Handling */}
+                                        <div className="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 rounded-lg overflow-hidden cursor-pointer">
+                                            {project.firstImage || project.thumbnail || (project.images && project.images.length > 0) ? (
+                                                <>
+                                                    {/* Show Image by Default */}
+                                                    <img
+                                                        src={
+                                                            project.thumbnail ||
+                                                            `${API_BASE_URL || "http://localhost:5000"}${project.firstImage || project.images[0]}` ||
+                                                            "/default-thumbnail.jpg"
+                                                        }
+                                                        alt={project.title}
+                                                        className="w-full h-full object-cover rounded-lg group-hover:hidden"
+                                                        onError={(e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.src = getDefaultImage ? getDefaultImage("project") : "/uploads/default-project.jpg";
+                                                        }}
+                                                    />
+                                                    {/* Show Video on Hover if available, otherwise show same image */}
+                                                    {project.videos && project.videos.length > 0 ? (
+                                                        <video
+                                                            className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                            autoPlay
+                                                            loop
+                                                            muted
+                                                            playsInline
+                                                        >
+                                                            <source src={`${API_BASE_URL || "http://localhost:5000"}${project.videos[0]}`} />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    ) : (
+                                                        <img
+                                                            src={
+                                                                project.thumbnail ||
+                                                                `${API_BASE_URL || "http://localhost:5000"}${project.firstImage || project.images[0]}` ||
+                                                                "/default-thumbnail.jpg"
+                                                            }
+                                                            alt={project.title}
+                                                            className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                            onError={(e) => {
+                                                                e.target.onerror = null;
+                                                                e.target.src = getDefaultImage ? getDefaultImage("project") : "/uploads/default-project.jpg";
+                                                            }}
+                                                        />
+                                                    )}
+                                                </>
+                                            ) : project.videos && project.videos.length > 0 ? (
+                                                <>
+                                                    {/* For video-only projects: Show first frame of video as static thumbnail */}
+                                                    <div className="w-full h-full group-hover:hidden">
+                                                        <video
+                                                            className="w-full h-full object-cover rounded-lg"
+                                                            muted
+                                                            playsInline
+                                                            preload="metadata"
+                                                        >
+                                                            <source src={`${API_BASE_URL || "http://localhost:5000"}${project.videos[0]}`} />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </div>
+                                                    {/* Play video on hover */}
+                                                    <video
+                                                        className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                        autoPlay
+                                                        loop
+                                                        muted
+                                                        playsInline
+                                                    >
+                                                        <source src={`${API_BASE_URL || "http://localhost:5000"}${project.videos[0]}`} />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </>
+                                            ) : (
+                                                <div className={`rounded-lg w-full h-full flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
+                                                    <span className="text-gray-500">No preview available</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center justify-between mt-1">
+                                        <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
+                                                {project.title}
+                                            </p>
+
+                                            <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
+                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center p-4">
+                            <p className={`text-lg font-semibold ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                No projects to display.
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Get in Touch Section */}
                 <div className="w-full flex items-center justify-center p-4 sm:p-6 md:p-10">
-                    <div className={`w-full h-40 sm:h-48 md:h-50 rounded-lg sm:rounded-xl md:rounded-[25px] flex items-center justify-center relative shadow-lg ${theme === "dark" ? "bg-gradient-to-r from-gray-700 to-gray-900 shadow-gray-700/30" : "bg-gradient-to-r from-blue-500 to-blue-500 shadow-blue-800/30"
-                        }`}>
-                        <button onClick={() => setIsPopupOpen(true)} className={`text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full shadow-md cursor-pointer ${theme === "dark" ? "bg-gray-700 text-white" : "bg-blue-400 text-white"
-                            }`}>
+                    <div className={`w-full h-40 sm:h-48 md:h-50 rounded-lg sm:rounded-xl md:rounded-[25px] flex items-center justify-center relative shadow-lg ${theme === "dark" ? "bg-gradient-to-r from-gray-700 to-gray-900 shadow-gray-700/30" : "bg-gradient-to-r from-blue-500 to-blue-500 shadow-blue-800/30"}`}>
+                        <button onClick={() => setIsPopupOpen(true)} className={`text-base sm:text-lg font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full shadow-md cursor-pointer ${theme === "dark" ? "bg-gray-700 text-white" : "bg-blue-400 text-white"}`}>
                             Get in Touch
                         </button>
                     </div>
@@ -127,12 +292,16 @@ const Profilepageothers = () => {
                             {/* Profile Section */}
                             <div className="flex items-center gap-2 sm:gap-3">
                                 <img
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2wA1VwotSa6lpZGtlOPa5Pp7BlsKjigaAovLXKsTyVqQEWnMjPtEYcr1AgBNB3Hvuh00&usqp=CAU"
-                                    alt="User"
+                                    src={user.profilePicture || getDefaultImage("profile")}
+                                    alt={user.name}
                                     className="w-12 h-12 sm:w-14 sm:h-14 rounded-full"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = getDefaultImage("profile");
+                                    }}
                                 />
                                 <div>
-                                    <h3 className="font-semibold">Username</h3>
+                                    <h3 className="font-semibold">{user.name}</h3>
                                     <p className={`${theme === "dark" ? "text-gray-300" : "text-gray-500"} text-xs sm:text-sm`}>
                                         Responds within a few hours
                                     </p>
@@ -151,7 +320,6 @@ const Profilepageothers = () => {
                                     placeholder="Please describe your project"
                                     rows="4"
                                 ></textarea>
-
 
                                 <label className="font-medium text-xs sm:text-sm mt-2 block">Project Timeline</label>
                                 <input

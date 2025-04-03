@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+const User = require("../models/User"); // Import User model
 const uploadProject = require("../config/uploadProject"); // Import Multer configuration
 const Project = require("../models/Project");
 const authMiddleware = require("../middleware/currentUserMiddleware"); // Import authentication middleware
@@ -151,7 +153,64 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-module.exports = router;
+// Get user profile by ID
+router.get('/users/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
 
+        // Validate if userId is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: 'Invalid user ID format' });
+        }
+
+        const user = await User.findById(userId)
+            .select('-password -resetPasswordToken -resetPasswordExpires -__v')
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        res.json({
+            success: true,
+            user
+        });
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error while fetching user profile'
+        });
+    }
+});
+
+// Get projects by user ID
+router.get('/projects/user/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Validate if userId is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: 'Invalid user ID format' });
+        }
+
+        const projects = await Project.find({ userId: userId })
+            .sort({ createdAt: -1 }) // Sort by newest first
+            .populate('userId', 'name profilePicture');
+
+        res.json({
+            success: true,
+            projects
+        });
+    } catch (error) {
+        console.error("Error fetching user projects:", error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error while fetching user projects'
+        });
+    }
+});
 
 module.exports = router;

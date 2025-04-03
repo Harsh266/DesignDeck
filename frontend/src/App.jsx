@@ -36,7 +36,7 @@ function App() {
               <Route path="/logout" element={<Landingpage />} />
               <Route path="/view/:projectId" element={<Projectview />} />
               <Route path="/upload" element={<Uploadprojectpage />} />
-              <Route path="/otheruser" element={<Profilepageothers />} />
+              <Route path="/profile/:userId" element={<Profilepageothers />} />
               <Route path="/resetpassword" element={<ResetPassword />} />
               <Route path="/changepasswordwithtoken/:token" element={<ChangePassword />} />
               <Route path="/user-notifications" element={<UserNotifications />} />
