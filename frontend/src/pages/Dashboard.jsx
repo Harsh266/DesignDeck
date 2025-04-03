@@ -14,24 +14,24 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const { theme } = useContext(ThemeContext);
-    
+
     // Fetch projects when category changes
     useEffect(() => {
         const fetchProjectsByCategory = async () => {
             setLoading(true);
             try {
                 const apiUrl = "http://localhost:5000/api/projects/all-projects";
-                
+
                 // Important change: For "All" category, explicitly pass null or undefined to ensure backend doesn't use previous value
-                const params = activeCategory === "All" 
-                    ? { category: null } 
+                const params = activeCategory === "All"
+                    ? { category: null }
                     : { category: activeCategory };
-                
+
                 const response = await axios.get(apiUrl, {
                     params: params,
                     withCredentials: true,
                 });
-                
+
                 // Process response
                 if (response.data.success) {
                     setProjects(response.data.projects || []);
@@ -79,7 +79,7 @@ const Dashboard = () => {
     // Handle category change
     const handleCategoryChange = (category) => {
         if (category === activeCategory) return; // Skip if same category
-        
+
         setLoading(true); // Show loading immediately
         setActiveCategory(category);
         // The useEffect will handle fetching new data
@@ -180,9 +180,12 @@ const Dashboard = () => {
 
                 {/* Image & Video Grid */}
                 <div className={`max-w-full mx-auto p-4 sm:p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                    <h3 className={`text-xl font-semibold border-b-2 pb-2 ${activeCategory === "All" ? "w-[30%] sm:w-[20%]" : "w-[40%] sm:w-[30%]"} md:w-[20%] lg:w-[15%] ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
+                    <h3
+                        className={`text-xl font-semibold border-b-2 pb-2 inline-block min-w-fit px-1 ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}
+                    >
                         {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
                     </h3>
+
 
                     {filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
