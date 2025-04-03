@@ -85,24 +85,8 @@ const Dashboard = () => {
         // The useEffect will handle fetching new data
     };
 
-    // Handle search
-    const handleSearch = (e) => {
-        e.preventDefault();
-        // The search is now handled by the useEffect above
-    };
 
-    // Reset search
-    const resetSearch = () => {
-        setSearchQuery("");
-    };
 
-    // Load more functionality (placeholder - you would need to implement pagination on backend)
-    const handleLoadMore = () => {
-        // Implement load more functionality here
-        console.log("Load more clicked");
-        // Example implementation:
-        // fetchMoreProjects(activeCategory, projects.length);
-    };
 
     return (
         <>
@@ -125,7 +109,7 @@ const Dashboard = () => {
                         ready to take on your next project
                     </p>
                     <div className="mt-4 sm:mt-6 flex items-center justify-center px-4">
-                        <form onSubmit={handleSearch} className="w-full max-w-md relative">
+                        <form className="w-full max-w-md relative">
                             <div className={`flex items-center px-3 py-2 rounded-full w-full ${theme === "dark" ? "bg-gray-800 text-white" : "bg-[#DCE6FF] text-gray-700"}`}>
                                 <input
                                     type="text"
@@ -190,7 +174,7 @@ const Dashboard = () => {
                     {filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                             {filteredProjects.map((project, index) => (
-                                <Link to={`/project/${project._id}`} key={index} className="no-underline">
+                                <Link to="/view" key={index} className="no-underline">
                                     <div className={`rounded-xl overflow-hidden group cursor-pointer ${theme === "dark" ? "bg-black" : "bg-white"}`}>
                                         {/* Media Handling */}
                                         <div className="relative w-full h-48 sm:h-52 md:h-60 rounded-xl overflow-hidden">
@@ -302,7 +286,6 @@ const Dashboard = () => {
                 {filteredProjects.length > 0 && (
                     <div className="flex justify-center mt-6 sm:mt-8 pb-8">
                         <button
-                            onClick={handleLoadMore}
                             className={`px-4 py-2 sm:px-6 sm:py-2 rounded-full text-sm sm:text-base font-medium cursor-pointer ${theme === "dark" ? "bg-purple-600 text-white" : "bg-purple-200 text-purple-600"}`}
                         >
                             Load More

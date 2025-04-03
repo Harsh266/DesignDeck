@@ -62,11 +62,11 @@ const Projectview = () => {
                             {/* Profile Card only on first media */}
                             {index === 0 && (
                                 <div
-                                    className={`fixed z-[2] bottom-4 sm:bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 shadow-lg rounded-lg p-3 sm:p-4 ${
+                                    className={`fixed z-[2] bottom-4 sm:bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 shadow-lg rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center ${
                                         theme === "dark"
                                             ? "bg-black text-white"
                                             : "bg-white text-black"
-                                    } ${isCollapsed ? "w-24 sm:w-32" : "w-[92%] sm:w-[85%] md:w-[80%] max-w-md"}`}
+                                    } ${isCollapsed ? "w-22 sm:w-26" : "w-[92%] sm:w-[85%] md:w-[80%] max-w-md"}`}
                                 >
                                     {/* Profile Section */}
                                     <div className="flex items-center justify-between">
