@@ -448,13 +448,13 @@ const AdminDashboard = () => {
                                             } transition-colors`}
                                     />
                                     <button
-                                    onClick={sendEmail}
+                                        onClick={sendEmail}
                                         className={`w-full px-4 sm:px-6 py-2 sm:py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 ${theme === "dark"
                                             ? "bg-blue-600 hover:bg-blue-700"
                                             : "bg-blue-500 hover:bg-blue-600"
                                             } text-white font-medium transition-colors`}
                                     >
-                                        
+
                                         <Send className="h-4 w-4" />Send Email
                                     </button>
                                 </div>
@@ -558,17 +558,37 @@ const AdminDashboard = () => {
                             {profilePopupUser && isAdmin && (
                                 <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${theme === "dark" ? "bg-black/40 backdrop-blur-sm" : "bg-white/40 backdrop-blur-md"}`}>
                                     <div className={`w-full max-w-md relative rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ${theme === "dark" ? "bg-gray-900 text-gray-200 border border-gray-800" : "bg-white text-gray-900 border border-gray-200"}`}>
-                                        <button onClick={() => setProfilePopupUser(null)} className={`absolute top-3 right-3 z-10 p-2 rounded-full transition-colors duration-200 text-gray-300 cursor-pointer `}>
+                                        <button
+                                            onClick={() => setProfilePopupUser(null)}
+                                            className="absolute top-3 right-3 z-10 p-2 rounded-full transition-colors duration-200 cursor-pointer text-gray-500 hover:text-gray-700"
+                                        >
                                             <X className="w-6 h-6" />
                                         </button>
 
-                                        <div className={`h-24 md:h-32 lg:h-36 ${profilePopupUser.bannerImage}`} />
+
+                                        <div className={`h-24 md:h-32 lg:h-36`}>
+                                            {profilePopupUser.bannerImage && (
+                                                <img
+                                                    src={profilePopupUser.bannerImage}
+                                                    alt="Banner"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            )}
+                                        </div>
 
                                         <div className="relative -mt-10 md:-mt-14 lg:-mt-16 flex justify-center">
-                                            <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full border-4 flex items-center justify-center shadow-md ${theme === "dark" ? "border-gray-800 bg-gray-700" : "border-white bg-gray-200"}`}>
-                                                <div className={`w-10 md:w-12 lg:w-14 h-10 md:h-12 lg:h-14 ${profilePopupUser.profilePicture}`} />
+                                            <div className={`w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full border-2 flex items-center justify-center shadow-md ${theme === "dark" ? "border-gray-800 bg-gray-700" : "border-white bg-gray-200"}`}>
+                                                {profilePopupUser.profilePicture && (
+                                                    <img
+                                                        src={`${profilePopupUser?.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}`}
+                                                        alt="Profile"
+                                                        className="w-full h-full object-cover rounded-full"
+                                                    />
+
+                                                )}
                                             </div>
                                         </div>
+
 
                                         <div className="text-center p-4 md:p-5 lg:p-6">
                                             <h2 className="text-xl md:text-2xl lg:text-3xl font-bold">{profilePopupUser.name}</h2>
