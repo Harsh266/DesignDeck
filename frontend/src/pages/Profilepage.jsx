@@ -12,12 +12,6 @@ import "../styles/toastStyles.css";
 
 const API_BASE_URL = api.defaults.baseURL;
 
-const obfuscateId = (id) => {
-    // Convert MongoDB ObjectId to a more complex string that's harder to reverse-engineer
-    const encodedId = btoa(id); // Base64 encode
-    return encodedId.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); // URL safe
-};
-
 const Profilepage = () => {
     const [user, setUser] = useState(null);
     const [profileImage, setProfileImage] = useState(null);
@@ -296,7 +290,7 @@ const Profilepage = () => {
                                 {projects?.length > 0 ? (
                                     projects?.map((project, index) => (
                                         <Link
-                                            to={`/view/${obfuscateId(project._id)}`}
+                                            to={`/view/${project._id}`}
                                             key={project._id || index}
                                             className="no-underline block"
                                             onClick={(e) => {

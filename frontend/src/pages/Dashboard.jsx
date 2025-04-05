@@ -9,13 +9,6 @@ import { ThemeContext } from "../context/ThemeContext";
 // Define API base URL as a constant
 const API_BASE_URL = api.defaults.baseURL;
 
-// ID obfuscation function
-const obfuscateId = (id) => {
-    // Convert MongoDB ObjectId to a more complex string that's harder to reverse-engineer
-    const encodedId = btoa(id); // Base64 encode
-    return encodedId.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); // URL safe
-};
-
 const Dashboard = () => {
     const categories = ["All", "UI/UX", "Motion Graphics", "Web Design", "App Design", "Graphic Design", "Fashion Design", "Other"];
     const [activeCategory, setActiveCategory] = useState("All");
@@ -183,7 +176,7 @@ const Dashboard = () => {
                     {filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                             {filteredProjects.map((project, index) => (
-                                <Link to={`/view/${obfuscateId(project._id)}`} key={project._id || index} className="no-underline">
+                                <Link to={`/view/${project._id}`} key={project._id || index} className="no-underline">
                                     <div className={`rounded-xl overflow-hidden group cursor-pointer ${theme === "dark" ? "bg-black" : "bg-white"}`}>
                                         {/* Media Handling */}
                                         <div className="relative w-full h-48 sm:h-52 md:h-60 rounded-xl overflow-hidden">
