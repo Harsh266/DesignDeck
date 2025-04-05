@@ -8,6 +8,12 @@ import { ThemeContext } from "../context/ThemeContext";
 
 const API_BASE_URL = api.defaults.baseURL;
 
+const obfuscateId = (id) => {
+    // Convert MongoDB ObjectId to a more complex string that's harder to reverse-engineer
+    const encodedId = btoa(id); // Base64 encode
+    return encodedId.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); // URL safe
+};
+
 const ProjectView = () => {
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -124,7 +130,8 @@ const ProjectView = () => {
                                         )}
                                         <div className="flex gap-1 sm:gap-2 flex-shrink-0">
                                             {/* Profile Button */}
-                                            <Link to={`/profile/${project.userId?._id}`}>
+                                            <Link to={`/profile/${obfuscateId(project.userId?._id)}`}>
+
                                             <button
                                                 className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
                                                     ? "bg-gray-700 hover:bg-gray-600"

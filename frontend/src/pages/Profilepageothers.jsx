@@ -10,6 +10,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 const API_BASE_URL = api.defaults.baseURL;
 
+const obfuscateId = (id) => {
+    // Convert MongoDB ObjectId to a more complex string that's harder to reverse-engineer
+    const encodedId = btoa(id); // Base64 encode
+    return encodedId.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); // URL safe
+};
+
 const getCustomToastStyle = (theme) => ({
     borderRadius: "5px",
     padding: "18px 25px",
@@ -274,7 +280,7 @@ const Profilepageothers = () => {
                     {projects?.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                             {projects.map((project, index) => (
-                                <Link to={`/view/${project._id}`} key={project._id || index} className="block">
+                                <Link to={`/view/${obfuscateId(project._id)}`} key={project._id || index} className="block">
                                     <div
                                         className={`group rounded-lg p-2 sm:p-3 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
                                     >

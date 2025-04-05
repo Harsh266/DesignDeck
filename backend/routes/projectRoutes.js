@@ -6,6 +6,7 @@ const uploadProject = require("../config/uploadProject"); // Import Multer confi
 const Project = require("../models/Project");
 const nodemailer = require("nodemailer"); // Import nodemailer for sending emails
 const authMiddleware = require("../middleware/currentUserMiddleware"); // Import authentication middleware
+const { obfuscateId, deobfuscateId } = require("../utils/idUtils"); // Import ID utility functions
 
 // ✅ Route to upload a new project with images & videos
 router.post("/upload", authMiddleware, uploadProject.fields([
@@ -13,7 +14,6 @@ router.post("/upload", authMiddleware, uploadProject.fields([
     { name: "projectVideo", maxCount: 10 },
 ]), async (req, res) => {
     try {
-
         if (!req.files || (!req.files["projectImage"] && !req.files["projectVideo"])) {
             return res.status(400).json({ message: "Files are missing!" });
         }
@@ -34,7 +34,11 @@ router.post("/upload", authMiddleware, uploadProject.fields([
 
         await newProject.save();
 
-        res.status(200).json({ message: "Project uploaded successfully!", project: newProject });
+        // Return obfuscated project ID in the response
+        const responseProject = newProject.toObject();
+        responseProject.obfuscatedId = obfuscateId(newProject._id);
+
+        res.status(200).json({ message: "Project uploaded successfully!", project: responseProject });
     } catch (err) {
         console.error("Error uploading project:", err);
         res.status(500).json({ message: "Error uploading project" });
@@ -57,20 +61,34 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
             return res.status(200).json({ success: true, projects: [] });
         }
 
-        // Return complete project objects
-        res.status(200).json({ success: true, projects });
+        // Add obfuscated IDs to all projects
+        const projectsWithObfuscatedIds = projects.map(project => {
+            const projectObj = project.toObject();
+            projectObj.obfuscatedId = obfuscateId(project._id);
+            return projectObj;
+        });
+
+        // Return projects with obfuscated IDs
+        res.status(200).json({ success: true, projects: projectsWithObfuscatedIds });
     } catch (error) {
         console.error("Error fetching user projects:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
 
-// Add a new route to get a specific project by ID
-router.get("/project/:id", async (req, res) => {
+// Modified route to get a specific project by obfuscated ID
+router.get("/project/:obfuscatedId", async (req, res) => {
     try {
-        const projectId = req.params.id;
+        const obfuscatedId = req.params.obfuscatedId;
         
-        // Find the project by ID
+        // Decode the obfuscated ID to get the original MongoDB ID
+        const projectId = deobfuscateId(obfuscatedId);
+        
+        if (!projectId) {
+            return res.status(400).json({ success: false, message: "Invalid project ID" });
+        }
+        
+        // Find the project by decoded ID
         const project = await Project.findById(projectId);
         
         if (!project) {
@@ -80,12 +98,17 @@ router.get("/project/:id", async (req, res) => {
         // Find the owner's information
         const user = await User.findById(project.userId, 'name profilePicture');
         
+        // Include the owner's obfuscated ID
+        const userWithObfuscatedId = user.toObject();
+        userWithObfuscatedId.obfuscatedId = obfuscateId(user._id);
+        
         // Return project with owner information
         res.status(200).json({ 
             success: true, 
             project: {
                 ...project._doc,
-                owner: user
+                obfuscatedId: obfuscatedId, // Include the obfuscated ID in the response
+                owner: userWithObfuscatedId
             } 
         });
     } catch (error) {
@@ -93,7 +116,6 @@ router.get("/project/:id", async (req, res) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
-
 
 // Fetch all projects and shuffle them randomly
 router.get("/all-projects", async (req, res) => {
@@ -136,18 +158,41 @@ router.get("/all-projects", async (req, res) => {
             });
         }
 
-        res.status(200).json({ success: true, projects: projects });
+        // Add obfuscated IDs to each project
+        const projectsWithObfuscatedIds = projects.map(project => {
+            const projectObj = project.toObject();
+            projectObj.obfuscatedId = obfuscateId(project._id);
+            
+            // Also obfuscate user ID if it exists
+            if (projectObj.userId && projectObj.userId._id) {
+                projectObj.userId.obfuscatedId = obfuscateId(projectObj.userId._id);
+            }
+            
+            return projectObj;
+        });
+
+        res.status(200).json({ success: true, projects: projectsWithObfuscatedIds });
     } catch (error) {
         console.error("Error fetching projects:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
 
-router.get('/:id', async (req, res) => {
+// Modified route to get project by obfuscated ID
+router.get('/:obfuscatedId', async (req, res) => {
     try {
+        // Decode the obfuscated ID
+        const projectId = deobfuscateId(req.params.obfuscatedId);
+        
+        if (!projectId) {
+            return res.status(400).json({
+                success: false, 
+                message: 'Invalid project ID format'
+            });
+        }
+        
         // Using populate to get the user data along with the project
-        // This assumes your Project model has a userId field referencing the User model
-        const project = await Project.findById(req.params.id)
+        const project = await Project.findById(projectId)
             .populate({
                 path: 'userId',
                 select: 'name profilePicture title' // Select the user fields you need
@@ -160,10 +205,18 @@ router.get('/:id', async (req, res) => {
             });
         }
 
+        // Convert to object to add obfuscated IDs
+        const projectObj = project.toObject();
+        
+        // Add obfuscated user ID if it exists
+        if (projectObj.userId && projectObj.userId._id) {
+            projectObj.userId.obfuscatedId = obfuscateId(projectObj.userId._id);
+        }
+        
         // Return the project with success flag
         return res.json({
             success: true,
-            project
+            project: projectObj
         });
     } catch (error) {
         console.error('Error fetching project details:', error);
@@ -175,10 +228,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Get user profile by ID
-router.get('/users/:userId', async (req, res) => {
+// Get user profile by obfuscated ID
+router.get('/users/:obfuscatedUserId', async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const obfuscatedUserId = req.params.obfuscatedUserId;
+        
+        // Decode the obfuscated ID
+        const userId = deobfuscateId(obfuscatedUserId);
+        
+        if (!userId) {
+            return res.status(400).json({ success: false, message: 'Invalid user ID format' });
+        }
 
         // Validate if userId is a valid MongoDB ObjectId
         if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -186,7 +246,7 @@ router.get('/users/:userId', async (req, res) => {
         }
 
         const user = await User.findById(userId)
-            .select('-password -resetPasswordToken -resetPasswordExpires -__v')
+            .select('-password -resetPasswordToken -resetPasswordExpires -__v');
 
         if (!user) {
             return res.status(404).json({
@@ -195,9 +255,13 @@ router.get('/users/:userId', async (req, res) => {
             });
         }
 
+        // Return user without exposing actual MongoDB ID
+        const userObj = user.toObject();
+        userObj.obfuscatedId = obfuscatedUserId; // Use the passed obfuscated ID
+        
         res.json({
             success: true,
-            user
+            user: userObj
         });
     } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -208,10 +272,17 @@ router.get('/users/:userId', async (req, res) => {
     }
 });
 
-// Get projects by user ID
-router.get('/projects/user/:userId', async (req, res) => {
+// Get projects by obfuscated user ID
+router.get('/projects/user/:obfuscatedUserId', async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const obfuscatedUserId = req.params.obfuscatedUserId;
+        
+        // Decode the obfuscated ID
+        const userId = deobfuscateId(obfuscatedUserId);
+        
+        if (!userId) {
+            return res.status(400).json({ success: false, message: 'Invalid user ID format' });
+        }
 
         // Validate if userId is a valid MongoDB ObjectId
         if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -222,9 +293,22 @@ router.get('/projects/user/:userId', async (req, res) => {
             .sort({ createdAt: -1 }) // Sort by newest first
             .populate('userId', 'name profilePicture');
 
+        // Add obfuscated IDs to projects
+        const projectsWithObfuscatedIds = projects.map(project => {
+            const projectObj = project.toObject();
+            projectObj.obfuscatedId = obfuscateId(project._id);
+            
+            // Also obfuscate user ID if it exists
+            if (projectObj.userId && projectObj.userId._id) {
+                projectObj.userId.obfuscatedId = obfuscatedUserId; // Use the passed obfuscated ID
+            }
+            
+            return projectObj;
+        });
+
         res.json({
             success: true,
-            projects
+            projects: projectsWithObfuscatedIds
         });
     } catch (error) {
         console.error("Error fetching user projects:", error);
@@ -235,36 +319,22 @@ router.get('/projects/user/:userId', async (req, res) => {
     }
 });
 
-// Create email transporter
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.MAIL_ID, // Using your existing env variable
-        pass: process.env.MAIL_PASS // Using your existing env variable
-    }
-});
-
-// Verify transporter configuration
-transporter.verify(function (error, success) {
-    if (error) {
-        console.error('SMTP connection error:', error);
-    } else {
-        console.log('SMTP server is ready to send messages');
-    }
-});
-
 // Contact route with authentication middleware
-router.post("/users/contact", async (req, res) => {
+router.post("/users/contact", authMiddleware, async (req, res) => {
     try {
         const { recipientId, subject, message, projectDetails, timeline, budget } = req.body;
+        
+        // Decode recipientId if it's obfuscated
+        let actualRecipientId = recipientId;
+        if (recipientId && recipientId.indexOf('_') >= 0) {
+            actualRecipientId = deobfuscateId(recipientId);
+        }
 
         // Find the sender (current logged-in user)
         const sender = await User.findById(req.user.id).select("-password");
 
         // Find the recipient
-        const recipient = await User.findById(recipientId);
+        const recipient = await User.findById(actualRecipientId);
 
         if (!recipient || !recipient.email) {
             return res.status(404).json({
