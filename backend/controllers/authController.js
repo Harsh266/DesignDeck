@@ -1,0 +1,141 @@
+// controllers/adminController.js
+const User = require("../models/User");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+// Controller for admin dashboard
+const getDashboard = (req, res) => {
+    res.status(200).json({ message: "Welcome Admin!", isAdmin: true });
+};
+
+// Controller to get all users
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find().select("name email isLoggedIn lastLogin profilePicture isAdmin");
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Controller to delete user by ID
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find and delete user by _id
+        const deletedUser = await User.findByIdAndDelete(id);
+
+        if (!deletedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ message: `User with ID ${id} deleted successfully` });
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Controller to send email to all users
+const sendEmailToAllUsers = async (req, res) => {
+    try {
+        const { subject, email } = req.body;
+
+        // Fetch all user emails from the database
+        const users = await User.find({}, "email");
+
+        // If no users are found, return an error response
+        if (users.length === 0) {
+            return res.status(404).json({ success: false, message: "No users found in the database." });
+        }
+
+        // Extract email addresses
+        const emailList = users.map((user) => user.email);
+
+        // If emailList is empty for some reason, return an error
+        if (!emailList.length) {
+            return res.status(400).json({ success: false, message: "No valid emails found." });
+        }
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.MAIL_ID, // Your Gmail
+                pass: process.env.MAIL_PASS, // App Password
+            },
+        });
+
+        // Send emails individually to each user
+        for (const user of users) {
+            const mailOptions = {
+                from: process.env.MAIL_ID, // Sender email
+                to: user.email, // Send to the specific user's email
+                subject: subject,
+                text: email,
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(`Email sent to: ${user.email}`);
+        }
+
+        res.status(200).json({ success: true, message: "Emails sent successfully to all users." });
+    } catch (error) {
+        console.error("Error sending email:", error);
+        res.status(500).json({ success: false, message: "Failed to send emails.", error: error.message });
+    }
+};
+
+// Controller for admin logout
+const logout = async (req, res) => {
+    try {
+        const token = req.cookies.token;
+        let userId = null;
+
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                userId = decoded.id;
+            } catch (tokenError) {
+                console.error("Token verification failed:", tokenError);
+            }
+        }
+
+        // If no user ID from token, try to get from session
+        if (!userId && req.session && req.session.user) {
+            userId = req.session.user._id;
+        }
+
+        if (userId) {
+            await User.findByIdAndUpdate(userId, { isLoggedIn: false });
+        }
+
+        // Clear the admin auth token
+        res.clearCookie("token", { httpOnly: true, sameSite: "lax" });
+
+        if (req.session) {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error("Session destruction error:", err);
+                    return res.status(500).json({ message: "Logout failed" });
+                }
+                return res.status(200).json({ message: "Admin logged out successfully" });
+            });
+        } else {
+            return res.status(200).json({ message: "Admin logged out successfully" });
+        }
+    } catch (error) {
+        console.error("Admin Logout Error:", error);
+        res.status(500).json({ message: "Logout failed", error: error.message });
+    }
+};
+
+module.exports = {
+    getDashboard,
+    getAllUsers,
+    deleteUser,
+    sendEmailToAllUsers,
+    logout
+};
