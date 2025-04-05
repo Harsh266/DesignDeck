@@ -23,32 +23,26 @@ router.get("/all-users", adminAuth, async (req, res) => {
 });
 
 // ✅ DELETE User by ID (Admin Only)
-router.delete("/delete-user/:email", adminAuth, async (req, res) => {
+router.delete("/delete-user/:id", adminAuth, async (req, res) => {
     try {
-        const { email } = req.params;
+        const { id } = req.params;
 
-        // Step 1: Fetch all users' emails
-        const allUsers = await User.find({}, "email");
-        const allEmails = allUsers.map(user => user.email);
-
-        // Step 2: Check if the provided email exists
-        if (!allEmails.includes(email)) {
-            return res.status(404).json({ message: "Email not found in the database" });
-        }
-
-        // Step 3: Find and delete the user with the matched email
-        const deletedUser = await User.findOneAndDelete({ email });
+        // Find and delete user by _id
+        const deletedUser = await User.findByIdAndDelete(id);
 
         if (!deletedUser) {
-            return res.status(500).json({ message: "Error deleting user" });
+            return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json({ message: `User with email ${email} deleted successfully` });
+        res.status(200).json({ message: `User with ID ${id} deleted successfully` });
     } catch (error) {
         console.error("Error deleting user:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
+
+
+
 
 // ✅ Admin Send mail to all users
 

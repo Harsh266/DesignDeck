@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import api from "../services/api";
 import { ThemeContext } from "../context/ThemeContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,7 +29,7 @@ const Contactus = () => {
         border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
         width: "320px", // Fixed width for consistency
     });
-    
+
 
     const progressStyle = { background: "#0099FF" }; // Light Blue Progress Bar
 
@@ -54,43 +55,11 @@ const Contactus = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
         try {
-            const response = await fetch("http://localhost:5000/api/contact/send-email", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
+            const response = await api.post("/api/contact/send-email", formData);
 
-            const data = await response.json();
-
-            if (response.ok) {
-                toast("Message sent successfully!", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    style: getCustomToastStyle(theme),
-                    progressStyle, // Light Blue Progress Bar
-                    className: theme === "dark" ? "dark-theme" : "light-theme",
-                });
-                setFormData({ name: "", email: "", message: "" });
-            } else {
-                toast(data.message || "Failed to send message!", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    style: getCustomToastStyle(theme),
-                    progressStyle, // Light Blue Progress Bar
-                    className: theme === "dark" ? "dark-theme" : "light-theme",
-                });
-            }
-        } catch (error) {
-            toast("Something went wrong! Try again.", {
+            toast("Message sent successfully!", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -101,17 +70,36 @@ const Contactus = () => {
                 progressStyle, // Light Blue Progress Bar
                 className: theme === "dark" ? "dark-theme" : "light-theme",
             });
+
+            setFormData({ name: "", email: "", message: "" });
+
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || "Failed to send message!";
+
+            toast(errorMessage, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                progressStyle, // Light Blue Progress Bar
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
+
 
     return (
         <>
             <Helmet>
                 <title>DesignDeck - Contact Us</title>
-            </Helmet> 
-            <ToastContainer toastClassName={() => "custom-toast"} 
-            progressClassName="custom-toast-progress" />
+            </Helmet>
+            <ToastContainer toastClassName={() => "custom-toast"}
+                progressClassName="custom-toast-progress" />
             <div className={`flex flex-col lg:flex-row items-center justify-between min-h-screen h-screen p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
                 <div className="w-full lg:w-1/2 h-screen flex flex-col justify-center p-10">
                     <Link to="/logout">

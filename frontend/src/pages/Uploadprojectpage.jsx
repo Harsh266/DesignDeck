@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import { Helmet } from "react-helmet";
 import { ThemeContext } from "../context/ThemeContext";
 import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
+import api from "../services/api";
 import "react-toastify/dist/ReactToastify.css";
 
 const UploadProjectPage = () => {
@@ -167,7 +167,7 @@ const UploadProjectPage = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/projects/upload", formData, {
+            const response = await api.post("/api/projects/upload", formData, {
                 withCredentials: true,
                 headers: { "Content-Type": "multipart/form-data" },
             });

@@ -1,9 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import { ThemeContext } from "../context/ThemeContext";
-import { Sun, Moon, LogOut, Menu, Users, User as UserIcon, X, Trash2, Bell, Mail, Send, Clock, Shield, MoreHorizontal, Calendar } from "lucide-react"; // Added Menu icon
+import { Sun, Moon, LogOut, Menu, Users, Trash2, Bell, Mail, Send, Shield,  Calendar } from "lucide-react"; // Added Menu icon
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminDashboard = () => {
@@ -12,7 +12,6 @@ const AdminDashboard = () => {
     const { theme, toggleTheme } = useContext(ThemeContext);
     const [users, setUsers] = useState([]);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [profilePopupUser, setProfilePopupUser] = useState(null);
     const [activeSection, setActiveSection] = useState(null);
     const [subject, setSubject] = useState("");
     const [email, setEmail] = useState("");
@@ -44,7 +43,7 @@ const AdminDashboard = () => {
     });
 
     useEffect(() => {
-        axios.get("http://localhost:5000/admin/admin-dashboard", { withCredentials: true })
+        api.get("/admin/admin-dashboard", { withCredentials: true })
             .then((res) => {
                 if (res.data.isAdmin) {
                     setIsAdmin(true);
@@ -92,7 +91,7 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         const fetchUsers = () => {
-            axios.get("http://localhost:5000/admin/all-users", { withCredentials: true })
+            api.get("/admin/all-users", { withCredentials: true })
                 .then((res) => setUsers(res.data))
                 .catch((err) => console.error("Error fetching users:", err));
         };
@@ -104,27 +103,44 @@ const AdminDashboard = () => {
     }, []);
 
     // Fetch a specific user's details
-
     const handleDeleteUser = async (email) => {
-        // Step 1: Send DELETE request to the backend
-        const response = await axios.delete(`http://localhost:5000/admin/delete-user/${email}`, {
-            withCredentials: true,
-        });
-
-        toast("User deleted successfully!", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: getCustomToastStyle(theme),
-            className: theme === "dark" ? "dark-theme" : "light-theme",
-        });
-        setToastShown(true);
-
-        // Step 2: Update UI immediately after deletion
-        setUsers(prevUsers => prevUsers.filter(user => user.email !== email));
+        try {
+            // Step 1: Send DELETE request to the backend
+            const response = await api.delete(`/admin/delete-user/${email}`, {
+                withCredentials: true,
+            });
+    
+            toast("User deleted successfully!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+            setToastShown(true);
+    
+            // Step 2: Update UI
+            setUsers(prevUsers => prevUsers.filter(user => user.email !== email));
+        } catch (error) {
+            console.error("Error deleting user:", error);
+    
+            toast(
+                error?.response?.data?.message || "Failed to delete user.",
+                {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: getCustomToastStyle(theme),
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
+                }
+            );
+        }
     };
 
     const sendNotification = () => {
@@ -142,7 +158,7 @@ const AdminDashboard = () => {
             return;
         }
 
-        axios.post("http://localhost:5000/notifications/admin-notifications", { message }, { withCredentials: true })
+        api.post("/notifications/admin-notifications", { message }, { withCredentials: true })
             .then(() => {
                 toast("Notification sent successfully!", {
                     position: "top-right",
@@ -188,7 +204,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/admin/send-email", {
+            const response = await api.post("/admin/send-email", {
                 subject,
                 email,
             });
@@ -224,7 +240,7 @@ const AdminDashboard = () => {
 
 
     const handleLogout = () => {
-        axios.post("http://localhost:5000/admin/logout", {}, { withCredentials: true })
+        api.post("/admin/logout", {}, { withCredentials: true })
             .then(() => {
                 toast("Admin logged out successfully!", {
                     position: "top-right",
@@ -401,12 +417,12 @@ const AdminDashboard = () => {
                                     />
                                     <button
                                         onClick={sendNotification}
-                                        className={`flex items-center gap-2 w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 mt-3 sm:mt-0 rounded-lg cursor-pointer ${theme === "dark"
+                                        className={`flex items-center justify-center gap-2 w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 mt-3 sm:mt-0 rounded-lg cursor-pointer ${theme === "dark"
                                             ? "bg-blue-600 hover:bg-blue-700"
                                             : "bg-blue-500 hover:bg-blue-600"
                                             } text-white font-medium transition-colors whitespace-nowrap flex-shrink-0`}
                                     >
-                                        <Send className="h-4 w-4" />
+                                        <Send className="h-4 w-4 " />
                                         Send Notification
                                     </button>
                                 </div>
@@ -476,8 +492,8 @@ const AdminDashboard = () => {
                                     key={user._id}
                                     onClick={() => handleUserClick(user._id)}
                                     className={`cursor-pointer rounded-lg overflow-hidden flex flex-col ${theme === "dark"
-                                            ? "bg-gray-700"
-                                            : "bg-white"
+                                        ? "bg-gray-700"
+                                        : "bg-white"
                                         } transition-all duration-200 ${theme === "dark" ? "shadow-lg shadow-gray-900/30" : "shadow-lg shadow-gray-200/50"} hover:shadow-xl`}
                                 >
 
@@ -507,8 +523,8 @@ const AdminDashboard = () => {
 
                                             <div className="flex">
                                                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${user.isAdmin
-                                                        ? theme === "dark" ? "bg-blue-900/40 text-blue-300" : "bg-blue-100 text-blue-700"
-                                                        : theme === "dark" ? "bg-purple-900/40 text-purple-300" : "bg-purple-100 text-purple-700"
+                                                    ? theme === "dark" ? "bg-blue-900/40 text-blue-300" : "bg-blue-100 text-blue-700"
+                                                    : theme === "dark" ? "bg-purple-900/40 text-purple-300" : "bg-purple-100 text-purple-700"
                                                     }`}>
                                                     <Shield className="w-3 h-3 mr-1" />
                                                     {user.isAdmin ? "Admin" : "User"}
@@ -545,9 +561,9 @@ const AdminDashboard = () => {
                                                     e.stopPropagation();
                                                     handleDeleteUser(user._id);
                                                 }}
-                                                className={`p-1.5 rounded-full transition ${theme === "dark"
-                                                        ? "hover:bg-gray-600"
-                                                        : "hover:bg-gray-100"
+                                                className={`p-1.5 rounded-full transition cursor-pointer ${theme === "dark"
+                                                    ? "hover:bg-gray-600"
+                                                    : "hover:bg-gray-100"
                                                     }`}
                                             >
                                                 <Trash2 className={`h-4 w-4 ${theme === "dark" ? "text-red-400" : "text-red-500"}`} />

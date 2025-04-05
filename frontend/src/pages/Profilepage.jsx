@@ -1,16 +1,16 @@
 import React from "react";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 import { FaUserEdit } from "react-icons/fa";
 import { Helmet } from "react-helmet";
-import { useContext } from "react";
+import api from "../services/api";
 import { ThemeContext } from "../context/ThemeContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/toastStyles.css";
+
+const API_BASE_URL = api.defaults.baseURL;
 
 const Profilepage = () => {
     const [user, setUser] = useState(null);
@@ -21,8 +21,9 @@ const Profilepage = () => {
     const [behanceProfile, setBehanceProfile] = useState('');
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(null);
+    const [loading, setLoading] = useState(true);
     const { theme } = useContext(ThemeContext);
+    const { userId } = useParams();
     const navigate = useNavigate();
 
     const getCustomToastStyle = (theme) => ({
@@ -44,33 +45,36 @@ const Profilepage = () => {
         width: "400px"
     });
 
-    useEffect(() => {
-        fetchUser();
-    }, [navigate]);
-
     const fetchUser = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/auth/me", {
+            const res = await api.get("/auth/me", {
                 withCredentials: true,
             });
             console.log("🟢 User Data Received:");
 
-
             if (res.data && res.data._id) {
                 setUser(res.data);
+                // Initialize form state with user data if available
+                setBio(res.data.bio || '');
+                setDribbbleProfile(res.data.dribbbleProfile || '');
+                setBehanceProfile(res.data.behanceProfile || '');
             } else {
                 navigate("/signin"); // Redirect to login if no user found
             }
         } catch (error) {
-            console.error("❌ Error fetching user:");
+            console.error("❌ Error fetching user:", error);
             navigate("/signin"); // Redirect if not authenticated
         }
     };
 
     useEffect(() => {
+        fetchUser();
+    }, [navigate]);
+
+    useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/projects/user-projects", {
+                const response = await api.get("/api/projects/user-projects", {
                     withCredentials: true,  // Ensure you're sending the cookie with the request
                 });
 
@@ -94,8 +98,6 @@ const Profilepage = () => {
         return () => clearInterval(intervalId);
     }, []);
 
-
-
     if (!user) {
         return <div className={`flex items-center justify-center h-screen w-screen ${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}>
             <h1 className="text-center text-xl font-semibold tracking-wide animate-bounce bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient">
@@ -108,6 +110,7 @@ const Profilepage = () => {
         event.preventDefault();
         setProfileImage(event.target.files[0]);
     };
+
     const handleCoverChange = (event) => {
         event.preventDefault();
         setCoverImage(event.target.files[0]);
@@ -148,8 +151,8 @@ const Profilepage = () => {
         if (behanceProfile) formData.append("behanceProfile", behanceProfile);
 
         try {
-            const response = await axios.post(
-                "http://localhost:5000/auth/updateprofile",
+            const response = await api.post(
+                "/auth/updateprofile",
                 formData,
                 {
                     withCredentials: true,
@@ -178,8 +181,6 @@ const Profilepage = () => {
             console.error("Upload error:", error.response?.data || error.message);
         }
     };
-
-
 
     return (
         <>
@@ -210,7 +211,7 @@ const Profilepage = () => {
                             {/* Profile Image Container */}
                             <div className={`w-28 h-28 sm:w-40 sm:h-40 ${theme === "dark" ? "bg-black" : "bg-white"} rounded-2xl p-1 relative border-4 border-transparent`}>
                                 <img
-                                    src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
+                                    src={user.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
                                     alt="User"
                                     className="w-full h-full object-cover rounded-2xl"
                                 />
@@ -275,9 +276,10 @@ const Profilepage = () => {
 
                 {/* My Projects Section */}
                 <div className={`max-w-full mx-auto p-4 sm:p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                    <h3 className={`text-xl font-semibold border-b-2 pb-2 w-[30%] sm:w-[20%] md:w-[15%] lg:w-[10%] ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
+                    <h3 className={`text-xl font-semibold border-b-2 pb-2 inline-block ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
                         My Projects
                     </h3>
+
 
                     {/* Projects Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
@@ -287,22 +289,63 @@ const Profilepage = () => {
                             <>
                                 {projects?.length > 0 ? (
                                     projects?.map((project, index) => (
-                                        <div
-                                            key={index}
-                                            className={`group rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}
+                                        <Link
+                                            to={`/view/${project._id}`}
+                                            key={project._id || index}
+                                            className="no-underline block"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                console.log(`Navigating to /view/${project._id}`);
+                                            }}
                                         >
-                                            {/* Media Handling - Using the new logic */}
-                                            <div className="relative w-full h-40 sm:h-48 md:h-56 lg:h-65 rounded-lg overflow-hidden cursor-pointer">
-                                                {project.firstImage || (project.images && project.images.length > 0) ? (
-                                                    <>
-                                                        {/* Show Image by Default */}
-                                                        <img
-                                                            src={`http://localhost:5000${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
-                                                            alt={project.title}
-                                                            className="w-full h-full object-cover rounded-lg group-hover:hidden"
-                                                        />
-                                                        {/* Show Video on Hover if available, otherwise show same image */}
-                                                        {project.videos && project.videos.length > 0 ? (
+                                            <div
+                                                className={`group rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}
+                                            >
+                                                {/* Media Handling - Using the new logic */}
+                                                <div className="relative w-full h-40 sm:h-48 md:h-56 lg:h-65 rounded-lg overflow-hidden cursor-pointer">
+                                                    {project.firstImage || (project.images && project.images.length > 0) ? (
+                                                        <>
+                                                            {/* Show Image by Default */}
+                                                            <img
+                                                                src={`${API_BASE_URL}${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
+                                                                alt={project.title}
+                                                                className="w-full h-full object-cover rounded-lg group-hover:hidden"
+                                                            />
+                                                            {/* Show Video on Hover if available, otherwise show same image */}
+                                                            {project.videos && project.videos.length > 0 ? (
+                                                                <video
+                                                                    className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                                    autoPlay
+                                                                    loop
+                                                                    muted
+                                                                    playsInline
+                                                                >
+                                                                    <source src={`${API_BASE_URL}${project.videos[0]}`} />
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            ) : (
+                                                                <img
+                                                                    src={`${API_BASE_URL}${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
+                                                                    alt={project.title}
+                                                                    className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                                />
+                                                            )}
+                                                        </>
+                                                    ) : project.videos && project.videos.length > 0 ? (
+                                                        <>
+                                                            {/* For video-only projects: Show first frame of video as static thumbnail */}
+                                                            <div className="w-full h-full group-hover:hidden">
+                                                                <video
+                                                                    className="w-full h-full object-cover rounded-lg"
+                                                                    muted
+                                                                    playsInline
+                                                                    preload="metadata"
+                                                                >
+                                                                    <source src={`${API_BASE_URL}${project.videos[0]}`} />
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                            </div>
+                                                            {/* Play video on hover */}
                                                             <video
                                                                 className="w-full h-full object-cover rounded-lg hidden group-hover:block"
                                                                 autoPlay
@@ -310,60 +353,28 @@ const Profilepage = () => {
                                                                 muted
                                                                 playsInline
                                                             >
-                                                                <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                                <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                                 Your browser does not support the video tag.
                                                             </video>
-                                                        ) : (
-                                                            <img
-                                                                src={`http://localhost:5000${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
-                                                                alt={project.title}
-                                                                className="w-full h-full object-cover rounded-lg hidden group-hover:block"
-                                                            />
-                                                        )}
-                                                    </>
-                                                ) : project.videos && project.videos.length > 0 ? (
-                                                    <>
-                                                        {/* For video-only projects: Show first frame of video as static thumbnail */}
-                                                        <div className="w-full h-full group-hover:hidden">
-                                                            <video
-                                                                className="w-full h-full object-cover rounded-lg"
-                                                                muted
-                                                                playsInline
-                                                                preload="metadata"
-                                                            >
-                                                                <source src={`http://localhost:5000${project.videos[0]}`} />
-                                                                Your browser does not support the video tag.
-                                                            </video>
+                                                        </>
+                                                    ) : (
+                                                        <div className={`rounded-lg w-full h-full flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
+                                                            <span className="text-gray-500">No preview available</span>
                                                         </div>
-                                                        {/* Play video on hover */}
-                                                        <video
-                                                            className="w-full h-full object-cover rounded-lg hidden group-hover:block"
-                                                            autoPlay
-                                                            loop
-                                                            muted
-                                                            playsInline
-                                                        >
-                                                            <source src={`http://localhost:5000${project.videos[0]}`} />
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                    </>
-                                                ) : (
-                                                    <div className={`rounded-lg w-full h-full flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
-                                                        <span className="text-gray-500">No preview available</span>
+                                                    )}
+                                                </div>
+
+                                                <div className="flex items-center justify-between mt-1">
+                                                    <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
+                                                        {project.title}
+                                                    </p>
+
+                                                    <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
+                                                        <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
                                                     </div>
-                                                )}
-                                            </div>
-
-                                            <div className="flex items-center justify-between mt-1">
-                                                <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
-                                                    {project.title}
-                                                </p>
-
-                                                <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
-                                                    <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
                                                 </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     ))
                                 ) : (
                                     <div className="col-span-3 text-center p-4">
@@ -462,16 +473,15 @@ const Profilepage = () => {
                             </div>
 
                             {/* Save Changes Button */}
-                            <button className={`text-md font-medium w-full py-3 mt-4 rounded-full cursor-pointer ${theme === "dark" ? "bg-blue-700 text-white hover:bg-blue-600" : "bg-[#376CFF] text-white hover:bg-[#2D5BEA]"}`}
+                            <button
+                                className={`text-md font-medium w-full py-3 mt-4 rounded-full cursor-pointer ${theme === "dark" ? "bg-blue-700 text-white hover:bg-blue-600" : "bg-[#376CFF] text-white hover:bg-[#2D5BEA]"}`}
                                 onClick={handleUpdateProfile}
-
                             >
                                 Save Changes
                             </button>
                         </div>
                     </div>
                 )}
-
             </div>
         </>
     );

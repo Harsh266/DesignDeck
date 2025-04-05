@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { io } from "socket.io-client";
-import axios from "axios";
+import api from "../services/api";
 import Navbar from "../components/Navbar";
 import { ThemeContext } from "../context/ThemeContext";
 import moment from "moment"; // For formatting timestamps
@@ -10,7 +10,7 @@ function UserNotifications() {
     const { theme } = useContext(ThemeContext);
     
     // ✅ Connect to the Socket.io server
-    const socket = io("http://localhost:5000", { withCredentials: true });
+    const socket = io(api.baseURL, { withCredentials: true });
 
     useEffect(() => {
         fetchNotifications(); // Fetch notifications when component mounts
@@ -40,7 +40,7 @@ function UserNotifications() {
     // ✅ Fetch notifications from backend
     const fetchNotifications = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/notifications/user-notifications", { withCredentials: true });
+            const response = await api.get("/notifications/user-notifications", { withCredentials: true });
 
             // Sort notifications by date (newest first)
             const sortedNotifications = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

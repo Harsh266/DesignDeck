@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 import { FcGoogle } from "react-icons/fc";
 import { IoClose } from "react-icons/io5";
 import { Helmet } from "react-helmet";
@@ -56,8 +56,8 @@ const Signup = () => {
         }
 
         try {
-            const response = await axios.post(
-                "http://localhost:5000/auth/register",
+            const response = await api.post(
+                "/auth/register",
                 { name, email, password },
                 { withCredentials: true }
             );
@@ -89,9 +89,8 @@ const Signup = () => {
     };
 
     const handleGoogleLogin = () => {
-        window.open("http://localhost:5000/auth/google", "_self"); // Redirect to Google login
+        window.open(`${api.defaults.baseURL}/auth/google`, "_self");
     };
-
     return (
         <>
             <Helmet>

@@ -1,13 +1,33 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import axios from "axios";
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
+import api from "../services/api";
 import { ThemeContext } from "../context/ThemeContext";
-import { toast } from "react-toastify"; // Make sure to install react-toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = api.defaults.baseURL;
+
+const getCustomToastStyle = (theme) => ({
+    borderRadius: "5px",
+    padding: "18px 25px",
+    fontSize: "14px",
+    fontWeight: "500",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "10px",
+    boxShadow: theme === "dark"
+        ? "0px 4px 10px rgba(255, 255, 255, 0.2)"
+        : "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    background: theme === "dark" ? "#181818" : "#fff",
+    color: theme === "dark" ? "#fff" : "#333",
+    border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #ddd",
+    width: "320px",
+});
 
 const Profilepageothers = () => {
     const [user, setUser] = useState(null);
@@ -30,7 +50,7 @@ const Profilepageothers = () => {
         const fetchUserProfile = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/projects/users/${userId}`, {
+                const response = await api.get(`/api/projects/users/${userId}`, {
                     withCredentials: true,
                 });
 
@@ -48,7 +68,7 @@ const Profilepageothers = () => {
 
         const fetchUserProjects = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/projects/projects/user/${userId}`, {
+                const response = await api.get(`/api/projects/projects/user/${userId}`, {
                     withCredentials: true,
                 });
 
@@ -88,15 +108,24 @@ const Profilepageothers = () => {
         e.preventDefault();
         
         if (!contactForm.projectDetails.trim()) {
-            toast.error("Please provide project details");
+            toast("Please provide project details", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
             return;
         }
         
         setIsSending(true);
         
         try {
-            const response = await axios.post(
-                `${API_BASE_URL}/api/projects/users/contact`,
+            const response = await api.post(
+                `/api/projects/users/contact`,
                 {
                     recipientId: userId,
                     message: "I'm interested in working with you!",
@@ -108,7 +137,16 @@ const Profilepageothers = () => {
             );
             
             if (response.data.success) {
-                toast.success("Message sent successfully!");
+                toast("Message sent successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: getCustomToastStyle(theme),
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
+                });
                 setContactForm({
                     projectDetails: "",
                     timeline: "",
@@ -116,11 +154,28 @@ const Profilepageothers = () => {
                 });
                 setIsPopupOpen(false);
             } else {
-                toast.error(response.data.message || "Failed to send message");
+                toast(response.data.message || "Failed to send message", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    style: getCustomToastStyle(theme),
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
+                });
             }
         } catch (error) {
-            console.error("Error sending message:", error);
-            toast.error(error.response?.data?.message || "Error sending message. Please try again.");
+            toast(error.response?.data?.message || "Error sending message. Please try again.", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
         } finally {
             setIsSending(false);
         }
@@ -150,6 +205,7 @@ const Profilepageothers = () => {
                 <title>{user.name} - DesignDeck Profile</title>
             </Helmet>
             <Navbar />
+            <ToastContainer toastClassName={() => "custom-toast"} />
             <div className={`min-h-screen ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} mt-13`}>
                 {/* Profile Section */}
                 <div className="w-full flex flex-col items-center">
@@ -230,7 +286,7 @@ const Profilepageothers = () => {
                                                     <img
                                                         src={
                                                             project.thumbnail ||
-                                                            `${API_BASE_URL || "http://localhost:5000"}${project.firstImage || project.images[0]}` ||
+                                                            `${API_BASE_URL}${project.firstImage || project.images[0]}` ||
                                                             "/default-thumbnail.jpg"
                                                         }
                                                         alt={project.title}
@@ -249,14 +305,14 @@ const Profilepageothers = () => {
                                                             muted
                                                             playsInline
                                                         >
-                                                            <source src={`${API_BASE_URL || "http://localhost:5000"}${project.videos[0]}`} />
+                                                            <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                             Your browser does not support the video tag.
                                                         </video>
                                                     ) : (
                                                         <img
                                                             src={
                                                                 project.thumbnail ||
-                                                                `${API_BASE_URL || "http://localhost:5000"}${project.firstImage || project.images[0]}` ||
+                                                                `${API_BASE_URL}${project.firstImage || project.images[0]}` ||
                                                                 "/default-thumbnail.jpg"
                                                             }
                                                             alt={project.title}
@@ -278,7 +334,7 @@ const Profilepageothers = () => {
                                                             playsInline
                                                             preload="metadata"
                                                         >
-                                                            <source src={`${API_BASE_URL || "http://localhost:5000"}${project.videos[0]}`} />
+                                                            <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                             Your browser does not support the video tag.
                                                         </video>
                                                     </div>
@@ -290,7 +346,7 @@ const Profilepageothers = () => {
                                                         muted
                                                         playsInline
                                                     >
-                                                        <source src={`${API_BASE_URL || "http://localhost:5000"}${project.videos[0]}`} />
+                                                        <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 </>
@@ -383,7 +439,6 @@ const Profilepageothers = () => {
                                     className={`w-full p-2 border rounded-lg mt-2 text-xs sm:text-sm transition-all ${theme === "dark" ? "border-gray-600 bg-black text-white focus:ring-2 focus:ring-blue-400 focus:outline-none" : "border-gray-300 bg-white text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"}`}
                                     placeholder="Please describe your project"
                                     rows="4"
-                                    required
                                 ></textarea>
 
                                 <label className="font-medium text-xs sm:text-sm mt-2 block">Project Timeline</label>

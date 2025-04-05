@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import api from "../services/api";
 import { ThemeContext } from "../context/ThemeContext";
 import { Sun, Moon, Menu, X } from "lucide-react";
 
@@ -37,7 +37,7 @@ const Navbar = () => {
   const fetchUser = async () => {
     console.log("🟡 Fetching user data...");
     try {
-      const res = await axios.get("http://localhost:5000/auth/me", {
+      const res = await api.get("/auth/me", {
         withCredentials: true, // Send cookies for authentication
       });
 
@@ -80,8 +80,8 @@ const Navbar = () => {
     console.log("🟡 Logging out...");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/auth/logout",
+      const response = await api.post(
+        "/auth/logout",
         {},
         { withCredentials: true } // Ensure cookies are sent
       );
@@ -139,7 +139,7 @@ const Navbar = () => {
               onClick={() => setShowPopup(!showPopup)}
             >
               <img
-                src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
+                src={user.profilePicture || `${api.defaults.baseURL}uploads/default-profile.jpg`}
                 alt="User"
                 className="object-cover object-top w-8 h-8 md:w-10 md:h-10 rounded-full"
               />
@@ -192,7 +192,11 @@ const Navbar = () => {
                 {/* Profile Section */}
                 <div className="flex items-center gap-4">
                   <img
-                    src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
+                    src={
+                      user.profilePicture
+                        ? `${user.profilePicture}`
+                        : `${api.defaults.baseURL}uploads/default-profile.jpg`
+                    }
                     alt="User"
                     className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover object-top"
                   />
@@ -261,7 +265,7 @@ const Navbar = () => {
                 {/* User Profile Info */}
                 <div className="flex flex-col items-center gap-2">
                   <img
-                    src={user.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
+                    src={user.profilePicture || `${api.defaults.baseURL}uploads/default-profile.jpg`}
                     alt="User"
                     className="w-20 h-20 rounded-full object-cover object-top"
                   />

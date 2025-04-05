@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import axios from "axios";
+import api from "../services/api";
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+
+const API_BASE_URL = api.defaults.baseURL;
 
 const ProjectView = () => {
     const [project, setProject] = useState(null);
@@ -29,8 +31,7 @@ const ProjectView = () => {
                     return;
                 }
 
-                const apiUrl = `http://localhost:5000/api/projects/${id}`;
-                const response = await axios.get(apiUrl, {
+                const response = await api.get(`/api/projects/${id}`, {
                     withCredentials: true,
                 });
 
@@ -103,7 +104,7 @@ const ProjectView = () => {
                                         {!isCollapsed && (
                                             <div className="flex items-center gap-2 pr-2 sm:pr-4 md:pr-8 flex-1">
                                                 <img
-                                                    src={project.userId?.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}
+                                                    src={project.userId?.profilePicture || `${api.defaults.baseURL}uploads/default-profile.jpg`}
                                                     alt={project.userId?.name || "Unknown designer"}
                                                     className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover flex-shrink-0"
                                                 />
@@ -212,13 +213,13 @@ const ProjectView = () => {
                             {/* Media Display */}
                             {media.type === "image" ? (
                                 <img
-                                    src={`http://localhost:5000${media.src}`}
+                                    src={`${API_BASE_URL}${media.src}`}
                                     alt={`Project media ${index + 1}`}
                                     className="w-full h-auto sm:h-auto md:h-auto lg:h-auto rounded-lg shadow-lg object-contain"
                                 />
                             ) : (
                                 <video
-                                    src={`http://localhost:5000${media.src}`}
+                                    src={`${API_BASE_URL}${media.src}`}
                                     autoPlay
                                     loop
                                     muted

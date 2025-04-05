@@ -54,21 +54,42 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
         const projects = await Project.find({ userId: userId });
 
         if (projects.length === 0) {
-            return res.status(200).json({ success: true, message: "No projects found" });
+            return res.status(200).json({ success: true, projects: [] });
         }
 
-        // Prepare a response with title and first image of each project
-        const projectDetails = projects.map(project => ({
-            title: project.title,
-            firstImage: project.images && project.images[0] ? project.images[0] : null,
-            videos: project.videos,
-            category: project.category,
-            description: project.description,
-        }));
-
-        res.status(200).json({ success: true, projects: projectDetails });
+        // Return complete project objects
+        res.status(200).json({ success: true, projects });
     } catch (error) {
         console.error("Error fetching user projects:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
+// Add a new route to get a specific project by ID
+router.get("/project/:id", async (req, res) => {
+    try {
+        const projectId = req.params.id;
+        
+        // Find the project by ID
+        const project = await Project.findById(projectId);
+        
+        if (!project) {
+            return res.status(404).json({ success: false, message: "Project not found" });
+        }
+
+        // Find the owner's information
+        const user = await User.findById(project.userId, 'name profilePicture');
+        
+        // Return project with owner information
+        res.status(200).json({ 
+            success: true, 
+            project: {
+                ...project._doc,
+                owner: user
+            } 
+        });
+    } catch (error) {
+        console.error("Error fetching project details:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 });

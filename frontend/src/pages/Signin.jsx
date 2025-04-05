@@ -1,10 +1,10 @@
 import { useState, useContext, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Helmet } from "react-helmet";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { ThemeContext } from "../context/ThemeContext";
+import api from "../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -48,8 +48,8 @@ const SignIn = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(
-                "http://localhost:5000/auth/login",
+            const res = await api.post(
+                "/auth/login",
                 { email, password },
                 { withCredentials: true }
             );
@@ -89,7 +89,7 @@ const SignIn = () => {
     };
 
     const handleGoogleLogin = () => {
-        window.open("http://localhost:5000/auth/google", "_self");
+        window.open(`${api.defaults.baseURL}/auth/google`, "_self");
     };
 
     return (

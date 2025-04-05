@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { IoMdDoneAll } from "react-icons/io";
-import { IoClose } from "react-icons/io5";
+import api from "../services/api";
 import { Helmet } from "react-helmet";
 import { ThemeContext } from "../context/ThemeContext";
 import { toast, ToastContainer } from "react-toastify";
@@ -37,47 +36,11 @@ const ResetPassword = () => {
         setIsProcessing(true);
 
         try {
-            const response = await fetch("http://localhost:5000/auth/resetpassword", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
-            });
+            const response = await api.post("/auth/resetpassword", { email });
 
-            const data = await response.json();
-            if (response.ok) {
-                toast(
-                    "Reset password link has been sent to your email. Please check your inbox & set a new password.",
-                    {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        style: getCustomToastStyle(theme),
-                        className: theme === "dark" ? "dark-theme" : "light-theme",
-                    }
-                );
-                setTimeout(() => navigate(`/signin`), 5000);
-            } else {
-                toast(
-                    data.message || "Something went wrong",
-                    {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        style: getCustomToastStyle(theme),
-                        className: theme === "dark" ? "dark-theme" : "light-theme",
-                    }
-                );
-            }            
-        } catch (error) {
             toast(
-                "Failed to send request. Please try again"
-                , {
+                "Reset password link has been sent to your email. Please check your inbox & set a new password.",
+                {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -88,10 +51,26 @@ const ResetPassword = () => {
                     className: theme === "dark" ? "dark-theme" : "light-theme",
                 }
             );
+
+            setTimeout(() => navigate(`/signin`), 5000);
+        } catch (error) {
+            const message = error?.response?.data?.message || "Failed to send request. Please try again";
+
+            toast(message, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
         } finally {
             setIsProcessing(false);
         }
     };
+
 
     return (
         <>

@@ -6,6 +6,9 @@ import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
+// Define API base URL as a constant
+const API_BASE_URL = api.defaults.baseURL;
+
 const Dashboard = () => {
     const categories = ["All", "UI/UX", "Motion Graphics", "Web Design", "App Design", "Graphic Design", "Fashion Design", "Other"];
     const [activeCategory, setActiveCategory] = useState("All");
@@ -20,14 +23,12 @@ const Dashboard = () => {
         const fetchProjectsByCategory = async () => {
             setLoading(true);
             try {
-                const apiUrl = "api/projects/all-projects";
-
                 // Important change: For "All" category, explicitly pass null or undefined to ensure backend doesn't use previous value
                 const params = activeCategory === "All"
                     ? { category: null }
                     : { category: activeCategory };
 
-                const response = await api.get(apiUrl, {
+                const response = await api.get( "/api/projects/all-projects", {
                     params: params,
                     withCredentials: true,
                 });
@@ -183,7 +184,7 @@ const Dashboard = () => {
                                                 <>
                                                     {/* Show Image by Default */}
                                                     <img
-                                                        src={`http://localhost:5000${project.images[0]}` || "/default-thumbnail.jpg"}
+                                                        src={`${API_BASE_URL}${project.images[0]}` || "/default-thumbnail.jpg"}
                                                         alt={project.title}
                                                         className="w-full h-full object-cover rounded-xl group-hover:hidden"
                                                     />
@@ -196,12 +197,12 @@ const Dashboard = () => {
                                                             muted
                                                             playsInline
                                                         >
-                                                            <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                            <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                             Your browser does not support the video tag.
                                                         </video>
                                                     ) : (
                                                         <img
-                                                            src={`http://localhost:5000${project.images[0]}` || "/default-thumbnail.jpg"}
+                                                            src={`${API_BASE_URL}${project.images[0]}` || "/default-thumbnail.jpg"}
                                                             alt={project.title}
                                                             className="w-full h-full object-cover rounded-xl hidden group-hover:block"
                                                         />
@@ -217,7 +218,7 @@ const Dashboard = () => {
                                                             playsInline
                                                             preload="metadata"
                                                         >
-                                                            <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                            <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                             Your browser does not support the video tag.
                                                         </video>
                                                     </div>
@@ -229,7 +230,7 @@ const Dashboard = () => {
                                                         muted
                                                         playsInline
                                                     >
-                                                        <source src={`http://localhost:5000${project.videos[0]}`} />
+                                                        <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                         Your browser does not support the video tag.
                                                     </video>
                                                 </>
@@ -250,7 +251,7 @@ const Dashboard = () => {
                                         {/* User Info at Bottom */}
                                         <div className="py-2 flex items-center gap-2 sm:gap-3">
                                             <img
-                                                src={`${project.userId?.profilePicture || "http://localhost:5000/uploads/default-profile.jpg"}`}
+                                                src={`${project.userId?.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}`}
                                                 alt={project.userId?.name || "Unknown"}
                                                 className="w-10 h-10 rounded-full object-cover"
                                             />

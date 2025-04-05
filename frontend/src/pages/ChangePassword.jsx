@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import api from "../services/api";
 import { ThemeContext } from "../context/ThemeContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,71 +39,32 @@ const ChangePassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (password !== confirmPassword) {
-      toast(
-        "Password do not match"
-        , {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          style: getCustomToastStyle(theme),
-          className: theme === "dark" ? "dark-theme" : "light-theme",
-        }
-      );
+      toast("Passwords do not match", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: getCustomToastStyle(theme),
+        className: theme === "dark" ? "dark-theme" : "light-theme",
+      });
       return;
     }
-
+  
     setIsProcessing(true);
-
+  
     try {
-      const response = await fetch("http://localhost:5000/auth/changepasswordwithtoken", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password, token }),
+      const response = await api.post("/auth/changepasswordwithtoken", {
+        password,
+        token,
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast(
-          "Your password has been reset successfully. Please log in with your new password.",
-          {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: getCustomToastStyle(theme),
-            className: theme === "dark" ? "dark-theme" : "light-theme",
-          }
-        );
-        setTimeout(() => navigate(`/signin`), 5000);
-      } else {
-        toast(
-          data.message || "Something went wrong",
-          {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            style: getCustomToastStyle(theme),
-            className: theme === "dark" ? "dark-theme" : "light-theme",
-          }
-        );
-      }
-    } catch (error) {
+  
       toast(
-        "Failed to send request. Please try again"
-        , {
+        "Your password has been reset successfully. Please log in with your new password.",
+        {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -113,10 +75,26 @@ const ChangePassword = () => {
           className: theme === "dark" ? "dark-theme" : "light-theme",
         }
       );
+  
+      setTimeout(() => navigate(`/signin`), 5000);
+    } catch (error) {
+      const errorMessage = error?.response?.data?.message || "Failed to send request. Please try again";
+  
+      toast(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: getCustomToastStyle(theme),
+        className: theme === "dark" ? "dark-theme" : "light-theme",
+      });
     } finally {
       setIsProcessing(false);
     }
   };
+  
 
   return (
     <>
