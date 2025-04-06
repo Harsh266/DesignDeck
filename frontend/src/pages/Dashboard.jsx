@@ -18,28 +18,43 @@ const Dashboard = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const { theme } = useContext(ThemeContext);
 
-    // Fetch projects when category changes
+    // Fetch all projects and apply category filtering client-side
     useEffect(() => {
-        const fetchProjectsByCategory = async () => {
+        const fetchProjects = async () => {
             setLoading(true);
             try {
-                // Important change: For "All" category, explicitly pass null or undefined to ensure backend doesn't use previous value
-                const params = activeCategory === "All"
-                    ? { category: null }
-                    : { category: activeCategory };
-
-                const response = await api.get( "/api/projects/all-projects", {
-                    params: params,
+                // Always fetch all projects
+                const response = await api.get("/api/projects/all-projects", {
                     withCredentials: true,
                 });
 
-                // Process response
                 if (response.data.success) {
-                    setProjects(response.data.projects || []);
-                    setFilteredProjects(response.data.projects || []);
+                    const allProjects = response.data.projects || [];
+
+                    // Ensure all projects have category as an array
+                    const normalizedProjects = allProjects.map(project => {
+                        // Convert string category to array
+                        if (typeof project.category === 'string') {
+                            console.log(`Normalizing project "${project.title}": converting category string "${project.category}" to array`);
+                            return { ...project, category: [project.category] };
+                        }
+                        // Ensure category is an array if it's undefined or null
+                        else if (!project.category) {
+                            console.log(`Normalizing project "${project.title}": setting missing category to ["Uncategorized"]`);
+                            return { ...project, category: ["Uncategorized"] };
+                        }
+                        // Keep as is if already an array
+                        return project;
+                    });
+
+                    setProjects(normalizedProjects);
+
+                    // Filter projects based on the active category
+                    filterProjectsByCategory(normalizedProjects, activeCategory);
                 } else {
                     setProjects([]);
                     setFilteredProjects([]);
+                    console.log("No projects fetched or API returned error");
                 }
             } catch (error) {
                 console.error(`Error fetching projects:`, error);
@@ -49,46 +64,95 @@ const Dashboard = () => {
                 setLoading(false);
             }
         };
-        setSearchQuery(""); // Reset search query when changing categories
 
-        fetchProjectsByCategory();
+        fetchProjects();
 
-        // Set interval for every 5 seconds
-        const interval = setInterval(fetchProjectsByCategory, 5000);
-
-        // Cleanup function to clear interval on unmount or category change
-        return () => clearInterval(interval);
     }, [activeCategory]);
+
+    // Helper function to filter projects by category
+    const filterProjectsByCategory = (projectsList, category) => {
+
+        if (category === "All") {
+            setFilteredProjects(projectsList);
+            return;
+        }
+
+        const filtered = projectsList.filter(project => {
+            if (Array.isArray(project.category)) {
+                const found = project.category.find(cat =>
+                    cat.trim().toLowerCase() === category.trim().toLowerCase()
+                );
+                return !!found;
+            } else if (typeof project.category === 'string') {
+                return project.category.trim().toLowerCase() === category.trim().toLowerCase();
+            } else {
+                return false;
+            }
+        });
+
+        setFilteredProjects(filtered);
+    };
 
     // Apply search filter whenever searchQuery changes
     useEffect(() => {
         if (!searchQuery.trim()) {
-            setFilteredProjects(projects);
+            // If no search query, just apply category filter to all projects
+            filterProjectsByCategory(projects, activeCategory);
             return;
         }
 
+        console.log(`Applying search filter: "${searchQuery}" with category: ${activeCategory}`);
+
+        // First, filter by search query
         const query = searchQuery.toLowerCase();
-        const filtered = projects.filter(project =>
+        const searchFiltered = projects.filter(project =>
             project.title.toLowerCase().includes(query) ||
             project.description?.toLowerCase().includes(query) ||
             project.userId?.name?.toLowerCase().includes(query)
         );
 
-        setFilteredProjects(filtered);
-    }, [searchQuery, projects]);
+        console.log(`Search found ${searchFiltered.length} matching projects`);
+
+        // Then apply category filter to search results
+        if (activeCategory === "All") {
+            setFilteredProjects(searchFiltered);
+            console.log(`Displaying all ${searchFiltered.length} search matches`);
+        } else {
+            const categoryFiltered = searchFiltered.filter(project => {
+                if (Array.isArray(project.category)) {
+                    const matches = project.category.includes(activeCategory);
+                    console.log(`Search-filtered project "${project.title}" [${project.category.join(', ')}] - Match with "${activeCategory}": ${matches}`);
+                    return matches;
+                } else if (typeof project.category === 'string') {
+                    const matches = project.category === activeCategory;
+                    console.log(`Search-filtered project "${project.title}" "${project.category}" - Match with "${activeCategory}": ${matches}`);
+                    return matches;
+                }
+                return false;
+            });
+            console.log(`Found ${categoryFiltered.length} projects matching both search and category`);
+            setFilteredProjects(categoryFiltered);
+        }
+    }, [searchQuery, projects, activeCategory]);
 
     // Handle category change
     const handleCategoryChange = (category) => {
         if (category === activeCategory) return; // Skip if same category
-
-        setLoading(true); // Show loading immediately
         setActiveCategory(category);
-        // The useEffect will handle fetching new data
+        setSearchQuery(""); // Reset search when changing categories
     };
 
     // Reset search
     const resetSearch = () => {
+        console.log("Search query reset");
         setSearchQuery("");
+    };
+
+    // Prevent form submission (which would refresh the page)
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        console.log(`Search submitted with query: "${searchQuery}"`);
+        // The search is already being handled by the useEffect
     };
 
     return (
@@ -112,7 +176,7 @@ const Dashboard = () => {
                         ready to take on your next project
                     </p>
                     <div className="mt-4 sm:mt-6 flex items-center justify-center px-4">
-                        <form className="w-full max-w-md relative">
+                        <form className="w-full max-w-md relative" onSubmit={handleSearchSubmit}>
                             <div className={`flex items-center px-3 py-2 rounded-full w-full ${theme === "dark" ? "bg-gray-800 text-white" : "bg-[#DCE6FF] text-gray-700"}`}>
                                 <input
                                     type="text"
@@ -173,7 +237,11 @@ const Dashboard = () => {
                         {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
                     </h3>
 
-                    {filteredProjects.length > 0 ? (
+                    {loading ? (
+                        <div className="flex justify-center items-center h-40">
+                            <p>Loading projects...</p>
+                        </div>
+                    ) : filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                             {filteredProjects.map((project, index) => (
                                 <Link to={`/view/${project._id}`} key={project._id || index} className="no-underline">
@@ -242,9 +310,23 @@ const Dashboard = () => {
                                                 />
                                             )}
 
-                                            {/* Category Label */}
-                                            <div className="absolute top-2 right-2 px-2 py-1 rounded-full text-xs bg-opacity-70 bg-black text-white">
-                                                {project.category || "Uncategorized"}
+                                            {/* Category Labels - Display multiple categories */}
+                                            <div className="absolute top-2 right-2 flex flex-wrap justify-end gap-1">
+                                                {Array.isArray(project.category) && project.category.length > 0 ? (
+                                                    project.category.map((cat, idx) => (
+                                                        <span key={idx} className="px-2 py-1 rounded-full text-xs bg-opacity-70 bg-black text-white">
+                                                            {cat}
+                                                        </span>
+                                                    ))
+                                                ) : project.category ? (
+                                                    <span className="px-2 py-1 rounded-full text-xs bg-opacity-70 bg-black text-white">
+                                                        {project.category}
+                                                    </span>
+                                                ) : (
+                                                    <span className="px-2 py-1 rounded-full text-xs bg-opacity-70 bg-black text-white">
+                                                        Uncategorized
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
 

@@ -99,46 +99,59 @@ router.get("/project/:id", async (req, res) => {
 router.get("/all-projects", async (req, res) => {
     try {
         const { category } = req.query;
-        const sessionKey = category ? `shuffled_${category}` : 'shuffled_all';
+        const sessionKey = category ? `shuffled_${category}` : "shuffled_all";
 
-        // Apply category filter if provided
-        let filter = category ? { category } : {};
-
-        // Fetch projects from the database
-        let projects = await Project.find(filter)
+        // Fetch all projects
+        let projects = await Project.find({})
             .populate("userId", "name profilePicture")
             .exec();
 
-        // Check if we have a stored shuffle order for this category
-        if (!req.session[sessionKey]) {
-            // First time viewing this category, shuffle and store
-            projects = projects.sort(() => Math.random() - 0.5);
+        // 🔧 Auto-fix improperly stored categories like ["Web Design,App Design"]
+        projects.forEach(async (project) => {
+            if (
+                Array.isArray(project.category) &&
+                project.category.length === 1 &&
+                project.category[0].includes(",")
+            ) {
+                const fixed = project.category[0].split(",").map((c) => c.trim());
+                project.category = fixed;
+                await project.save();
+            }
+        });
 
-            // Store project IDs in session for this category
-            req.session[sessionKey] = projects.map(p => p._id.toString());
+        // 🔍 Category Filter
+        let filteredProjects = projects;
+        if (category && category !== "All") {
+            filteredProjects = projects.filter((project) => {
+                return Array.isArray(project.category) &&
+                    project.category.find(
+                        (cat) => cat.trim().toLowerCase() === category.trim().toLowerCase()
+                    );
+            });
+        }
+
+        // 🌀 Shuffle and store order in session
+        if (!req.session[sessionKey]) {
+            filteredProjects = filteredProjects.sort(() => Math.random() - 0.5);
+            req.session[sessionKey] = filteredProjects.map((p) => p._id.toString());
         } else {
-            // We have a stored order, sort according to it
             const orderMap = {};
             req.session[sessionKey].forEach((id, index) => {
                 orderMap[id] = index;
             });
 
-            // Sort based on saved order
-            projects.sort((a, b) => {
+            filteredProjects.sort((a, b) => {
                 const idA = a._id.toString();
                 const idB = b._id.toString();
-
-                // Handle new projects (not in the stored order)
                 if (orderMap[idA] === undefined) return 1;
                 if (orderMap[idB] === undefined) return -1;
-
                 return orderMap[idA] - orderMap[idB];
             });
         }
 
-        res.status(200).json({ success: true, projects: projects });
+        res.status(200).json({ success: true, projects: filteredProjects });
     } catch (error) {
-        console.error("Error fetching projects:", error);
+        console.error("❌ Error fetching projects:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
