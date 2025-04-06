@@ -18,7 +18,7 @@ const SignIn = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"));
         if (user) {
-            if (user.email === "harshvekriya441@gmail.com") {
+            if (user.email === "harshvekriya441@gmail.com" || "ptwinkle837@gmail.com") {
                 navigate("/admin-notifications");
             } else {
                 navigate("/signin");
@@ -68,7 +68,7 @@ const SignIn = () => {
             });
 
             setTimeout(() => {
-                if (res.data.user.email === "harshvekariya441@gmail.com") {
+                if (res.data.user.email === "harshvekariya441@gmail.com" || "ptwinkle837@gmail.com") {
                     navigate("/admin-notifications");
                 } else {
                     navigate("/dashboard");
