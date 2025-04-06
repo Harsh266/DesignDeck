@@ -18,12 +18,15 @@ const SignIn = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"));
         if (user) {
-            if (user.email === "harshvekriya441@gmail.com" || "ptwinkle837@gmail.com") {
-                navigate("/admin-notifications");
+            const adminEmails = ["harshvekriya441@gmail.com", "ptwinkle837@gmail.com"];
+        
+            if (adminEmails.includes(user.email)) {
+                navigate("/admin-dashboard");
             } else {
                 navigate("/signin");
             }
         }
+        
     }, [navigate]);
 
     const getCustomToastStyle = (theme) => ({
@@ -68,11 +71,16 @@ const SignIn = () => {
             });
 
             setTimeout(() => {
-                if (res.data.user.email === "harshvekariya441@gmail.com" || "ptwinkle837@gmail.com") {
+
+                const adminEmails = ["harshvekariya441@gmail.com", "ptwinkle837@gmail.com"];
+
+                if (adminEmails.includes(res.data.user.email)) {
                     navigate("/admin-notifications");
                 } else {
                     navigate("/dashboard");
                 }
+
+
             }, 3000);
         } catch (error) {
             toast("Incorrect email or password!", {
