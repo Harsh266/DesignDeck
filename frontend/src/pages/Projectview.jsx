@@ -168,11 +168,18 @@ const ProjectView = () => {
                                                 onClick={handleLikeToggle}
                                             >
                                                 <i
-                                                    className={`${liked ? "ri-heart-fill" : "ri-heart-line"
-                                                        } text-base sm:text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                                                    className={`ri-heart-fill text-base sm:text-lg ${liked
+                                                            ? theme === "dark"
+                                                                ? "text-blue-400"
+                                                                : "text-blue-600"
+                                                            : theme === "dark"
+                                                                ? "text-gray-200"
+                                                                : "text-gray-600"
                                                         }`}
-                                                ></i>
+                                                />
+
                                             </button>
+
 
 
                                             {/* Profile Button */}
