@@ -65,7 +65,14 @@ const Dashboard = () => {
             }
         };
 
-        fetchProjects();
+
+        fetchProjects(); // initial call
+
+        const interval = setInterval(() => {
+            fetchProjects();
+        }, 5000); // every 5 seconds
+
+        return () => clearInterval(interval); // cleanup on unmount
 
     }, [activeCategory]);
 
@@ -237,11 +244,7 @@ const Dashboard = () => {
                         {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
                     </h3>
 
-                    {loading ? (
-                        <div className="flex justify-center items-center h-40">
-                            <p>Loading projects...</p>
-                        </div>
-                    ) : filteredProjects.length > 0 ? (
+                    {filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
                             {filteredProjects.map((project, index) => (
                                 <Link to={`/view/${project._id}`} key={project._id || index} className="no-underline">

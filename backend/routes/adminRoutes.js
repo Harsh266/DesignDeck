@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/User");
+const Project = require("../models/Project");
 const router = express.Router();
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
@@ -23,25 +24,28 @@ router.get("/all-users", adminAuth, async (req, res) => {
 });
 
 // ✅ DELETE User by ID (Admin Only)
+
+
 router.delete("/delete-user/:id", adminAuth, async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Find and delete user by _id
+        // Delete the user
         const deletedUser = await User.findByIdAndDelete(id);
 
         if (!deletedUser) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json({ message: `User with ID ${id} deleted successfully` });
+        // Delete all projects related to the user
+        await Project.deleteMany({ userId: id });
+
+        res.status(200).json({ message: `User with ID ${id} and their projects deleted successfully` });
     } catch (error) {
-        console.error("Error deleting user:", error);
+        console.error("Error deleting user and projects:", error);
         res.status(500).json({ message: "Server error" });
     }
 });
-
-
 
 
 // ✅ Admin Send mail to all users
