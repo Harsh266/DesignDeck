@@ -15,7 +15,6 @@ const Dashboard = () => {
     const [projects, setProjects] = useState([]);
     const [filteredProjects, setFilteredProjects] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState("");
     const { theme } = useContext(ThemeContext);
 
     // Fetch all projects and apply category filtering client-side
@@ -100,68 +99,12 @@ const Dashboard = () => {
         setFilteredProjects(filtered);
     };
 
-    // Apply search filter whenever searchQuery changes
-    useEffect(() => {
-        if (!searchQuery.trim()) {
-            // If no search query, just apply category filter to all projects
-            filterProjectsByCategory(projects, activeCategory);
-            return;
-        }
-
-        console.log(`Applying search filter: "${searchQuery}" with category: ${activeCategory}`);
-
-        // First, filter by search query
-        const query = searchQuery.toLowerCase();
-        const searchFiltered = projects.filter(project =>
-            project.title.toLowerCase().includes(query) ||
-            project.description?.toLowerCase().includes(query) ||
-            project.userId?.name?.toLowerCase().includes(query)
-        );
-
-        console.log(`Search found ${searchFiltered.length} matching projects`);
-
-        // Then apply category filter to search results
-        if (activeCategory === "All") {
-            setFilteredProjects(searchFiltered);
-            console.log(`Displaying all ${searchFiltered.length} search matches`);
-        } else {
-            const categoryFiltered = searchFiltered.filter(project => {
-                if (Array.isArray(project.category)) {
-                    const matches = project.category.includes(activeCategory);
-                    console.log(`Search-filtered project "${project.title}" [${project.category.join(', ')}] - Match with "${activeCategory}": ${matches}`);
-                    return matches;
-                } else if (typeof project.category === 'string') {
-                    const matches = project.category === activeCategory;
-                    console.log(`Search-filtered project "${project.title}" "${project.category}" - Match with "${activeCategory}": ${matches}`);
-                    return matches;
-                }
-                return false;
-            });
-            console.log(`Found ${categoryFiltered.length} projects matching both search and category`);
-            setFilteredProjects(categoryFiltered);
-        }
-    }, [searchQuery, projects, activeCategory]);
-
     // Handle category change
     const handleCategoryChange = (category) => {
         if (category === activeCategory) return; // Skip if same category
         setActiveCategory(category);
         setSearchQuery(""); // Reset search when changing categories
     };
-
-    // Reset search
-    const resetSearch = () => {
-        console.log("Search query reset");
-        setSearchQuery("");
-    };
-
-    // Prevent form submission (which would refresh the page)
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        console.log(`Search submitted with query: "${searchQuery}"`);
-        // The search is already being handled by the useEffect
-    };
-
     return (
         <>
             <Helmet>
@@ -183,24 +126,13 @@ const Dashboard = () => {
                         ready to take on your next project
                     </p>
                     <div className="mt-4 sm:mt-6 flex items-center justify-center px-4">
-                        <form className="w-full max-w-md relative" onSubmit={handleSearchSubmit}>
+                        <form className="w-full max-w-md relative">
                             <div className={`flex items-center px-3 py-2 rounded-full w-full ${theme === "dark" ? "bg-gray-800 text-white" : "bg-[#DCE6FF] text-gray-700"}`}>
                                 <input
                                     type="text"
                                     placeholder="Find your inspiration"
                                     className={`w-full bg-transparent outline-none px-2 text-sm sm:text-base ${theme === "dark" ? "text-white" : "text-gray-700"}`}
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
                                 />
-                                {searchQuery && (
-                                    <button
-                                        type="button"
-                                        onClick={resetSearch}
-                                        className="mr-1 text-gray-400 hover:text-gray-600"
-                                    >
-                                        <i className="ri-close-line"></i>
-                                    </button>
-                                )}
                                 <button
                                     type="submit"
                                     className={`rounded-full px-2 py-1 sm:px-3 sm:py-2 ${theme === "dark" ? "bg-gray-600" : "bg-[#9091FF]"}`}
@@ -334,20 +266,28 @@ const Dashboard = () => {
                                         </div>
 
                                         {/* User Info at Bottom */}
-                                        <div className="py-2 flex items-center gap-2 sm:gap-3">
-                                            <img
-                                                src={`${project.userId?.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}`}
-                                                alt={project.userId?.name || "Unknown"}
-                                                className="w-10 h-10 rounded-full object-cover"
-                                            />
-                                            <div className="flex flex-col">
-                                                <h2 className={`font-semibold text-sm sm:text-base break-words max-w-[180px] sm:max-w-[220px] md:max-w-full ${theme === "dark" ? "text-white" : "text-black"}`}>
-                                                    {project.title}
-                                                </h2>
+                                        <div className="py-2 flex items-center justify-between gap-3">
+                                            {/* User Info */}
+                                            <div className="flex items-center gap-2 sm:gap-3">
+                                                <img
+                                                    src={project.userId?.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
+                                                    alt={project.userId?.name || "Unknown"}
+                                                    className="w-10 h-10 rounded-full object-cover"
+                                                />
+                                                <div className="flex flex-col">
+                                                    <h2 className={`font-semibold text-sm sm:text-base break-words max-w-[180px] sm:max-w-[220px] md:max-w-full ${theme === "dark" ? "text-white" : "text-black"}`}>
+                                                        {project.title}
+                                                    </h2>
+                                                    <p className={`text-xs sm:text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                                                        {project.userId?.name || "Unknown User"}
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                                                <p className={`text-xs sm:text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                                                    {project.userId?.name || "Unknown User"}
-                                                </p>
+                                            {/* Like Count - Simply display the count from project.likeCount */}
+                                            <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
+                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : "text-blue-500"}`}></i> 
+                                                {project.likeCount || 0}
                                             </div>
                                         </div>
                                     </div>

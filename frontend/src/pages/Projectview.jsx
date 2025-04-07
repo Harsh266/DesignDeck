@@ -14,6 +14,8 @@ const ProjectView = () => {
     const [allMedia, setAllMedia] = useState([]);
     const [expanded, setExpanded] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
     const { theme } = useContext(ThemeContext);
     const location = useLocation();
     const { projectId } = useParams();
@@ -50,6 +52,9 @@ const ProjectView = () => {
                     const mediaList = [...videosList, ...imagesList];
 
                     setAllMedia(mediaList);
+
+                    // Fetch like status for this project
+                    fetchLikeStatus(id);
                 } else {
                     console.error("Failed to fetch project details");
                 }
@@ -62,6 +67,39 @@ const ProjectView = () => {
 
         fetchProjectDetails();
     }, [projectId, location]);
+
+    const fetchLikeStatus = async (id) => {
+        try {
+            const likeStatusRes = await api.get(`/api/projects/like/${id}`, {
+                withCredentials: true,
+            });
+
+            if (likeStatusRes.data.success) {
+                setLiked(likeStatusRes.data.liked);
+                setLikeCount(likeStatusRes.data.likeCount);
+            }
+        } catch (error) {
+            console.error(`❌ Like status error for project ${id}:`, error.response?.data || error.message);
+        }
+    };
+
+    const handleLikeToggle = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        try {
+            const res = await api.post(`/api/projects/like/${projectId}`, {}, {
+                withCredentials: true,
+            });
+
+            if (res.data.success) {
+                setLiked(res.data.liked);
+                setLikeCount(res.data.likeCount);
+            }
+        } catch (error) {
+            console.error("❌ Toggle like error:", error.response?.data || error.message);
+        }
+    };
 
     if (!project) {
         return (
@@ -87,15 +125,15 @@ const ProjectView = () => {
                 <title>{project.title} - DesignDeck</title>
             </Helmet>
             <Navbar />
-            <div className={`w-full mx-auto px-2 sm:px-4 md:px-6 pt-16 pb-10 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                <div className={`grid gap-4 md:gap-6 lg:gap-8 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+            <div className={`w-full min-h-screen mx-auto px-2 sm:px-4 md:px-6 pt-16 pb-10 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                <div className={`grid gap-4 md:gap-6 lg:gap-8`}>
                     {allMedia.map((media, index) => (
                         <div key={index} className="w-full max-w-2xl mx-auto relative">
                             {/* Profile Card only on first media */}
                             {index === 0 && (
                                 <div
                                     className={`fixed z-[2] bottom-4 sm:bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 shadow-lg rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center ${theme === "dark"
-                                        ? "bg-black text-white"
+                                        ? "bg-gray-900 text-white"
                                         : "bg-white text-black"
                                         } ${isCollapsed ? "w-22 sm:w-26" : "w-[92%] sm:w-[85%] md:w-[80%] max-w-md"}`}
                                 >
@@ -123,19 +161,33 @@ const ProjectView = () => {
                                             </div>
                                         )}
                                         <div className="flex gap-1 sm:gap-2 flex-shrink-0">
-                                            {/* Profile Button */}
-                                            <Link to={`/profile/${project.userId?._id}`}>
+                                            {/* Like Button */}
                                             <button
-                                                className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
-                                                    ? "bg-gray-700 hover:bg-gray-600"
-                                                    : "bg-gray-200 hover:bg-gray-300"
+                                                className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
                                                     }`}
+                                                onClick={handleLikeToggle}
                                             >
                                                 <i
-                                                    className={`ri-user-fill text-base sm:text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                                                    className={`${liked ? "ri-heart-fill" : "ri-heart-line"
+                                                        } text-base sm:text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
                                                         }`}
                                                 ></i>
                                             </button>
+
+
+                                            {/* Profile Button */}
+                                            <Link to={`/profile/${project.userId?._id}`}>
+                                                <button
+                                                    className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark"
+                                                        ? "bg-gray-700 hover:bg-gray-600"
+                                                        : "bg-gray-200 hover:bg-gray-300"
+                                                        }`}
+                                                >
+                                                    <i
+                                                        className={`ri-user-fill text-base sm:text-lg ${theme === "dark" ? "text-gray-300" : "text-gray-600"
+                                                            }`}
+                                                    ></i>
+                                                </button>
                                             </Link>
 
                                             {/* Three-dot Button (Reopen Profile Section) */}
@@ -195,7 +247,7 @@ const ProjectView = () => {
                                             }`}
                                     >
                                         <div
-                                            className={`p-2 shadow-md rounded-lg max-h-24 overflow-y-auto custom-scrollbar ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"
+                                            className={`p-2 shadow-md rounded-lg max-h-24 overflow-y-auto custom-scrollbar ${theme === "dark" ? "bg-gray-800" : "bg-gray-100"
                                                 }`}
                                         >
                                             <p

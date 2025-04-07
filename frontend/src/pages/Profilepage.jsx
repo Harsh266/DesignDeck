@@ -79,7 +79,30 @@ const Profilepage = () => {
                 });
 
                 if (response.data.success) {
-                    setProjects(response.data.projects);  // Set the projects data
+                    // For each project, fetch the like status
+                    const projectsWithLikes = await Promise.all(
+                        response.data.projects.map(async (project) => {
+                            try {
+                                const likeResponse = await api.get(`/api/projects/like/${project._id}`, {
+                                    withCredentials: true,
+                                });
+                                
+                                if (likeResponse.data.success) {
+                                    return {
+                                        ...project,
+                                        likeCount: likeResponse.data.likeCount,
+                                        liked: likeResponse.data.liked
+                                    };
+                                }
+                                return project;
+                            } catch (error) {
+                                console.error(`Error fetching like status for project ${project._id}:`, error);
+                                return project;
+                            }
+                        })
+                    );
+                    
+                    setProjects(projectsWithLikes);
                 } else {
                     console.error("Error: ", response.data.message);
                 }
@@ -370,7 +393,8 @@ const Profilepage = () => {
                                                     </p>
 
                                                     <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
-                                                        <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
+                                                        <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 
+                                                        {project.likeCount || 0}
                                                     </div>
                                                 </div>
                                             </div>

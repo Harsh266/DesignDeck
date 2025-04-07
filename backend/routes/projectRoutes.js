@@ -69,24 +69,24 @@ router.get("/user-projects", authMiddleware, async (req, res) => {
 router.get("/project/:id", async (req, res) => {
     try {
         const projectId = req.params.id;
-        
+
         // Find the project by ID
         const project = await Project.findById(projectId);
-        
+
         if (!project) {
             return res.status(404).json({ success: false, message: "Project not found" });
         }
 
         // Find the owner's information
         const user = await User.findById(project.userId, 'name profilePicture');
-        
+
         // Return project with owner information
-        res.status(200).json({ 
-            success: true, 
+        res.status(200).json({
+            success: true,
             project: {
                 ...project._doc,
                 owner: user
-            } 
+            }
         });
     } catch (error) {
         console.error("Error fetching project details:", error);
@@ -247,6 +247,69 @@ router.get('/projects/user/:userId', async (req, res) => {
         });
     }
 });
+
+// Like/Unlike a project
+router.post("/like/:projectId", async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        const userId = req.user._id;
+
+        const project = await Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ success: false, message: "Project not found" });
+        }
+
+        const hasLiked = project.likedBy.includes(userId);
+
+        if (hasLiked) {
+            // Unlike
+            project.likedBy.pull(userId);
+            project.likeCount -= 1;
+        } else {
+            // Like
+            project.likedBy.push(userId);
+            project.likeCount += 1;
+        }
+
+        await project.save();
+
+        return res.status(200).json({
+            success: true,
+            liked: !hasLiked,
+            likeCount: project.likeCount,
+        });
+
+    } catch (error) {
+        console.error("Toggle Like Error:", error);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
+// Get like status for a user
+router.get("/like/:projectId", async (req, res) => {
+    try {
+        const { projectId } = req.params;
+        const userId = req.user._id;
+
+        const project = await Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ success: false, message: "Project not found" });
+        }
+
+        const liked = project.likedBy.includes(userId);
+
+        return res.status(200).json({
+            success: true,
+            liked,
+            likeCount: project.likeCount,
+        });
+
+    } catch (error) {
+        console.error("Check Like Status Error:", error);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }
+});
+
 
 // Create email transporter
 const transporter = nodemailer.createTransport({
