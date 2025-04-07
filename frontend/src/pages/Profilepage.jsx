@@ -306,9 +306,6 @@ const Profilepage = () => {
 
                     {/* Projects Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
-                        {loading ? (
-                            <p>Loading...</p>
-                        ) : (
                             <>
                                 {projects?.length > 0 ? (
                                     projects?.map((project, index) => (
@@ -417,7 +414,6 @@ const Profilepage = () => {
                                     </p>
                                 </div>
                             </>
-                        )}
                     </div>
                 </div>
 

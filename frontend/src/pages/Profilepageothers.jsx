@@ -358,12 +358,13 @@ const Profilepageothers = () => {
                                         </div>
 
                                         <div className="flex items-center justify-between mt-1">
-                                        <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
+                                            <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
                                                 {project.title}
                                             </p>
 
                                             <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
-                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 582
+                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 
+                                                {project.likeCount || 0}
                                             </div>
                                         </div>
                                     </div>
