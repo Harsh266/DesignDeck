@@ -38,7 +38,7 @@ const Profilepageothers = () => {
     const [isSending, setIsSending] = useState(false);
     const { theme } = useContext(ThemeContext);
     const { userId } = useParams();
-    
+
     // Form data state
     const [contactForm, setContactForm] = useState({
         projectDetails: "",
@@ -106,7 +106,7 @@ const Profilepageothers = () => {
     // Handle form submission
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        
+
         if (!contactForm.projectDetails.trim()) {
             toast("Please provide project details", {
                 position: "top-right",
@@ -120,9 +120,9 @@ const Profilepageothers = () => {
             });
             return;
         }
-        
+
         setIsSending(true);
-        
+
         try {
             const response = await api.post(
                 `/api/projects/users/contact`,
@@ -135,7 +135,7 @@ const Profilepageothers = () => {
                 },
                 { withCredentials: true }
             );
-            
+
             if (response.data.success) {
                 toast("Message sent successfully!", {
                     position: "top-right",
@@ -255,11 +255,36 @@ const Profilepageothers = () => {
 
                         {/* Social Icons */}
                         <div className="mt-4 sm:mt-0 sm:ml-auto flex gap-3 self-end sm:self-auto">
-                            <div className={`w-10 h-10 p-2 rounded-full flex items-center justify-center ${theme === "dark" ? "bg-purple-900 text-purple-400" : "bg-purple-100 text-purple-500"}`}>
-                                <i className="ri-dribbble-line text-xl"></i>
+                            {/* Instagram */}
+                            <div className="relative group">
+                                <a
+                                    href={user.dribbbleProfile || "#"}
+                                    target={user.dribbbleProfile ? "_blank" : "_self"}
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 p-2 rounded-full flex items-center justify-center transition-all cursor-pointer  hover:scale-110 active:scale-95 "
+                                    style={{
+                                        backgroundColor: theme === "dark" ? "#833AB4" : "#FEE2FE",
+                                        color: theme === "dark" ? "#FBC2EB" : "#C13584"
+                                    }}
+                                >
+                                    <i className="ri-dribbble-line text-xl"></i>
+                                </a>
                             </div>
-                            <div className={`w-10 h-10 p-2 rounded-full flex items-center justify-center ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-blue-100 text-blue-500"}`}>
-                                <i className="ri-behance-line text-xl"></i>
+
+                            {/* Behance */}
+                            <div className="relative group">
+                                <a
+                                    href={user.behanceProfile || "#"}
+                                    target={user.behanceProfile ? "_blank" : "_self"}
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 p-2 rounded-full flex items-center justify-center transition-all cursor-pointer  hover:scale-110 active:scale-95 "
+                                    style={{
+                                        backgroundColor: theme === "dark" ? "#1E40AF" : "#DBEAFE",
+                                        color: theme === "dark" ? "#93C5FD" : "#3B82F6"
+                                    }}
+                                >
+                                    <i className="ri-behance-line text-xl"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -363,7 +388,7 @@ const Profilepageothers = () => {
                                             </p>
 
                                             <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
-                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 
+                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i>
                                                 {project.likeCount || 0}
                                             </div>
                                         </div>
@@ -460,16 +485,15 @@ const Profilepageothers = () => {
                                     placeholder="Enter amount"
                                     type="number"
                                 />
-                                
+
                                 {/* Send Message Button */}
                                 <button
                                     type="submit"
                                     disabled={isSending}
-                                    className={`text-sm sm:text-md font-medium w-full py-2 sm:py-3 mt-4 rounded-full cursor-pointer transition-all ${
-                                        isSending 
+                                    className={`text-sm sm:text-md font-medium w-full py-2 sm:py-3 mt-4 rounded-full cursor-pointer transition-all ${isSending
                                             ? `${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-gray-300 text-gray-500"}`
                                             : `${theme === "dark" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-[#376CFF] hover:bg-[#2C5CFF] text-white"}`
-                                    }`}
+                                        }`}
                                 >
                                     {isSending ? (
                                         <span>Sending...</span>
