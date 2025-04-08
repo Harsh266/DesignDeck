@@ -9,6 +9,8 @@ import { CardContainer } from "../UI/3d-card";
 const Landingpage = () => {
     const { theme, toggleTheme } = useContext(ThemeContext);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
+    const [termsOfServiceOpen, setTermsOfServiceOpen] = useState(false);
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
@@ -260,8 +262,8 @@ const Landingpage = () => {
                         <CardContainer>
                             <div
                                 className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${theme === "dark"
-                                        ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                        : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
                                     }`}
                             >
                                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#DCE6FF] self-start">
@@ -403,79 +405,138 @@ const Landingpage = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Explore Section */}
-                <div
-                    id="explore"
-                    className={`w-full relative py-14 px-4 sm:px-6 md:px-10 lg:px-20 transition-all duration-300 ${theme === "dark"
-                        ? "bg-black text-white"
-                        : "bg-white text-black"
-                        }`}
-                >
-                    <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 md:gap-10">
-                        {/* Left Side - Title & Description */}
-                        <div className="flex-1 text-center md:text-left">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 sm:mb-6 leading-tight">
-                                Let's Connect
-                            </h2>
-                            <p className="text-base sm:text-lg text-gray-400 md:w-[85%]">
-                                Got questions? Need help? We're here for you! Reach out to us
-                                for anything related to admissions, courses, or assistance.
-                            </p>
-                        </div>
-
-                        {/* Right Side - Contact Card with Aesthetic Gradient */}
-                        <div className="relative w-full md:w-auto p-6 rounded-2xl bg-gradient-to-br from-[#4f46e5] to-[#d946ef] shadow-xl text-center mt-6 md:mt-0">
-                            <h3 className="text-xl sm:text-2xl font-semibold mb-3 text-white">
-                                Contact Us
-                            </h3>
-                            <p className="text-sm sm:text-base text-gray-200 mb-6">
-                                We're just a click away for your queries!
-                            </p>
-                            <Link to="/contactus">
-                                <button className="bg-white text-indigo-600 text-base sm:text-lg font-semibold py-2 px-6 rounded-lg transition-all duration-300 hover:bg-gray-200 hover:scale-105 shadow-md cursor-pointer">
-                                    Get in Touch
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-
                 <hr className={`border-t transition-all ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
 
                 {/* Footer Section */}
-                <footer
-                    className={`py-4 px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 transition-all ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
+                <footer id="explore"
+                    className={`px-6 sm:px-10 pt-10 pb-5 text-sm transition-all ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                        }`}
                 >
-                    {/* Left Side - Copyright */}
-                    <p className="text-xs sm:text-sm">
-                        &copy; {new Date().getFullYear()} DesignDeck. All rights reserved.
-                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 border-b border-gray-600 pb-8">
+                        {/* Brand Info */}
+                        <div>
+                            <h2 className="text-xl font-bold mb-3">DesignDeck</h2>
+                            <p className="text-sm text-gray-400">
+                                Empower your creativity and build stunning project showcases with DesignDeck.
+                            </p>
+                        </div>
 
-                    {/* Right Side - Social Media Links */}
-                    <div className="flex space-x-4">
-                        <a
-                            href="www.github.com"
-                            className={`hover:transition-all ${theme === "dark" ? "hover:text-gray-400" : "hover:text-gray-600"}`}
-                        >
-                            <i className="ri-github-line text-lg sm:text-xl"></i>
-                        </a>
-                        <a
-                            href="www.twitter.com"
-                            className={`hover:transition-all ${theme === "dark" ? "hover:text-gray-400" : "hover:text-gray-600"}`}
-                        >
-                            <i className="ri-twitter-x-line text-lg sm:text-xl"></i>
-                        </a>
-                        <a
-                            href="www.instagram.com"
-                            className={`hover:transition-all ${theme === "dark" ? "hover:text-gray-400" : "hover:text-gray-600"}`}
-                        >
-                            <i className="ri-instagram-line text-lg sm:text-xl"></i>
-                        </a>
-                        <Link to="/document"><i className="ri-file-list-2-line text-lg sm:text-xl"></i></Link>
+                        {/* Quick Links */}
+                        <div>
+                            <h2 className="text-lg font-semibold mb-3">Quick Links</h2>
+                            <ul className="space-y-2 text-gray-400">
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#features">Features</a></li>
+                                <li><Link to="/signup">Get Started</Link></li>
+                                <li><Link to="/document">Docs</Link></li>
+                            </ul>
+                        </div>
 
+                        {/* Contact Info */}
+                        <div>
+                            <h2 className="text-lg font-semibold mb-3">Connect With Us</h2>
+                            <div className="flex space-x-3 mb-3">
+                                <a href="https://github.com/Harsh266/DesignDeck" target="_blank" rel="noopener noreferrer">
+                                    <i className="ri-github-line text-xl"></i>
+                                </a>
+                                <Link to="/contactus">
+                                    <i className="ri-contacts-line text-xl"></i>
+                                </Link>
+                            </div>
+                            <div className="text-gray-400 space-y-1">
+                                <p><i className="ri-mail-line mr-2"></i> design.deck@email.com</p>
+                                <p><i className="ri-phone-line mr-2"></i> +91 XXXXX - XXXXX</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Bottom Bar - Modified to use buttons instead of Links for popups */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center mt-5 text-gray-400 text-xs sm:text-sm gap-3">
+                        <p>&copy; {new Date().getFullYear()} DesignDeck. All rights reserved.</p>
+                        <div className="flex space-x-4">
+                            <button
+                                onClick={() => setPrivacyPolicyOpen(true)}
+                                className="hover:text-gray-300 cursor-pointer"
+                            >
+                                Privacy Policy
+                            </button>
+                            <button
+                                onClick={() => setTermsOfServiceOpen(true)}
+                                className="hover:text-gray-300 cursor-pointer"
+                            >
+                                Terms of Service
+                            </button>
+                        </div>
                     </div>
                 </footer>
+
+                {/* Privacy Policy Modal */}
+                {privacyPolicyOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
+                        <div
+                            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
+                            onClick={() => setPrivacyPolicyOpen(false)}
+                        ></div>
+
+                        <div
+                            className={`relative max-w-2xl w-full max-h-[80vh] overflow-y-auto rounded-lg shadow-xl transform transition-all ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+                                }`}
+                        >
+                            <div className="px-6 py-4 border-b border-gray-300 flex justify-between items-center">
+                                <h3 className="text-xl font-bold">Privacy Policy</h3>
+                                <button
+                                    onClick={() => setPrivacyPolicyOpen(false)}
+                                    className="text-2xl focus:outline-none cursor-pointer"
+                                >
+                                    &times;
+                                </button>
+                            </div>
+
+                            <div className="p-6 overflow-y-auto">
+                                <p className="mb-6">
+                                    At DesignDeck, your privacy is our priority. We collect minimal personal information solely to provide and improve our services, including features like user profiles, saved projects, and personalized dashboards. Any data you provide—such as your name, email, or content uploads—is securely stored and never shared with third parties without your consent. We implement strong technical safeguards to ensure data protection, but no system is completely invulnerable. You may access, update, or delete your information anytime through your account settings. Continued use of our platform implies your agreement with our practices. We may update this policy occasionally and will notify users of major changes. If you have any concerns, feel free to contact us at design.deck@email.com.
+                                </p>
+
+                                <p className="text-sm text-gray-500 mt-6">Last Updated: April 8, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
+                {/* Terms of Service Modal */}
+                {termsOfServiceOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 overflow-y-auto">
+                        <div
+                            className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
+                            onClick={() => setTermsOfServiceOpen(false)}
+                        ></div>
+
+                        <div
+                            className={`relative max-w-2xl w-full max-h-[80vh] overflow-y-auto rounded-lg shadow-xl transform transition-all ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
+                                }`}
+                        >
+                            <div className="px-6 py-4 border-b border-gray-300 flex justify-between items-center">
+                                <h3 className="text-xl font-bold">Terms & Conditions</h3>
+                                <button
+                                    onClick={() => setTermsOfServiceOpen(false)}
+                                    className="text-2xl focus:outline-none cursor-pointer"
+                                >
+                                    &times;
+                                </button>
+                            </div>
+
+                            <div className="p-6 overflow-y-auto">
+                                <p className="mb-6">
+                                    By accessing or using DesignDeck, you agree to be bound by these Terms & Conditions. You must use the platform responsibly, refrain from uploading harmful or illegal content, and respect other users. DesignDeck grants you a limited, non-exclusive license to use its services for personal, creative purposes. You retain ownership of your projects but allow us to display them on your profile and within the platform for discovery. We may modify features or suspend accounts that violate these terms. We’re not liable for losses or damages arising from user misuse or downtime. These terms may change over time, and continued use implies acceptance of updates.
+                                </p>
+
+                                <p className="text-sm text-gray-500 mt-6">Last Updated: April 8, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div>
         </>
     );
