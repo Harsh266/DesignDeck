@@ -99,6 +99,7 @@ const projectRoutes = require("./routes/projectRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 app.use("/auth", authRoutes);
 app.use("/auth", googleAuthRoutes);
@@ -107,6 +108,7 @@ app.use("/auth", updateProfileRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/notifications", notificationRoutes);
+app.use("/api/users", userRoutes);
 app.use("/admin", adminRoutes);
 
 // ✅ Static File Serving

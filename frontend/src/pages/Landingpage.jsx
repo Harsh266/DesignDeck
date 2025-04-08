@@ -405,7 +405,6 @@ const Landingpage = () => {
                         </div>
                     </div>
                 </div>
-                <hr className={`border-t transition-all ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} />
 
                 {/* Footer Section */}
                 <footer id="explore"

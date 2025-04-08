@@ -36,6 +36,10 @@ const Profilepageothers = () => {
     const [error, setError] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isSending, setIsSending] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [isFollowActionLoading, setIsFollowActionLoading] = useState(false);
+    const [followersCount, setFollowersCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
     const { theme } = useContext(ThemeContext);
     const { userId } = useParams();
 
@@ -56,6 +60,21 @@ const Profilepageothers = () => {
 
                 if (response.data.success) {
                     setUser(response.data.user);
+
+                    // Check if current user is following this profile
+                    const currentUser = response.data.currentUser;
+                    if (currentUser && response.data.user.followers) {
+                        setIsFollowing(response.data.user.followers.includes(currentUser._id));
+                    }
+
+                    // Set followers and following counts
+                    if (response.data.user.followers) {
+                        setFollowersCount(response.data.user.followers.length);
+                    }
+
+                    if (response.data.user.following) {
+                        setFollowingCount(response.data.user.following.length);
+                    }
                 } else {
                     console.error("Failed to fetch user profile");
                     setError("Failed to fetch user profile");
@@ -89,6 +108,64 @@ const Profilepageothers = () => {
             fetchUserProjects();
         }
     }, [userId]);
+
+    useEffect(() => {
+        const checkIfFollowing = async () => {
+            if (!user || !userId) return;
+
+            try {
+                const response = await api.get(`/api/users/${userId}/is-following`, {
+                    withCredentials: true,
+                });
+
+                if (response.data?.isFollowing) {
+                    setIsFollowing(true);
+                } else {
+                    setIsFollowing(false);
+                }
+            } catch (error) {
+                console.error("Error checking follow status:", error);
+            }
+        };
+
+        checkIfFollowing();
+    }, [user, userId]);
+
+    const handleFollowToggle = async () => {
+        if (!user) return;
+
+        setIsFollowActionLoading(true);
+        try {
+            const endpoint = isFollowing
+                ? `/api/users/unfollow/${userId}`
+                : `/api/users/follow/${userId}`;
+
+            const response = await api.put(endpoint, {}, {
+                withCredentials: true,
+            });
+
+            if (response.data) {
+                setIsFollowing(!isFollowing);
+                setFollowersCount(prev => isFollowing ? Math.max(0, prev - 1) : prev + 1);
+
+                toast(`${isFollowing ? "Unfollowed" : "Followed"} successfully`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    style: getCustomToastStyle(theme),
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
+                });
+            }
+        } catch (error) {
+            toast(error.response?.data?.message || "Error updating follow status", {
+                position: "top-right",
+                autoClose: 3000,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+        } finally {
+            setIsFollowActionLoading(false);
+        }
+    };
 
     const getDefaultImage = (type) => {
         return `${API_BASE_URL}/uploads/default-${type}.jpg`;
@@ -244,14 +321,63 @@ const Profilepageothers = () => {
                         </div>
 
                         {/* User Details */}
-                        <div className="pl-2 sm:pl-48 w-full pt-16 sm:pt-0 flex flex-col gap-3 sm:gap-5">
-                            <div className="flex flex-col gap-1">
-                                <h2 className="text-xl sm:text-2xl font-semibold">{user.name}</h2>
+                        <div className="w-full pl-2 sm:pl-48 pt-16 sm:pt-0 flex flex-col gap-4 sm:gap-6">
+                            <div className="flex flex-col gap-2 sm:gap-3">
+                                {/* Name */}
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-xl sm:text-2xl font-semibold">{user.name}</h2>
+                                </div>
+
+                                {/* Bio */}
                                 <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                     {user.bio || "No bio provided"}
                                 </p>
+
+                                {/* Follower Stats */}
+                                <div className="flex items-center gap-6 text-sm">
+                                    <div className="flex flex-col items-center">
+                                        <span className="font-semibold">{followersCount}</span>
+                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                            Followers
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col items-center">
+                                        <span className="font-semibold">{followingCount}</span>
+                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                            Following
+                                        </span>
+                                    </div>
+                                </div>
+                                {/* Follow Button */}
+                                <div>
+                                    <button
+                                        onClick={handleFollowToggle}
+                                        disabled={isFollowActionLoading}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${isFollowActionLoading
+                                                ? theme === "dark"
+                                                    ? "bg-gray-700 text-gray-400"
+                                                    : "bg-gray-200 text-gray-500"
+                                                : isFollowing
+                                                    ? theme === "dark"
+                                                        ? "border border-gray-500 text-gray-300"
+                                                        : "border border-gray-300 text-gray-700"
+                                                    : theme === "dark"
+                                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                                        : "bg-blue-500 hover:bg-blue-600 text-white"
+                                            }`}
+                                    >
+                                        {isFollowActionLoading ? (
+                                            <span>Loading...</span>
+                                        ) : isFollowing ? (
+                                            <>Unfollow</>
+                                        ) : (
+                                            <>Follow</>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
 
                         {/* Social Icons */}
                         <div className="mt-4 sm:mt-0 sm:ml-auto flex gap-3 self-end sm:self-auto">
@@ -491,8 +617,8 @@ const Profilepageothers = () => {
                                     type="submit"
                                     disabled={isSending}
                                     className={`text-sm sm:text-md font-medium w-full py-2 sm:py-3 mt-4 rounded-full cursor-pointer transition-all ${isSending
-                                            ? `${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-gray-300 text-gray-500"}`
-                                            : `${theme === "dark" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-[#376CFF] hover:bg-[#2C5CFF] text-white"}`
+                                        ? `${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-gray-300 text-gray-500"}`
+                                        : `${theme === "dark" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-[#376CFF] hover:bg-[#2C5CFF] text-white"}`
                                         }`}
                                 >
                                     {isSending ? (

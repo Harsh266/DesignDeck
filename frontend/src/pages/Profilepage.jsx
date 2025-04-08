@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import { FaUserEdit } from "react-icons/fa";
+import { FaUserEdit, FaUserPlus, FaUserMinus } from "react-icons/fa";
 import { Helmet } from "react-helmet";
 import api from "../services/api";
 import { ThemeContext } from "../context/ThemeContext";
@@ -22,6 +22,11 @@ const Profilepage = () => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isCurrentUser, setIsCurrentUser] = useState(true);
+    const [following, setFollowing] = useState(false);
+    const [followersCount, setFollowersCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
+    const [profileOwner, setProfileOwner] = useState(null);
     const { theme } = useContext(ThemeContext);
     const { userId } = useParams();
     const navigate = useNavigate();
@@ -58,6 +63,17 @@ const Profilepage = () => {
                 setBio(res.data.bio || '');
                 setDribbbleProfile(res.data.dribbbleProfile || '');
                 setBehanceProfile(res.data.behanceProfile || '');
+
+                // Check if we're viewing a different user's profile
+                if (userId && userId !== res.data._id) {
+                    setIsCurrentUser(false);
+                    fetchProfileOwner(userId);
+                } else {
+                    setIsCurrentUser(true);
+                    setProfileOwner(res.data);
+                    setFollowersCount(res.data.followers?.length || 0);
+                    setFollowingCount(res.data.following?.length || 0);
+                }
             } else {
                 navigate("/signin"); // Redirect to login if no user found
             }
@@ -67,15 +83,42 @@ const Profilepage = () => {
         }
     };
 
+    const fetchProfileOwner = async (ownerId) => {
+        try {
+            const res = await api.get(`/api/users/${ownerId}`, {
+                withCredentials: true,
+            });
+
+            if (res.data) {
+                setProfileOwner(res.data);
+                setFollowersCount(res.data.followers?.length || 0);
+                setFollowingCount(res.data.following?.length || 0);
+
+                // Check if current user is following profile owner
+                if (user && res.data.followers && res.data.followers.includes(user._id)) {
+                    setFollowing(true);
+                } else {
+                    setFollowing(false);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching profile owner:", error);
+        }
+    };
+
     useEffect(() => {
         fetchUser();
-    }, [navigate]);
+    }, [navigate, userId]);
 
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await api.get("/api/projects/user-projects", {
-                    withCredentials: true,  // Ensure you're sending the cookie with the request
+                const endpoint = isCurrentUser || !userId
+                    ? "/api/projects/user-projects"
+                    : `/api/projects/user/${userId}`;
+
+                const response = await api.get(endpoint, {
+                    withCredentials: true,
                 });
 
                 if (response.data.success) {
@@ -86,7 +129,7 @@ const Profilepage = () => {
                                 const likeResponse = await api.get(`/api/projects/like/${project._id}`, {
                                     withCredentials: true,
                                 });
-                                
+
                                 if (likeResponse.data.success) {
                                     return {
                                         ...project,
@@ -101,7 +144,7 @@ const Profilepage = () => {
                             }
                         })
                     );
-                    
+
                     setProjects(projectsWithLikes);
                 } else {
                     console.error("Error: ", response.data.message);
@@ -113,13 +156,64 @@ const Profilepage = () => {
             }
         };
 
-        fetchProjects();
+        if (user) {
+            fetchProjects();
+        }
 
-        const intervalId = setInterval(fetchProjects, 5000);
+        const intervalId = setInterval(() => {
+            if (user) {
+                fetchProjects();
+            }
+        }, 5000);
 
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
-    }, []);
+    }, [user, isCurrentUser, userId]);
+
+    const handleFollow = async () => {
+        if (!user || !profileOwner) return;
+
+        try {
+            const endpoint = following ? `/api/users/unfollow/${profileOwner._id}` : `/api/users/follow/${profileOwner._id}`;
+            const response = await api.put(endpoint, {}, {
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                const action = following ? "unfollowed" : "followed";
+                toast(`Successfully ${action} ${profileOwner.name}`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progressClassName: "Toastify__progress-bar",
+                    className: theme === "dark" ? "dark-theme" : "light-theme",
+                    style: getCustomToastStyle(theme),
+                });
+
+                setFollowing(!following);
+                setFollowersCount(prevCount => following ? prevCount - 1 : prevCount + 1);
+
+                // Refresh profile data
+                fetchProfileOwner(profileOwner._id);
+            }
+        } catch (error) {
+            console.error("Follow/unfollow error:", error.response?.data?.message || error.message);
+            toast(error.response?.data?.message || "An error occurred", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progressClassName: "Toastify__progress-bar",
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+                style: getCustomToastStyle(theme),
+            });
+        }
+    };
 
     if (!user) {
         return <div className={`flex items-center justify-center h-screen w-screen ${theme === "dark" ? "bg-[#1E1E1E] text-white" : "bg-white text-black"}`}>
@@ -205,10 +299,13 @@ const Profilepage = () => {
         }
     };
 
+    // Use the profile owner data for display
+    const displayUser = profileOwner || user;
+
     return (
         <>
             <Helmet>
-                <title>DesignDeck - Profile Page {user.name}</title>
+                <title>DesignDeck - Profile Page {displayUser.name}</title>
             </Helmet>
             <ToastContainer />
             <Navbar />
@@ -218,7 +315,7 @@ const Profilepage = () => {
                     {/* Banner Section */}
                     <div className="w-full max-w-full h-40 sm:h-48 md:h-60">
                         <img
-                            src={user.bannerImage || "/public/image.png"}
+                            src={displayUser.bannerImage || "/public/image.png"}
                             alt="Gradient Banner"
                             className="w-full h-full object-cover"
                         />
@@ -234,7 +331,7 @@ const Profilepage = () => {
                             {/* Profile Image Container */}
                             <div className={`w-28 h-28 sm:w-40 sm:h-40 ${theme === "dark" ? "bg-black" : "bg-white"} rounded-2xl p-1 relative border-4 border-transparent`}>
                                 <img
-                                    src={user.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
+                                    src={displayUser.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
                                     alt="User"
                                     className="w-full h-full object-cover rounded-2xl"
                                 />
@@ -242,30 +339,58 @@ const Profilepage = () => {
                         </div>
 
                         {/* User Details */}
-                        <div className="pl-2 sm:pl-48 w-full pt-16 sm:pt-0 flex flex-col gap-3 sm:gap-5">
-                            <div className="flex flex-col gap-1">
-                                <h2 className="text-xl sm:text-2xl font-semibold">{user.name}</h2>
+                        <div className="w-full pt-16 sm:pt-0 pl-2 sm:pl-48 flex flex-col gap-4 sm:gap-6">
+                            {/* User Info */}
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-xl sm:text-2xl font-semibold">{displayUser.name}</h2>
+                                </div>
+
                                 <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                                    {user.bio || "No Bio"}
+                                    {displayUser.bio || "No Bio"}
                                 </p>
                             </div>
-                            <div>
+
+                            {/* Followers/Following + Edit Button */}
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                                {/* Follower Stats */}
+                                <div className="flex items-center gap-6 text-sm">
+                                    <div className="flex flex-col items-center">
+                                        <span className="font-semibold">{followersCount}</span>
+                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                            Followers
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col items-center">
+                                        <span className="font-semibold">{followingCount}</span>
+                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                            Following
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Edit Profile Button */}
                                 <button
                                     onClick={() => setIsPopupOpen(true)}
-                                    className={`px-3 py-1 sm:px-4 sm:py-2 rounded-lg font-medium flex items-center gap-2 transition cursor-pointer ${theme === "dark" ? "bg-blue-900 text-blue-300 hover:bg-blue-800" : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"}`}
+                                    className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer ${theme === "dark"
+                                            ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
+                                            : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
+                                        }`}
                                 >
-                                    <FaUserEdit className="text-lg" /> Edit Profile
+                                    <FaUserEdit className="text-lg" />
+                                    Edit Profile
                                 </button>
                             </div>
                         </div>
 
+
                         {/* Social Icons */}
                         <div className="mt-4 sm:mt-0 sm:ml-auto flex gap-3 self-end sm:self-auto">
-                            {/* Instagram */}
+                            {/* Dribbble */}
                             <div className="relative group">
                                 <a
-                                    href={user.dribbbleProfile || "#"}
-                                    target={user.dribbbleProfile ? "_blank" : "_self"}
+                                    href={displayUser.dribbbleProfile || "#"}
+                                    target={displayUser.dribbbleProfile ? "_blank" : "_self"}
                                     rel="noopener noreferrer"
                                     className="w-10 h-10 p-2 rounded-full flex items-center justify-center transition-all cursor-pointer  hover:scale-110 active:scale-95 "
                                     style={{
@@ -280,8 +405,8 @@ const Profilepage = () => {
                             {/* Behance */}
                             <div className="relative group">
                                 <a
-                                    href={user.behanceProfile || "#"}
-                                    target={user.behanceProfile ? "_blank" : "_self"}
+                                    href={displayUser.behanceProfile || "#"}
+                                    target={displayUser.behanceProfile ? "_blank" : "_self"}
                                     rel="noopener noreferrer"
                                     className="w-10 h-10 p-2 rounded-full flex items-center justify-center transition-all cursor-pointer  hover:scale-110 active:scale-95 "
                                     style={{
@@ -306,66 +431,33 @@ const Profilepage = () => {
 
                     {/* Projects Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
-                            <>
-                                {projects?.length > 0 ? (
-                                    projects?.map((project, index) => (
-                                        <Link
-                                            to={`/view/${project._id}`}
-                                            key={project._id || index}
-                                            className="no-underline block"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                console.log(`Navigating to /view/${project._id}`);
-                                            }}
+                        <>
+                            {projects?.length > 0 ? (
+                                projects?.map((project, index) => (
+                                    <Link
+                                        to={`/view/${project._id}`}
+                                        key={project._id || index}
+                                        className="no-underline block"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            console.log(`Navigating to /view/${project._id}`);
+                                        }}
+                                    >
+                                        <div
+                                            className={`group rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}
                                         >
-                                            <div
-                                                className={`group rounded-lg p-3 text-center ${theme === "dark" ? "bg-black" : "bg-white"}`}
-                                            >
-                                                {/* Media Handling - Using the new logic */}
-                                                <div className="relative w-full h-40 sm:h-48 md:h-56 lg:h-65 rounded-lg overflow-hidden cursor-pointer">
-                                                    {project.firstImage || (project.images && project.images.length > 0) ? (
-                                                        <>
-                                                            {/* Show Image by Default */}
-                                                            <img
-                                                                src={`${API_BASE_URL}${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
-                                                                alt={project.title}
-                                                                className="w-full h-full object-cover rounded-lg group-hover:hidden"
-                                                            />
-                                                            {/* Show Video on Hover if available, otherwise show same image */}
-                                                            {project.videos && project.videos.length > 0 ? (
-                                                                <video
-                                                                    className="w-full h-full object-cover rounded-lg hidden group-hover:block"
-                                                                    autoPlay
-                                                                    loop
-                                                                    muted
-                                                                    playsInline
-                                                                >
-                                                                    <source src={`${API_BASE_URL}${project.videos[0]}`} />
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            ) : (
-                                                                <img
-                                                                    src={`${API_BASE_URL}${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
-                                                                    alt={project.title}
-                                                                    className="w-full h-full object-cover rounded-lg hidden group-hover:block"
-                                                                />
-                                                            )}
-                                                        </>
-                                                    ) : project.videos && project.videos.length > 0 ? (
-                                                        <>
-                                                            {/* For video-only projects: Show first frame of video as static thumbnail */}
-                                                            <div className="w-full h-full group-hover:hidden">
-                                                                <video
-                                                                    className="w-full h-full object-cover rounded-lg"
-                                                                    muted
-                                                                    playsInline
-                                                                    preload="metadata"
-                                                                >
-                                                                    <source src={`${API_BASE_URL}${project.videos[0]}`} />
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            </div>
-                                                            {/* Play video on hover */}
+                                            {/* Media Handling - Using the new logic */}
+                                            <div className="relative w-full h-40 sm:h-48 md:h-56 lg:h-65 rounded-lg overflow-hidden cursor-pointer">
+                                                {project.firstImage || (project.images && project.images.length > 0) ? (
+                                                    <>
+                                                        {/* Show Image by Default */}
+                                                        <img
+                                                            src={`${API_BASE_URL}${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
+                                                            alt={project.title}
+                                                            className="w-full h-full object-cover rounded-lg group-hover:hidden"
+                                                        />
+                                                        {/* Show Video on Hover if available, otherwise show same image */}
+                                                        {project.videos && project.videos.length > 0 ? (
                                                             <video
                                                                 className="w-full h-full object-cover rounded-lg hidden group-hover:block"
                                                                 autoPlay
@@ -376,44 +468,77 @@ const Profilepage = () => {
                                                                 <source src={`${API_BASE_URL}${project.videos[0]}`} />
                                                                 Your browser does not support the video tag.
                                                             </video>
-                                                        </>
-                                                    ) : (
-                                                        <div className={`rounded-lg w-full h-full flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
-                                                            <span className="text-gray-500">No preview available</span>
+                                                        ) : (
+                                                            <img
+                                                                src={`${API_BASE_URL}${project.firstImage || project.images[0]}` || "/default-thumbnail.jpg"}
+                                                                alt={project.title}
+                                                                className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                            />
+                                                        )}
+                                                    </>
+                                                ) : project.videos && project.videos.length > 0 ? (
+                                                    <>
+                                                        {/* For video-only projects: Show first frame of video as static thumbnail */}
+                                                        <div className="w-full h-full group-hover:hidden">
+                                                            <video
+                                                                className="w-full h-full object-cover rounded-lg"
+                                                                muted
+                                                                playsInline
+                                                                preload="metadata"
+                                                            >
+                                                                <source src={`${API_BASE_URL}${project.videos[0]}`} />
+                                                                Your browser does not support the video tag.
+                                                            </video>
                                                         </div>
-                                                    )}
-                                                </div>
-
-                                                <div className="flex items-center justify-between mt-1">
-                                                    <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
-                                                        {project.title}
-                                                    </p>
-
-                                                    <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
-                                                        <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i> 
-                                                        {project.likeCount || 0}
+                                                        {/* Play video on hover */}
+                                                        <video
+                                                            className="w-full h-full object-cover rounded-lg hidden group-hover:block"
+                                                            autoPlay
+                                                            loop
+                                                            muted
+                                                            playsInline
+                                                        >
+                                                            <source src={`${API_BASE_URL}${project.videos[0]}`} />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    </>
+                                                ) : (
+                                                    <div className={`rounded-lg w-full h-full flex items-center justify-center ${theme === "dark" ? "bg-gray-800" : "bg-gray-200"}`}>
+                                                        <span className="text-gray-500">No preview available</span>
                                                     </div>
+                                                )}
+                                            </div>
+
+                                            <div className="flex items-center justify-between mt-1">
+                                                <p className="mt-2 text-base text-start sm:text-lg font-medium line-clamp-3">
+                                                    {project.title}
+                                                </p>
+
+                                                <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 mt-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
+                                                    <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : " text-blue-500"}`}></i>
+                                                    {project.likeCount || 0}
                                                 </div>
                                             </div>
-                                        </Link>
-                                    ))
-                                ) : (
-                                    <div className="col-span-3 text-center p-4">
-                                        <p className="text-lg font-semibold text-gray-500">No projects found</p>
-                                    </div>
-                                )}
-
-                                {/* Upload Project Card */}
-                                <div className={`shadow-lg rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center w-full h-40 sm:h-48 md:h-56 lg:h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                                    <div className={`rounded-full w-12 h-12 sm:w-15 sm:h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
-                                        <Link to="/upload"><i className="ri-function-add-fill text-2xl sm:text-3xl"></i></Link>
-                                    </div>
-                                    <p className="mt-3 text-xl sm:text-2xl font-medium">Upload Project</p>
-                                    <p className="text-xs sm:text-sm text-center w-full sm:w-[80%] md:w-[70%]">
-                                        Show your creativity by uploading it to the world.
-                                    </p>
+                                        </div>
+                                    </Link>
+                                ))
+                            ) : (
+                                <div className="col-span-3 text-center p-4">
+                                    <p className="text-lg font-semibold text-gray-500">No projects found</p>
                                 </div>
-                            </>
+                            )}
+
+                            {/* Upload Project Card */}
+                            <div className={`shadow-lg rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center w-full h-40 sm:h-48 md:h-56 lg:h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                                <div className={`rounded-full w-12 h-12 sm:w-15 sm:h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
+                                    <Link to="/upload"><i className="ri-function-add-fill text-2xl sm:text-3xl"></i></Link>
+                                </div>
+                                <p className="mt-3 text-xl sm:text-2xl font-medium">Upload Project</p>
+                                <p className="text-xs sm:text-sm text-center w-full sm:w-[80%] md:w-[70%]">
+                                    Show your creativity by uploading it to the world.
+                                </p>
+                            </div>
+                        </>
                     </div>
                 </div>
 
