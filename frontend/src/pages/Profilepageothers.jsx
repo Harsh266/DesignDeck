@@ -40,6 +40,11 @@ const Profilepageothers = () => {
     const [isFollowActionLoading, setIsFollowActionLoading] = useState(false);
     const [followersCount, setFollowersCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
+    const [followers, setFollowers] = useState([]);
+    const [following, setFollowing] = useState([]);
+    const [followListType, setFollowListType] = useState(null); // 'followers' or 'following'
+    const [isFollowListOpen, setIsFollowListOpen] = useState(false);
+    const [isLoadingFollowList, setIsLoadingFollowList] = useState(false);
     const { theme } = useContext(ThemeContext);
     const { userId } = useParams();
 
@@ -131,6 +136,40 @@ const Profilepageothers = () => {
         checkIfFollowing();
     }, [user, userId]);
 
+    const fetchFollowList = async (type) => {
+        if (!userId) return;
+
+        setIsLoadingFollowList(true);
+        try {
+            const endpoint = type === 'followers' ?
+                `/api/users/${userId}/followers` :
+                `/api/users/${userId}/following`;
+
+            const response = await api.get(endpoint, {
+                withCredentials: true,
+            });
+
+            if (type === 'followers') {
+                setFollowers(response.data);
+            } else {
+                setFollowing(response.data);
+            }
+
+            setFollowListType(type);
+            setIsFollowListOpen(true);
+        } catch (error) {
+            console.error(`Error fetching ${type} list:`, error);
+            toast(`Failed to load ${type} list`, {
+                position: "top-right",
+                autoClose: 3000,
+                style: getCustomToastStyle(theme),
+                className: theme === "dark" ? "dark-theme" : "light-theme",
+            });
+        } finally {
+            setIsLoadingFollowList(false);
+        }
+    };
+
     const handleFollowToggle = async () => {
         if (!user) return;
 
@@ -147,6 +186,11 @@ const Profilepageothers = () => {
             if (response.data) {
                 setIsFollowing(!isFollowing);
                 setFollowersCount(prev => isFollowing ? Math.max(0, prev - 1) : prev + 1);
+
+                // Refresh followers list if it's currently open
+                if (isFollowListOpen && followListType === 'followers') {
+                    fetchFollowList('followers');
+                }
 
                 toast(`${isFollowing ? "Unfollowed" : "Followed"} successfully`, {
                     position: "top-right",
@@ -335,13 +379,19 @@ const Profilepageothers = () => {
 
                                 {/* Follower Stats */}
                                 <div className="flex items-center gap-6 text-sm">
-                                    <div className="flex flex-col items-center">
+                                    <div
+                                        className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
+                                        onClick={() => fetchFollowList('followers')}
+                                    >
                                         <span className="font-semibold">{followersCount}</span>
                                         <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                             Followers
                                         </span>
                                     </div>
-                                    <div className="flex flex-col items-center">
+                                    <div
+                                        className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
+                                        onClick={() => fetchFollowList('following')}
+                                    >
                                         <span className="font-semibold">{followingCount}</span>
                                         <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                             Following
@@ -354,16 +404,16 @@ const Profilepageothers = () => {
                                         onClick={handleFollowToggle}
                                         disabled={isFollowActionLoading}
                                         className={`px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${isFollowActionLoading
+                                            ? theme === "dark"
+                                                ? "bg-gray-700 text-gray-400"
+                                                : "bg-gray-200 text-gray-500"
+                                            : isFollowing
                                                 ? theme === "dark"
-                                                    ? "bg-gray-700 text-gray-400"
-                                                    : "bg-gray-200 text-gray-500"
-                                                : isFollowing
-                                                    ? theme === "dark"
-                                                        ? "border border-gray-500 text-gray-300"
-                                                        : "border border-gray-300 text-gray-700"
-                                                    : theme === "dark"
-                                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
-                                                        : "bg-blue-500 hover:bg-blue-600 text-white"
+                                                    ? "border border-gray-500 text-gray-300"
+                                                    : "border border-gray-300 text-gray-700"
+                                                : theme === "dark"
+                                                    ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                                    : "bg-blue-500 hover:bg-blue-600 text-white"
                                             }`}
                                     >
                                         {isFollowActionLoading ? (
@@ -539,6 +589,97 @@ const Profilepageothers = () => {
                         </button>
                     </div>
                 </div>
+
+                {isFollowListOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                        onClick={() => setIsFollowListOpen(false)}
+                    >
+                        <div
+                            className={`rounded-xl p-4 sm:p-6 w-full sm:w-[90%] max-w-md max-h-[80vh] overflow-y-auto shadow-lg relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                                }`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setIsFollowListOpen(false)}
+                                className={`absolute top-3 right-4 text-2xl cursor-pointer transition ${theme === "dark" ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"
+                                    }`}
+                            >
+                                &times;
+                            </button>
+
+                            {/* Title */}
+                            <h2 className="text-xl font-semibold mb-4">
+                                {followListType === 'followers' ? 'Followers' : 'Following'}
+                            </h2>
+
+                            {isLoadingFollowList ? (
+                                <div className="text-center py-8">
+                                    <p className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                        Loading...
+                                    </p>
+                                </div>
+                            ) : followListType === 'followers' ? (
+                                /* Followers List */
+                                followers.length > 0 ? (
+                                    <div className="space-y-3">
+                                        {followers.map((follower) => (
+                                            <div
+                                                key={follower._id}
+                                                className={`flex items-center justify-between p-3 rounded-lg ${theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
+                                                    }`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <img
+                                                        src={follower.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
+                                                        alt={follower.name}
+                                                        className="w-10 h-10 rounded-full object-cover"
+                                                    />
+                                                    <span className="font-medium">{follower.name}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <p className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                            No followers yet
+                                        </p>
+                                    </div>
+                                )
+                            ) : (
+                                /* Following List */
+                                following.length > 0 ? (
+                                    <div className="space-y-3">
+                                        {following.map((followedUser) => (
+                                            <div
+                                                key={followedUser._id}
+                                                className={`flex items-center justify-between p-3 rounded-lg ${theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
+                                                    }`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <img
+                                                        src={followedUser.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
+                                                        alt={followedUser.name}
+                                                        className="w-10 h-10 rounded-full object-cover"
+                                                    />
+                                                    <span className="font-medium">{followedUser.name}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <p className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                            Not following anyone yet
+                                        </p>
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {/* Contact Popup */}
                 {isPopupOpen && (

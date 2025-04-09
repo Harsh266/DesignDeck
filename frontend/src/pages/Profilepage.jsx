@@ -27,6 +27,10 @@ const Profilepage = () => {
     const [followersCount, setFollowersCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
     const [profileOwner, setProfileOwner] = useState(null);
+    const [followersList, setFollowersList] = useState([]);
+    const [followingList, setFollowingList] = useState([]);
+    const [showFollowers, setShowFollowers] = useState(false);
+    const [showFollowing, setShowFollowing] = useState(false);
     const { theme } = useContext(ThemeContext);
     const { userId } = useParams();
     const navigate = useNavigate();
@@ -73,6 +77,9 @@ const Profilepage = () => {
                     setProfileOwner(res.data);
                     setFollowersCount(res.data.followers?.length || 0);
                     setFollowingCount(res.data.following?.length || 0);
+                    // Fetch followers and following lists for current user
+                    fetchFollowersList(res.data._id);
+                    fetchFollowingList(res.data._id);
                 }
             } else {
                 navigate("/signin"); // Redirect to login if no user found
@@ -94,6 +101,10 @@ const Profilepage = () => {
                 setFollowersCount(res.data.followers?.length || 0);
                 setFollowingCount(res.data.following?.length || 0);
 
+                // Fetch followers and following lists
+                fetchFollowersList(ownerId);
+                fetchFollowingList(ownerId);
+
                 // Check if current user is following profile owner
                 if (user && res.data.followers && res.data.followers.includes(user._id)) {
                     setFollowing(true);
@@ -103,6 +114,28 @@ const Profilepage = () => {
             }
         } catch (error) {
             console.error("Error fetching profile owner:", error);
+        }
+    };
+
+    const fetchFollowersList = async (userId) => {
+        try {
+            const response = await api.get(`/api/users/${userId}/followers`, {
+                withCredentials: true,
+            });
+            setFollowersList(response.data);
+        } catch (error) {
+            console.error("Error fetching followers list:", error);
+        }
+    };
+
+    const fetchFollowingList = async (userId) => {
+        try {
+            const response = await api.get(`/api/users/${userId}/following`, {
+                withCredentials: true,
+            });
+            setFollowingList(response.data);
+        } catch (error) {
+            console.error("Error fetching following list:", error);
         }
     };
 
@@ -196,7 +229,7 @@ const Profilepage = () => {
                 setFollowing(!following);
                 setFollowersCount(prevCount => following ? prevCount - 1 : prevCount + 1);
 
-                // Refresh profile data
+                // Refresh profile data and followers list
                 fetchProfileOwner(profileOwner._id);
             }
         } catch (error) {
@@ -213,6 +246,12 @@ const Profilepage = () => {
                 style: getCustomToastStyle(theme),
             });
         }
+    };
+
+    const handleViewProfile = (userId) => {
+        navigate(`/profile/${userId}`);
+        setShowFollowers(false);
+        setShowFollowing(false);
     };
 
     if (!user) {
@@ -344,6 +383,27 @@ const Profilepage = () => {
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-xl sm:text-2xl font-semibold">{displayUser.name}</h2>
+                                    {!isCurrentUser && user && (
+                                        <button
+                                            onClick={handleFollow}
+                                            className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer ${theme === "dark"
+                                                ? following ? "bg-red-900 text-red-300 hover:bg-red-800" : "bg-blue-900 text-blue-300 hover:bg-blue-800"
+                                                : following ? "bg-red-100 text-red-600 hover:bg-red-200" : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
+                                                }`}
+                                        >
+                                            {following ? (
+                                                <>
+                                                    <FaUserMinus className="text-lg" />
+                                                    Unfollow
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaUserPlus className="text-lg" />
+                                                    Follow
+                                                </>
+                                            )}
+                                        </button>
+                                    )}
                                 </div>
 
                                 <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
@@ -355,13 +415,13 @@ const Profilepage = () => {
                             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
                                 {/* Follower Stats */}
                                 <div className="flex items-center gap-6 text-sm">
-                                    <div className="flex flex-col items-center">
+                                    <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowFollowers(true)}>
                                         <span className="font-semibold">{followersCount}</span>
                                         <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                             Followers
                                         </span>
                                     </div>
-                                    <div className="flex flex-col items-center">
+                                    <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowFollowing(true)}>
                                         <span className="font-semibold">{followingCount}</span>
                                         <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                             Following
@@ -370,19 +430,20 @@ const Profilepage = () => {
                                 </div>
 
                                 {/* Edit Profile Button */}
-                                <button
-                                    onClick={() => setIsPopupOpen(true)}
-                                    className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer ${theme === "dark"
+                                {isCurrentUser && (
+                                    <button
+                                        onClick={() => setIsPopupOpen(true)}
+                                        className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer ${theme === "dark"
                                             ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
                                             : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
-                                        }`}
-                                >
-                                    <FaUserEdit className="text-lg" />
-                                    Edit Profile
-                                </button>
+                                            }`}
+                                    >
+                                        <FaUserEdit className="text-lg" />
+                                        Edit Profile
+                                    </button>
+                                )}
                             </div>
                         </div>
-
 
                         {/* Social Icons */}
                         <div className="mt-4 sm:mt-0 sm:ml-auto flex gap-3 self-end sm:self-auto">
@@ -418,16 +479,14 @@ const Profilepage = () => {
                                 </a>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
                 {/* My Projects Section */}
                 <div className={`max-w-full mx-auto p-4 sm:p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
                     <h3 className={`text-xl font-semibold border-b-2 pb-2 inline-block ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}>
-                        My Projects
+                        {isCurrentUser ? "My Projects" : `${displayUser.name}'s Projects`}
                     </h3>
-
 
                     {/* Projects Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
@@ -528,20 +587,149 @@ const Profilepage = () => {
                                 </div>
                             )}
 
-                            {/* Upload Project Card */}
-                            <div className={`shadow-lg rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center w-full h-40 sm:h-48 md:h-56 lg:h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                                <div className={`rounded-full w-12 h-12 sm:w-15 sm:h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
-                                    <Link to="/upload"><i className="ri-function-add-fill text-2xl sm:text-3xl"></i></Link>
+                            {/* Upload Project Card - Only show for current user */}
+                            {isCurrentUser && (
+                                <div className={`shadow-lg rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center w-full h-40 sm:h-48 md:h-56 lg:h-70 relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
+                                    <div className={`rounded-full w-12 h-12 sm:w-15 sm:h-15 flex items-center justify-center ${theme === "dark" ? "bg-gray-600 text-gray-300" : "bg-[#DCE6FF] text-[#376CFF]"}`}>
+                                        <Link to="/upload"><i className="ri-function-add-fill text-2xl sm:text-3xl"></i></Link>
+                                    </div>
+                                    <p className="mt-3 text-xl sm:text-2xl font-medium">Upload Project</p>
+                                    <p className="text-xs sm:text-sm text-center w-full sm:w-[80%] md:w-[70%]">
+                                        Show your creativity by uploading it to the world.
+                                    </p>
                                 </div>
-                                <p className="mt-3 text-xl sm:text-2xl font-medium">Upload Project</p>
-                                <p className="text-xs sm:text-sm text-center w-full sm:w-[80%] md:w-[70%]">
-                                    Show your creativity by uploading it to the world.
-                                </p>
-                            </div>
+                            )}
                         </>
                     </div>
                 </div>
 
+                {/* Followers Modal */}
+                {showFollowers && (
+                    <div
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                        onClick={() => setShowFollowers(false)}
+                    >
+                        <div
+                            className={`rounded-xl p-4 sm:p-6 w-full sm:w-[90%] max-w-md max-h-[80vh] overflow-y-auto shadow-lg relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                                }`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setShowFollowers(false)}
+                                className={`absolute top-3 right-4 text-2xl cursor-pointer transition ${theme === "dark" ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"
+                                    }`}
+                            >
+                                &times;
+                            </button>
+
+                            {/* Title */}
+                            <h2 className="text-xl font-semibold mb-4">Followers</h2>
+
+                            {/* Followers List */}
+                            {followersList.length > 0 ? (
+                                <div className="space-y-3">
+                                    {followersList.map((follower) => (
+                                        <div
+                                            key={follower._id}
+                                            className={`flex items-center justify-between p-3 rounded-lg ${theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={follower.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
+                                                    alt={follower.name}
+                                                    className="w-10 h-10 rounded-full object-cover"
+                                                />
+                                                <span className="font-medium">{follower.name}</span>
+                                            </div>
+                                            <button
+                                                onClick={() => handleViewProfile(follower._id)}
+                                                className={`px-3 py-1 rounded text-sm cursor-pointer ${theme === "dark"
+                                                        ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
+                                                        : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
+                                                    }`}
+                                            >
+                                                View
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <p className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                        No followers yet
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* Following Modal */}
+                {showFollowing && (
+                    <div
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                        onClick={() => setShowFollowing(false)}
+                    >
+                        <div
+                            className={`rounded-xl p-4 sm:p-6 w-full sm:w-[90%] max-w-md max-h-[80vh] overflow-y-auto shadow-lg relative ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+                                }`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setShowFollowing(false)}
+                                className={`absolute top-3 right-4 text-2xl cursor-pointer transition ${theme === "dark" ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-black"
+                                    }`}
+                            >
+                                &times;
+                            </button>
+
+                            {/* Title */}
+                            <h2 className="text-xl font-semibold mb-4">Following</h2>
+
+                            {/* Following List */}
+                            {followingList.length > 0 ? (
+                                <div className="space-y-3">
+                                    {followingList.map((following) => (
+                                        <div
+                                            key={following._id}
+                                            className={`flex items-center justify-between p-3 rounded-lg ${theme === "dark" ? "hover:bg-gray-800" : "hover:bg-gray-100"
+                                                }`}
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={following.profilePicture || `${API_BASE_URL}/uploads/default-profile.jpg`}
+                                                    alt={following.name}
+                                                    className="w-10 h-10 rounded-full object-cover"
+                                                />
+                                                <span className="font-medium">{following.name}</span>
+                                            </div>
+                                            <button
+                                                onClick={() => handleViewProfile(following._id)}
+                                                className={`px-3 py-1 rounded text-sm cursor-pointer ${theme === "dark"
+                                                        ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
+                                                        : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
+                                                    }`}
+                                            >
+                                                View
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <p className={`text-lg ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                        Not following anyone yet
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* Edit Profile Popup */}
                 {isPopupOpen && (
                     <div
                         className="fixed h-screen w-screen inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
