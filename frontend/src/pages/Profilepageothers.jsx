@@ -191,13 +191,6 @@ const Profilepageothers = () => {
                 if (isFollowListOpen && followListType === 'followers') {
                     fetchFollowList('followers');
                 }
-
-                toast(`${isFollowing ? "Unfollowed" : "Followed"} successfully`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    style: getCustomToastStyle(theme),
-                    className: theme === "dark" ? "dark-theme" : "light-theme",
-                });
             }
         } catch (error) {
             toast(error.response?.data?.message || "Error updating follow status", {
