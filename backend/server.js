@@ -10,13 +10,13 @@ const MongoStore = require("connect-mongo");
 const http = require("http");
 const { Server } = require("socket.io");
 
+// ✅ Initialize Express App & HTTP Server
 const app = express();
 const server = http.createServer(app);
 
 // ✅ CORS Configuration
 const allowedOrigins = [
-    "http://localhost:5173",
-    "https://designdeck-frontend-psig.onrender.com"
+    "http://localhost:5173", // Local Development
 ];
 
 app.use(
@@ -80,8 +80,8 @@ app.use(
         }),
         cookie: {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // ⚠️ Must be true for cross-site cookies
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ⚠️ Required for third-party cookie support
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
             maxAge: 1000 * 60 * 60 * 24, // 1 day
         },
     })
