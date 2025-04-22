@@ -80,20 +80,12 @@ router.post("/login", async (req, res, next) => {
 // ✅ Get Authenticated User Route
 router.get("/me", async (req, res) => {
     try {
-        console.log("Auth status:", req.isAuthenticated());
-        console.log("Session:", req.session);
-        console.log("User in request:", req.user);
-        
         if (!req.isAuthenticated()) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        console.log("User ID being looked up:", req.user.id);
-        
         // ✅ Fetch complete user data from MongoDB
-        const user = await User.findById(req.user.id).select("-password");
-        console.log("User found in DB:", user ? "Yes" : "No");
-        
+        const user = await User.findById(req.user.id).select("-password"); // Exclude password
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
