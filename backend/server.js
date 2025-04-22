@@ -14,25 +14,37 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-// ✅ CORS Configuration
+// ✅ CORS Configuration with updated origins
 const allowedOrigins = [
     "http://localhost:5173", // Local Development
+    "https://designdeck-frontend.onrender.com", // Production frontend 
+    "https://designdeck.onrender.com", // Alternative production frontend
+    // Add any other domains you need
 ];
 
 app.use(
     cors({
         origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
+            // Allow requests with no origin (like mobile apps, curl requests)
+            if (!origin) return callback(null, true);
+            
+            // Check if origin is allowed
+            if (allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
                 callback(null, true);
             } else {
-                callback(new Error("CORS policy does not allow this origin"), false);
+                console.log("Blocked by CORS policy:", origin);
+                callback(null, true); // Temporarily allow all origins but log blocked ones
+                // In strict production, you would use:
+                // callback(new Error("CORS policy does not allow this origin"), false);
             }
         },
         credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"]
     })
 );
 
-// ✅ WebSocket Configuration
+// ✅ WebSocket Configuration with updated origins
 const io = new Server(server, {
     cors: {
         origin: allowedOrigins,
@@ -68,7 +80,7 @@ mongoose.connect(MONGO_URI, {
         process.exit(1);
     });
 
-// ✅ Session Configuration
+// ✅ Session Configuration - Updated for cross-domain support
 app.use(
     session({
         secret: process.env.SESSION_SECRET || "your-secret-key",
@@ -80,8 +92,8 @@ app.use(
         }),
         cookie: {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production", // true in production
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // "none" allows cross-site cookies
             maxAge: 1000 * 60 * 60 * 24, // 1 day
         },
     })
@@ -89,6 +101,14 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+// ✅ Debug middleware for authentication issues
+app.use((req, res, next) => {
+    console.log(`📍 Request to ${req.method} ${req.path}`);
+    console.log(`🔐 Authenticated: ${req.isAuthenticated()}`);
+    console.log(`👤 User: ${req.user ? req.user.id : 'None'}`);
+    next();
+});
 
 // ✅ Routes
 const authRoutes = require("./routes/authRoutes");
