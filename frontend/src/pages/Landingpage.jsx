@@ -234,8 +234,8 @@ const Landingpage = () => {
                         <CardContainer className="h-full">
                             <div
                                 className={`h-full flex flex-col justify-between rounded-xl gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${theme === "dark"
-                                        ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                        : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
                                     }`}
                             >
                                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#FDE8CB] self-start">
@@ -261,8 +261,8 @@ const Landingpage = () => {
                         <CardContainer className="h-full">
                             <div
                                 className={`h-full flex flex-col justify-between rounded-xl gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${theme === "dark"
-                                        ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                        : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
                                     }`}
                             >
                                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#DCE6FF] self-start">
@@ -289,8 +289,8 @@ const Landingpage = () => {
                         <CardContainer className="h-full">
                             <div
                                 className={`h-full flex flex-col justify-between rounded-xl gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${theme === "dark"
-                                        ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                        : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
                                     }`}
                             >
                                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#F4D9FF] self-start">

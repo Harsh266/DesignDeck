@@ -308,17 +308,6 @@ const Dashboard = () => {
                         </div>
                     )}
                 </div>
-
-                {/* Load More Button - Only show if there are projects */}
-                {filteredProjects.length > 0 && !loading && (
-                    <div className="flex justify-center mt-6 sm:mt-8 pb-8">
-                        <button
-                            className={`px-4 py-2 sm:px-6 sm:py-2 rounded-full text-sm sm:text-base font-medium cursor-pointer ${theme === "dark" ? "bg-purple-600 text-white" : "bg-purple-200 text-purple-600"}`}
-                        >
-                            Load More
-                        </button>
-                    </div>
-                )}
             </div>
         </>
     );

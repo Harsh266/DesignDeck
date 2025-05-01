@@ -15,6 +15,24 @@ const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const popupRef = useRef(null);
 
+  const getCustomToastStyle = (theme) => ({
+    borderRadius: "8px",
+    padding: "16px",
+    fontSize: "14px",
+    fontWeight: "500",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    boxShadow: theme === "dark"
+      ? "0px 4px 15px rgba(255, 255, 255, 0.15)"
+      : "0px 4px 15px rgba(0, 0, 0, 0.1)",
+    background: theme === "dark" ? "#222" : "#fff",
+    color: theme === "dark" ? "#fff" : "#333",
+    border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #eaeaea",
+    width: "320px",
+  });
+
   // ✅ Fetch user data
   const fetchUser = async () => {
     console.log("🟡 Fetching user data...");
@@ -33,7 +51,7 @@ const Navbar = () => {
         console.log("🟣 No valid user found, setting user to null");
       }
     } catch (error) {
-      console.error("❌ Error fetching user:");
+      console.error("❌ Error fetching user:",);
       setUser(null);
     }
   };
