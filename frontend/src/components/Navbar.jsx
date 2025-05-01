@@ -33,7 +33,7 @@ const Navbar = () => {
         console.log("🟣 No valid user found, setting user to null");
       }
     } catch (error) {
-      console.error("❌ Error fetching user:",);
+      console.error("❌ Error fetching user:");
       setUser(null);
     }
   };
