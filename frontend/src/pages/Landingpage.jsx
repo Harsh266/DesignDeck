@@ -188,14 +188,14 @@ const Landingpage = () => {
                     <div className="mt-8 sm:mt-12 flex flex-col md:flex-row gap-4 sm:gap-6 max-w-5xl">
                         <div className="w-full md:w-1/2">
                             <img
-                                src="https://in.pinterest.com/pin/1120481582299090357/"
+                                src="./public/image.jpg"
                                 alt="Creative Design Showcase"
                                 className={`w-full rounded-lg shadow-lg transition-all duration-300 ${theme === "dark" ? "brightness-90" : "brightness-100"}`}
                             />
                         </div>
                         <div className="w-full md:w-1/2 mt-4 md:mt-0">
                             <img
-                                src="https://in.pinterest.com/pin/1120481582299090355/"
+                                src="./public/image-1.jpg"
                                 alt="Growth Stats"
                                 className={`w-full rounded-lg shadow-lg transition-all duration-300 ${theme === "dark" ? "brightness-90" : "brightness-100"}`}
                             />
@@ -328,7 +328,7 @@ const Landingpage = () => {
                                 muted
                                 autoPlay
                                 loop
-                                src="https://in.pinterest.com/pin/1120481582299090366/"
+                                src="/public/graph.mp4"
                                 className="rounded-lg w-full shadow-lg"
                                 playsInline
                             ></video>
