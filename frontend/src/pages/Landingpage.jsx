@@ -229,13 +229,13 @@ const Landingpage = () => {
                     </div>
 
                     {/* Feature Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2 md:gap-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                         {/* Card 1 */}
-                        <CardContainer>
+                        <CardContainer className="h-full">
                             <div
-                                className={`rounded-xl flex flex-col gap-3 p-6 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${theme === "dark"
-                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                className={`h-full flex flex-col justify-between rounded-xl gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#FDE8CB] ${theme === "dark"
+                                        ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                        : "bg-white hover:border-[#fff] hover:shadow-lg"
                                     }`}
                             >
                                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#FDE8CB] self-start">
@@ -252,47 +252,45 @@ const Landingpage = () => {
                                         }`}
                                 >
                                     DesignDeck empowers creators with Image & Video Upload for seamless
-                                    media sharing, portfolio building, and high-quality project
-                                    showcasing.
+                                    media sharing, portfolio building, and high-quality project showcasing.
                                 </p>
                             </div>
                         </CardContainer>
 
                         {/* Card 2 */}
-                        <CardContainer>
+                        <CardContainer className="h-full">
                             <div
-                                className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${theme === "dark"
-                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                className={`h-full flex flex-col justify-between rounded-xl gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#DCE6FF] ${theme === "dark"
+                                        ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                        : "bg-white hover:border-[#fff] hover:shadow-lg"
                                     }`}
                             >
                                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#DCE6FF] self-start">
-                                    <i className="ri-user-follow-line text-[24px] sm:text-[30px] text-[#9091FF]"></i>
+                                    <i className="ri-live-line text-[24px] sm:text-[30px] text-[#9091FF]"></i>
                                 </div>
                                 <h3
                                     className={`font-semibold text-left text-lg sm:text-xl mt-3 sm:mt-4 transition-all ${theme === "dark" ? "text-white" : "text-black"
                                         }`}
                                 >
-                                    Follow Users
+                                    Live Preview
                                 </h3>
                                 <p
                                     className={`text-sm sm:text-base mt-2 sm:mt-3 text-justify transition-all ${theme === "dark" ? "text-gray-400" : "text-gray-500"
                                         }`}
                                 >
-                                    Stay connected by following your favorite creators on DesignDeck. Get
-                                    notified when they upload new projects, update their profiles, or gain
-                                    popularity.
+                                    DesignDeck empowers creators with Live Preview for real-time coding,
+                                    instant feedback, interactive design testing, and enhanced development
+                                    efficiency.
                                 </p>
                             </div>
-
                         </CardContainer>
 
                         {/* Card 3 */}
-                        <CardContainer>
+                        <CardContainer className="h-full">
                             <div
-                                className={`rounded-xl flex flex-col gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${theme === "dark"
-                                    ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
-                                    : "bg-white hover:border-[#fff] hover:shadow-lg"
+                                className={`h-full flex flex-col justify-between rounded-xl gap-3 p-5 sm:p-6 lg:p-5 transition-all border-3 border-[#F4D9FF] ${theme === "dark"
+                                        ? "bg-black hover:border-[#000] shadow-[0_0_15px_4px_rgba(255,255,255,0.20)]"
+                                        : "bg-white hover:border-[#fff] hover:shadow-lg"
                                     }`}
                             >
                                 <div className="flex items-center justify-center rounded-[10px] w-12 h-12 sm:w-14 sm:h-14 bg-[#F4D9FF] self-start">
