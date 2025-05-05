@@ -354,7 +354,7 @@ const Profilepage = () => {
                     {/* Banner Section */}
                     <div className="w-full max-w-full h-40 sm:h-48 md:h-60">
                         <img
-                            src={displayUser.bannerImage || "/public/image.png"}
+                            src={displayUser.bannerImage || `${API_BASE_URL}/uploads/default-profile.jpg`}
                             alt="Gradient Banner"
                             className="w-full h-full object-cover"
                         />
@@ -433,9 +433,9 @@ const Profilepage = () => {
                                 {isCurrentUser && (
                                     <button
                                         onClick={() => setIsPopupOpen(true)}
-                                        className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer ${theme === "dark"
-                                            ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
-                                            : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
+                                        className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer w-full sm:w-1/2 md:w-auto lg:w-auto justify-center sm:justify-start ${theme === "dark"
+                                                ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
+                                                : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
                                             }`}
                                     >
                                         <FaUserEdit className="text-lg" />
@@ -646,8 +646,8 @@ const Profilepage = () => {
                                             <button
                                                 onClick={() => handleViewProfile(follower._id)}
                                                 className={`px-3 py-1 rounded text-sm cursor-pointer ${theme === "dark"
-                                                        ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
-                                                        : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
+                                                    ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
+                                                    : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
                                                     }`}
                                             >
                                                 View
@@ -709,8 +709,8 @@ const Profilepage = () => {
                                             <button
                                                 onClick={() => handleViewProfile(following._id)}
                                                 className={`px-3 py-1 rounded text-sm cursor-pointer ${theme === "dark"
-                                                        ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
-                                                        : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
+                                                    ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
+                                                    : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
                                                     }`}
                                             >
                                                 View

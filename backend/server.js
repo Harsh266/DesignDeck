@@ -16,7 +16,8 @@ const server = http.createServer(app);
 
 // ✅ CORS Configuration
 const allowedOrigins = [
-    "http://localhost:5173", // Local Development
+    "http://localhost:5173",      // Local Development
+    "http://192.168.58.15:5173", // Laptop IP for mobile testing
 ];
 
 app.use(
