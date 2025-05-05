@@ -54,10 +54,10 @@ router.get(
             // ✅ Redirect based on user role
             if (user.isAdmin) {
                 console.log("🔹 Redirecting to Admin Dashboard");
-                return res.redirect("http://localhost:5173/admin-dashboard");
+                return res.redirect("https://designdeck-f31g.onrender.com/admin-dashboard");
             } else {
                 console.log("🔹 Redirecting to User Dashboard");
-                return res.redirect("http://localhost:5173/dashboard");
+                return res.redirect("https://designdeck-f31g.onrender.com/dashboard");
             }
         } catch (error) {
             console.error("❌ Error updating user login status:", error);
