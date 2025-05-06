@@ -14,23 +14,17 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-// ✅ CORS Configuration
-const allowedOrigins = [
-    "http://localhost:5173", // Local Development
-];
-
+// ✅ Express CORS Configuration — allow all origins
 app.use(
     cors({
-        origin: "*",
+        origin: "*", // Allow all
     })
 );
 
-
-// ✅ WebSocket Configuration
+// ✅ WebSocket Configuration — allow all origins
 const io = new Server(server, {
     cors: {
-        origin: allowedOrigins,
-        credentials: true
+        origin: "*", // Allow all
     }
 });
 
