@@ -21,16 +21,10 @@ const allowedOrigins = [
 
 app.use(
     cors({
-        origin: function (origin, callback) {
-            if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("CORS policy does not allow this origin"), false);
-            }
-        },
-        credentials: true,
+        origin: "*",
     })
 );
+
 
 // ✅ WebSocket Configuration
 const io = new Server(server, {
