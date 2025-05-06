@@ -354,7 +354,7 @@ const Profilepage = () => {
                     {/* Banner Section */}
                     <div className="w-full max-w-full h-40 sm:h-48 md:h-60">
                         <img
-                            src={displayUser.bannerImage || `${API_BASE_URL}/uploads/default-profile.jpg`}
+                            src={displayUser.bannerImage || "/public/image.png"}
                             alt="Gradient Banner"
                             className="w-full h-full object-cover"
                         />
@@ -383,27 +383,6 @@ const Profilepage = () => {
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-xl sm:text-2xl font-semibold">{displayUser.name}</h2>
-                                    {!isCurrentUser && user && (
-                                        <button
-                                            onClick={handleFollow}
-                                            className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer ${theme === "dark"
-                                                ? following ? "bg-red-900 text-red-300 hover:bg-red-800" : "bg-blue-900 text-blue-300 hover:bg-blue-800"
-                                                : following ? "bg-red-100 text-red-600 hover:bg-red-200" : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
-                                                }`}
-                                        >
-                                            {following ? (
-                                                <>
-                                                    <FaUserMinus className="text-lg" />
-                                                    Unfollow
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <FaUserPlus className="text-lg" />
-                                                    Follow
-                                                </>
-                                            )}
-                                        </button>
-                                    )}
                                 </div>
 
                                 <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
@@ -412,37 +391,53 @@ const Profilepage = () => {
                             </div>
 
                             {/* Followers/Following + Edit Button */}
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-                                {/* Follower Stats */}
-                                <div className="flex items-center gap-6 text-sm">
-                                    <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowFollowers(true)}>
-                                        <span className="font-semibold">{followersCount}</span>
-                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                                            Followers
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-col items-center cursor-pointer" onClick={() => setShowFollowing(true)}>
-                                        <span className="font-semibold">{followingCount}</span>
-                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                                            Following
-                                        </span>
-                                    </div>
+                            <div className="flex flex-row items-center justify-start flex-wrap gap-6 w-full">
+                                {/* Followers */}
+                                <div
+                                    className="flex flex-col items-center cursor-pointer"
+                                    onClick={() => setShowFollowers(true)}
+                                >
+                                    <span className="font-semibold">{followersCount}</span>
+                                    <span
+                                        className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"
+                                            }`}
+                                    >
+                                        Followers
+                                    </span>
                                 </div>
 
-                                {/* Edit Profile Button */}
+                                {/* Following */}
+                                <div
+                                    className="flex flex-col items-center cursor-pointer"
+                                    onClick={() => setShowFollowing(true)}
+                                >
+                                    <span className="font-semibold">{followingCount}</span>
+                                    <span
+                                        className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"
+                                            }`}
+                                    >
+                                        Following
+                                    </span>
+                                </div>
+
+                                {/* Edit Profile */}
                                 {isCurrentUser && (
                                     <button
                                         onClick={() => setIsPopupOpen(true)}
-                                        className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer w-full sm:w-1/2 md:w-auto lg:w-auto justify-center sm:justify-start ${theme === "dark"
+                                        className={`rounded-lg font-medium flex items-center gap-2 transition-colors duration-200 cursor-pointer
+        px-3 py-1.5 text-sm
+        sm:px-4 sm:py-2 sm:text-base
+        ${theme === "dark"
                                                 ? "bg-blue-900 text-blue-300 hover:bg-blue-800"
                                                 : "bg-[#C3D7FF] text-[#0057FF] hover:bg-[#A9C4FF]"
                                             }`}
                                     >
-                                        <FaUserEdit className="text-lg" />
-                                        Edit Profile
+                                        <FaUserEdit className="text-base sm:text-lg" />
+                                        <span>Edit Profile</span>
                                     </button>
                                 )}
                             </div>
+
                         </div>
 
                         {/* Social Icons */}

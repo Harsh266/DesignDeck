@@ -63,22 +63,17 @@ export default function Document() {
         {/* Header */}
         <header className={`sticky top-0 backdrop-blur-2xl z-50 ${theme === "dark" ? "bg-[#0000003] text-white" : "bg-[#ffffff3] text-black"}`}>
           <div className="flex justify-between items-center p-4">
-            <Link to="/landingpage"><div className="flex items-center">
+            <div className="flex items-center">
               <button
                 onClick={toggleMenu}
                 className={`md:hidden mr-4 ${styles.secondaryText}`}
               >
                 <Menu size={24} />
               </button>
-              <div className="flex-shrink-0">
-                <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-md flex items-center justify-center text-white font-bold">
-                  DD
-                </div>
-              </div>
-              <div className="ml-3">
+              <Link to="/landingpage"><div className="ml-3">
                 <h1 className={`text-xl font-bold ${styles.text}`}>DesignDeck Docs</h1>
-              </div>
-            </div></Link>
+              </div></Link>
+            </div>
 
             <button
               onClick={toggleTheme}
@@ -91,16 +86,20 @@ export default function Document() {
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="fixed inset-0 z-30 md:hidden bg-black bg-opacity-50" onClick={toggleMenu}>
+          <div
+          className={`fixed inset-0 z-30 md:hidden ${
+            theme === "dark"
+              ? "bg-[#0000003] text-white"
+              : "bg-[#ffffff3] text-black"
+          } bg-opacity-50`}
+          onClick={toggleMenu}
+        >
             <div
               className={`fixed inset-y-0 left-0 w-64 ${styles.card} p-4 overflow-y-auto`}
               onClick={e => e.stopPropagation()}
             >
               <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center">
-                  <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-md flex items-center justify-center text-white font-bold">
-                    DD
-                  </div>
                   <span className={`ml-3 font-bold ${styles.text}`}>DesignDeck</span>
                 </div>
                 <button onClick={toggleMenu} className={`${styles.secondaryText} p-1`}>
@@ -155,7 +154,8 @@ export default function Document() {
           </aside>
 
           {/* Main Content - Scrollable with all sections */}
-          <main className="flex-1 overflow-y-auto md:ml-64 p-6">
+          <main className="flex-1 overflow-y-auto md:ml-64 p-2 h-[85vh]">
+
             <div className="max-w-4xl mx-auto space-y-12 pb-20">
               {/* Project Overview Section */}
               <div id="project-overview" className={`${styles.card} rounded-lg shadow-sm border p-6 md:p-8`}>

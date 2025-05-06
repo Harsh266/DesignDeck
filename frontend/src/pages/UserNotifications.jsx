@@ -49,16 +49,6 @@ function UserNotifications() {
             console.error("Error fetching notifications:", error);
         }
     };
-
-    // ✅ Clear all notifications
-    const clearNotifications = async () => {
-        try {
-            setNotifications([]);
-        } catch (error) {
-            console.error("Error clearing notifications:", error);
-        }
-    };
-
     return (
         <>
             <Navbar />
@@ -82,16 +72,6 @@ function UserNotifications() {
                                     </li>
                                 ))}
                             </ul>
-
-                            {/* ✅ Clear Notifications Button */}
-                            <div className="mt-6 flex justify-center">
-                                <button
-                                    onClick={clearNotifications}
-                                    className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 bg-red-500 text-white py-2 sm:py-3 px-4 rounded-lg hover:bg-red-600 transition-all cursor-pointer"
-                                >
-                                    Clear Notifications
-                                </button>
-                            </div>
                         </>
                     )}
                 </div>

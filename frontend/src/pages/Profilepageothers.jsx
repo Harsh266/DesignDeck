@@ -371,42 +371,46 @@ const Profilepageothers = () => {
                                 </p>
 
                                 {/* Follower Stats */}
-                                <div className="flex items-center gap-6 text-sm">
-                                    <div
-                                        className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
-                                        onClick={() => fetchFollowList('followers')}
-                                    >
-                                        <span className="font-semibold">{followersCount}</span>
-                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                                            Followers
-                                        </span>
+                                <div className="flex items-center justify-start flex-wrap gap-6 w-full text-sm">
+                                    {/* Followers + Following */}
+                                    <div className="flex items-center gap-6">
+                                        <div
+                                            className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
+                                            onClick={() => fetchFollowList('followers')}
+                                        >
+                                            <span className="font-semibold">{followersCount}</span>
+                                            <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                                Followers
+                                            </span>
+                                        </div>
+
+                                        <div
+                                            className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
+                                            onClick={() => fetchFollowList('following')}
+                                        >
+                                            <span className="font-semibold">{followingCount}</span>
+                                            <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                                Following
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div
-                                        className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
-                                        onClick={() => fetchFollowList('following')}
-                                    >
-                                        <span className="font-semibold">{followingCount}</span>
-                                        <span className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                                            Following
-                                        </span>
-                                    </div>
-                                </div>
-                                {/* Follow Button */}
-                                <div>
+
+                                    {/* Follow Button */}
                                     <button
                                         onClick={handleFollowToggle}
                                         disabled={isFollowActionLoading}
-                                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${isFollowActionLoading
-                                            ? theme === "dark"
-                                                ? "bg-gray-700 text-gray-400"
-                                                : "bg-gray-200 text-gray-500"
-                                            : isFollowing
+                                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer
+      ${isFollowActionLoading
                                                 ? theme === "dark"
-                                                    ? "border border-gray-500 text-gray-300"
-                                                    : "border border-gray-300 text-gray-700"
-                                                : theme === "dark"
-                                                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                                                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                                                    ? "bg-gray-700 text-gray-400"
+                                                    : "bg-gray-200 text-gray-500"
+                                                : isFollowing
+                                                    ? theme === "dark"
+                                                        ? "border border-gray-500 text-gray-300"
+                                                        : "border border-gray-300 text-gray-700"
+                                                    : theme === "dark"
+                                                        ? "bg-blue-600 hover:bg-blue-700 text-white"
+                                                        : "bg-blue-500 hover:bg-blue-600 text-white"
                                             }`}
                                     >
                                         {isFollowActionLoading ? (
@@ -418,6 +422,7 @@ const Profilepageothers = () => {
                                         )}
                                     </button>
                                 </div>
+
                             </div>
                         </div>
 

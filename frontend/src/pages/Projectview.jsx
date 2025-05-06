@@ -161,6 +161,27 @@ const ProjectView = () => {
                                             </div>
                                         )}
                                         <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+                                            {/* Like Button */}
+                                            <button
+                                                className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                                                    }`}
+                                                onClick={handleLikeToggle}
+                                            >
+                                                <i
+                                                    className={`ri-heart-fill text-base sm:text-lg ${liked
+                                                            ? theme === "dark"
+                                                                ? "text-blue-400"
+                                                                : "text-blue-600"
+                                                            : theme === "dark"
+                                                                ? "text-gray-200"
+                                                                : "text-gray-600"
+                                                        }`}
+                                                />
+
+                                            </button>
+
+
+
                                             {/* Profile Button */}
                                             <Link to={`/profile/${project.userId?._id}`}>
                                                 <button
@@ -192,25 +213,6 @@ const ProjectView = () => {
                                                 </button>
                                             ) : (
                                                 <>
-
-                                                    {/* Like Button */}
-                                                    <button
-                                                        className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
-                                                            }`}
-                                                        onClick={handleLikeToggle}
-                                                    >
-                                                        <i
-                                                            className={`ri-heart-fill text-base sm:text-lg ${liked
-                                                                ? theme === "dark"
-                                                                    ? "text-blue-400"
-                                                                    : "text-blue-600"
-                                                                : theme === "dark"
-                                                                    ? "text-gray-200"
-                                                                    : "text-gray-600"
-                                                                }`}
-                                                        />
-
-                                                    </button>
                                                     {/* Expand/Collapse Button */}
                                                     <button
                                                         className={`rounded-full w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center cursor-pointer ${theme === "dark"

@@ -16,9 +16,7 @@ const server = http.createServer(app);
 
 // ✅ CORS Configuration
 const allowedOrigins = [
-    "http://localhost:5173",      // Local Development
-    "http://192.168.58.15:5173",
-    "https://designdeck-f31g.onrender.com" // Laptop IP for mobile testing
+    "http://localhost:5173", // Local Development
 ];
 
 app.use(

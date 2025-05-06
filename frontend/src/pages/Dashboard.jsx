@@ -125,25 +125,6 @@ const Dashboard = () => {
                         <span className="hidden sm:inline"><br /></span>
                         ready to take on your next project
                     </p>
-                    <div className="mt-4 sm:mt-6 flex items-center justify-center px-4">
-                        <form className="w-full max-w-md relative">
-                            <div className={`flex items-center px-3 py-2 rounded-full w-full ${theme === "dark" ? "bg-gray-800 text-white" : "bg-[#DCE6FF] text-gray-700"}`}>
-                                <input
-                                    type="text"
-                                    placeholder="Find your inspiration"
-                                    className={`w-full bg-transparent outline-none px-2 text-sm sm:text-base ${theme === "dark" ? "text-white" : "text-gray-700"}`}
-                                />
-                                <button
-                                    type="submit"
-                                    className={`rounded-full px-2 py-1 sm:px-3 sm:py-2 ${theme === "dark" ? "bg-gray-600" : "bg-[#9091FF]"}`}
-                                >
-                                    <i
-                                        className={`ri-search-line ${theme === "dark" ? "text-gray-300" : "text-white"}`}
-                                    ></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
 
                 {/* Categories */}
@@ -311,6 +292,6 @@ const Dashboard = () => {
             </div>
         </>
     );
-}
+};
 
 export default Dashboard;
