@@ -15,18 +15,30 @@ const app = express();
 const server = http.createServer(app);
 
 // ✅ Express CORS Configuration — allow all origins
+const allowedOrigins = ['https://designdeck-f31g.onrender.com'];
+
 app.use(
     cors({
-        origin: "*", // Allow all
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true, // if using cookies or auth headers
     })
 );
 
 // ✅ WebSocket Configuration — allow all origins
 const io = new Server(server, {
     cors: {
-        origin: "*", // Allow all
+        origin: "https://designdeck-f31g.onrender.com",
+        methods: ["GET", "POST"],
+        credentials: true // if you're using auth/cookies
     }
 });
+
 
 // ✅ WebSocket Events
 io.on("connection", (socket) => {
