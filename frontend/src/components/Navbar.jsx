@@ -107,6 +107,9 @@ const Navbar = () => {
     }
   };
 
+  const logoSrc = theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png';
+
+
   return (
     <nav
       className={`flex w-full justify-between items-center px-4 sm:px-6 py-3 fixed top-0 left-0 backdrop-blur-2xl z-50 ${theme === "dark" ? "bg-[#000000f3] text-white" : "bg-[#ffffffc3] text-black"
@@ -114,7 +117,15 @@ const Navbar = () => {
     >
       {/* Logo */}
       <Link to="/dashboard">
-        <h1 className="text-lg font-semibold">Design Deck</h1>
+        <div className="flex items-center space-x-2">
+          <img
+            src={logoSrc}
+            alt="DesignDeck Logo"
+            width={200}
+            height={320}
+            className="rounded-full"
+          />
+        </div>
       </Link>
 
       {/* Mobile Menu Button */}

@@ -422,12 +422,20 @@ const Landingpage = () => {
                 >
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 border-b border-gray-600 pb-8">
                         {/* Brand Info */}
-                        <div>
-                            <h2 className="text-xl font-bold mb-3">DesignDeck</h2>
-                            <p className="text-sm text-gray-400">
-                                Empower your creativity and build stunning project showcases with DesignDeck.
+
+                        <div className="flex flex-col items-start space-y-4 text-left">
+                            <div className="flex items-center">
+                                <img
+                                    src={logoSrc}
+                                    alt="DesignDeck Logo"
+                                    className="rounded-full w-48 h-auto object-contain"
+                                />
+                            </div>
+                            <p className="text-sm text-gray-400 max-w-md">
+                                Empower your creativity and build stunning project showcases with <span className="text-white font-medium">DesignDeck</span>.
                             </p>
                         </div>
+
 
                         {/* Quick Links */}
                         <div>
