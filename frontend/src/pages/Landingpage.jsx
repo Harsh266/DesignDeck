@@ -12,6 +12,8 @@ const Landingpage = () => {
     const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
     const [termsOfServiceOpen, setTermsOfServiceOpen] = useState(false);
 
+    const logoSrc = theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png';
+
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
     };
@@ -27,8 +29,15 @@ const Landingpage = () => {
                         className={`fixed top-0 left-0 w-full backdrop-blur-2xl z-50 px-4 sm:px-6 md:px-10 py-3 flex justify-between items-center transition-all duration-300 ${theme === "dark" ? "bg-[#000000c3] text-white" : "bg-[#ffffffc3] text-black"}`}
                     >
                         {/* Logo */}
-                        <div className="text-xl sm:text-2xl font-semibold">DesignDeck</div>
-
+                        <div className="flex items-center space-x-2">
+                            <img
+                                src={logoSrc}
+                                alt="DesignDeck Logo"
+                                width={200}
+                                height={320}
+                                className="rounded-full"
+                            />
+                        </div>
                         {/* Mobile Menu Button */}
                         <button
                             className="block md:hidden"
