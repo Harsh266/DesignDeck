@@ -385,7 +385,7 @@ const Profilepage = () => {
                                     <h2 className="text-xl sm:text-2xl font-semibold">{displayUser.name}</h2>
                                 </div>
 
-                                <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[30%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                                <p className={`text-sm w-full sm:w-[70%] md:w-[50%] lg:w-[50%] break-words ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
                                     {displayUser.bio || "No Bio"}
                                 </p>
                             </div>
