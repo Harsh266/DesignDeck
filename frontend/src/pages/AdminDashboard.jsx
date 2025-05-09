@@ -276,6 +276,8 @@ const AdminDashboard = () => {
         </div>
     );
 
+    const logoSrc = theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png';
+
     return (
         <>
             <ToastContainer />
@@ -283,14 +285,14 @@ const AdminDashboard = () => {
                 {/* Navbar */}
                 <nav className={`flex flex-col w-full items-end px-4 sm:px-6 py-3 fixed top-0 left-0 backdrop-blur-2xl z-50 ${theme === "dark" ? "bg-[#000000f3] text-white" : "bg-[#ffffffc3] text-black"
                     }`}>
-                    <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+                    <div className="w-full">
                         <div className="flex justify-between h-12">
-                            <div className="flex items-center">
-                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg ${theme === "dark" ? "bg-blue-600" : "bg-blue-500"} flex items-center justify-center text-white font-bold text-lg sm:text-xl`}>
-                                    A
-                                </div>
-                                <h1 className="ml-2 sm:ml-3 text-lg sm:text-xl font-bold tracking-tight">AdminPanel</h1>
-                            </div>
+                        <img
+                        src={logoSrc}
+                        alt="DesignDeck Logo"
+                        width={180}
+                        className="rounded-full"
+                    />
 
                             {/* Desktop menu */}
                             <div className="hidden md:flex items-center space-x-4">
@@ -376,8 +378,8 @@ const AdminDashboard = () => {
                 <div className="pt-20 sm:pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     {/* Header */}
                     <div className={`mb-6 sm:mb-8 pb-4 border-b ${theme === "dark" ? "border-gray-700" : "border-gray-200"}`}>
-                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-                        <p className={`mt-2 text-sm sm:text-base ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>Welcome to your control center</p>
+                        <h1 className="text-2xl sm:text-2xl font-bold tracking-tight">Admin Dashboard</h1>
+                        <p className={`mt-2 text-sm sm:text-base ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>Welcome to admin control center</p>
                     </div>
 
                     {/* Stats Cards */}
