@@ -91,6 +91,8 @@ const Signup = () => {
     const handleGoogleLogin = () => {
         window.open(`${api.defaults.baseURL}/auth/google`, "_self");
     };
+
+    const logoSrc = theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png';
     return (
         <>
             <Helmet>
@@ -106,8 +108,14 @@ const Signup = () => {
             >
                 {/* Left Content */}
                 <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-6">
-                    <h1 className="text-xl font-semibold absolute top-7 left-10">DesignDeck</h1>
-
+                <div className="flex items-center space-x-2">
+                        <img
+                            src={logoSrc}
+                            alt="DesignDeck Logo"
+                            width={180}
+                            className="rounded-full"
+                        />
+                    </div>
                     <form onSubmit={handleRegister} className="px-6 md:px-16 py-2 flex flex-col justify-center w-full pt-10">
                         <h2 className="text-2xl font-semibold">Create an Account</h2>
                         <p className={`mt-1 text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>

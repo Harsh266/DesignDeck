@@ -33,8 +33,7 @@ const Landingpage = () => {
                             <img
                                 src={logoSrc}
                                 alt="DesignDeck Logo"
-                                width={200}
-                                height={320}
+                                width={180}
                                 className="rounded-full"
                             />
                         </div>
@@ -420,19 +419,21 @@ const Landingpage = () => {
                     className={`px-6 sm:px-10 pt-10 pb-5 text-sm transition-all ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"
                         }`}
                 >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 border-b border-gray-600 pb-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 border-b border-gray-600 pb-8">
                         {/* Brand Info */}
 
-                        <div className="flex flex-col items-start space-y-4 text-left">
+                        <div className="flex flex-col items-start space-y-4 text-left col-span-2">
                             <div className="flex items-center">
                                 <img
                                     src={logoSrc}
+                                    width={180}
                                     alt="DesignDeck Logo"
-                                    className="rounded-full w-48 h-auto object-contain"
+                                    className="rounded-full "
                                 />
                             </div>
                             <p className="text-sm text-gray-400 max-w-md">
-                                Empower your creativity and build stunning project showcases with <span className="text-white font-medium">DesignDeck</span>.
+                            <span className="text-white font-medium">DesignDeck</span> is a platform that empowers creators to showcase their
+                                designs, upload code, and share their work with a vibrant community.
                             </p>
                         </div>
 

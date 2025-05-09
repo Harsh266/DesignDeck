@@ -19,14 +19,14 @@ const SignIn = () => {
         const user = JSON.parse(localStorage.getItem("user"));
         if (user) {
             const adminEmails = ["harshvekriya441@gmail.com", "ptwinkle837@gmail.com"];
-        
+
             if (adminEmails.includes(user.email)) {
                 navigate("/admin-dashboard");
             } else {
                 navigate("/signin");
             }
         }
-        
+
     }, [navigate]);
 
     const getCustomToastStyle = (theme) => ({
@@ -100,6 +100,8 @@ const SignIn = () => {
         window.open(`${api.defaults.baseURL}/auth/google`, "_self");
     };
 
+    const logoSrc = theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png';
+
     return (
         <>
             <Helmet>
@@ -108,7 +110,14 @@ const SignIn = () => {
             <ToastContainer toastClassName={() => "custom-toast"} />
             <div className={`flex flex-col lg:flex-row items-center justify-center min-h-screen p-6 h-screen overflow-hidden ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
                 <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-6">
-                    <h1 className="text-xl font-semibold absolute top-7 left-10">DesignDeck</h1>
+                    <div className="flex items-center space-x-2">
+                        <img
+                            src={logoSrc}
+                            alt="DesignDeck Logo"
+                            width={180}
+                            className="rounded-full"
+                        />
+                    </div>
                     <form onSubmit={handleLogin} className="px-6 md:px-16 py-2 flex flex-col justify-center w-full pt-10">
                         <h2 className="text-2xl font-semibold">Welcome Back</h2>
                         <p className={`mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Sign in to Showcase, Inspire, and Elevate Your Creativity!</p>

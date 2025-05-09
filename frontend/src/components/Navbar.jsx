@@ -121,8 +121,7 @@ const Navbar = () => {
           <img
             src={logoSrc}
             alt="DesignDeck Logo"
-            width={200}
-            height={320}
+            width={180}
             className="rounded-full"
           />
         </div>
