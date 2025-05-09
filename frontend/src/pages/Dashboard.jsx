@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
-import api from "../services/api"; // Adjust the import based on your project structure
+import api from "../services/api";
 import { Helmet } from "react-helmet";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
@@ -15,96 +15,94 @@ const Dashboard = () => {
     const [projects, setProjects] = useState([]);
     const [filteredProjects, setFilteredProjects] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
     const { theme } = useContext(ThemeContext);
 
-    // Fetch all projects and apply category filtering client-side
-    useEffect(() => {
-        const fetchProjects = async () => {
-            setLoading(true);
-            try {
-                // Always fetch all projects
-                const response = await api.get("/api/projects/all-projects", {
-                    withCredentials: true,
-                });
-
-                if (response.data.success) {
-                    const allProjects = response.data.projects || [];
-
-                    // Ensure all projects have category as an array
-                    const normalizedProjects = allProjects.map(project => {
-                        // Convert string category to array
-                        if (typeof project.category === 'string') {
-                            console.log(`Normalizing project "${project.title}": converting category string "${project.category}" to array`);
-                            return { ...project, category: [project.category] };
-                        }
-                        // Ensure category is an array if it's undefined or null
-                        else if (!project.category) {
-                            console.log(`Normalizing project "${project.title}": setting missing category to ["Uncategorized"]`);
-                            return { ...project, category: ["Uncategorized"] };
-                        }
-                        // Keep as is if already an array
-                        return project;
-                    });
-
-                    setProjects(normalizedProjects);
-
-                    // Filter projects based on the active category
-                    filterProjectsByCategory(normalizedProjects, activeCategory);
-                } else {
-                    setProjects([]);
-                    setFilteredProjects([]);
-                    console.log("No projects fetched or API returned error");
-                }
-            } catch (error) {
-                console.error(`Error fetching projects:`, error);
-                setProjects([]);
-                setFilteredProjects([]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-
-        fetchProjects(); // initial call
-
-        const interval = setInterval(() => {
-            fetchProjects();
-        }, 5000); // every 5 seconds
-
-        return () => clearInterval(interval); // cleanup on unmount
-
-    }, [activeCategory]);
-
-    // Helper function to filter projects by category
-    const filterProjectsByCategory = (projectsList, category) => {
-
+    // Filter projects by category - memoized to prevent unnecessary recalculations
+    const filterProjectsByCategory = useCallback((projectsList, category) => {
         if (category === "All") {
-            setFilteredProjects(projectsList);
-            return;
+            return projectsList;
         }
 
-        const filtered = projectsList.filter(project => {
+        return projectsList.filter(project => {
             if (Array.isArray(project.category)) {
-                const found = project.category.find(cat =>
+                return project.category.some(cat =>
                     cat.trim().toLowerCase() === category.trim().toLowerCase()
                 );
-                return !!found;
             } else if (typeof project.category === 'string') {
                 return project.category.trim().toLowerCase() === category.trim().toLowerCase();
-            } else {
-                return false;
             }
+            return false;
         });
+    }, []);
 
-        setFilteredProjects(filtered);
-    };
+    // Fetch projects with random order - only called on initial load and manual refresh
+    const fetchProjects = useCallback(async () => {
+        setLoading(true);
+        try {
+            // Add a random query parameter to prevent caching and get random order
+            const timestamp = new Date().getTime();
+            const response = await api.get(`/api/projects/all-projects?random=${timestamp}`, {
+                withCredentials: true,
+            });
+
+            if (response.data.success) {
+                const allProjects = response.data.projects || [];
+
+                // Normalize projects to ensure category is always an array
+                const normalizedProjects = allProjects.map(project => {
+                    if (typeof project.category === 'string') {
+                        return { ...project, category: [project.category] };
+                    } else if (!project.category) {
+                        return { ...project, category: ["Uncategorized"] };
+                    }
+                    return project;
+                });
+
+                // Shuffle the array for more randomness on client side
+                const shuffledProjects = [...normalizedProjects].sort(() => Math.random() - 0.5);
+
+                setProjects(shuffledProjects);
+
+                // Apply category filtering
+                const filtered = filterProjectsByCategory(shuffledProjects, activeCategory);
+                setFilteredProjects(filtered);
+            } else {
+                console.log("No projects fetched or API returned error");
+                setProjects([]);
+                setFilteredProjects([]);
+            }
+        } catch (error) {
+            console.error(`Error fetching projects:`, error);
+            setProjects([]);
+            setFilteredProjects([]);
+        } finally {
+            setLoading(false);
+        }
+    }, [activeCategory, filterProjectsByCategory]);
+
+    // Initial fetch only once when component mounts
+    useEffect(() => {
+        fetchProjects(); // initial call - fetch only once
+        // No interval setup for automatic refresh
+    }, [fetchProjects]);
 
     // Handle category change
     const handleCategoryChange = (category) => {
         if (category === activeCategory) return; // Skip if same category
         setActiveCategory(category);
         setSearchQuery(""); // Reset search when changing categories
+
+        // Immediately filter existing projects without waiting for next fetch
+        const filtered = filterProjectsByCategory(projects, category);
+        setFilteredProjects(filtered);
     };
+
+    // Handle manual refresh - now this is the only way to fetch new projects
+    const handleRefresh = () => {
+        fetchProjects();
+    };
+
     return (
         <>
             <Helmet>
@@ -127,35 +125,62 @@ const Dashboard = () => {
                     </p>
                 </div>
 
-                {/* Categories */}
-                <div className="flex justify-start md:justify-center mt-4 sm:mt-6 gap-2 sm:gap-4 overflow-x-auto pb-2 px-2">
-                    <div className="flex space-x-2 sm:space-x-4">
-                        {categories.map((cat) => (
-                            <button
-                                key={cat}
-                                onClick={() => handleCategoryChange(cat)}
-                                className={`px-3 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${activeCategory === cat
-                                    ? theme === "dark"
-                                        ? "bg-purple-600 text-white"
-                                        : "bg-purple-200 text-purple-600"
-                                    : theme === "dark"
-                                        ? "text-gray-400"
-                                        : "text-gray-600"
-                                    }`}
-                            >
-                                {cat}
-                            </button>
-                        ))}
+                {/* Categories*/}
+                <div className="md:flex-row md:items-center justify-between mt-4 sm:mt-6 px-2">
+                    <div className="flex justify-start md:justify-center gap-2 sm:gap-4 overflow-x-auto pb-2">
+                        <div className="flex space-x-2 sm:space-x-4">
+                            {categories.map((cat) => (
+                                <button
+                                    key={cat}
+                                    onClick={() => handleCategoryChange(cat)}
+                                    className={`px-3 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${activeCategory === cat
+                                        ? theme === "dark"
+                                            ? "bg-purple-600 text-white"
+                                            : "bg-purple-200 text-purple-600"
+                                        : theme === "dark"
+                                            ? "text-gray-400"
+                                            : "text-gray-600"
+                                        }`}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
+                        </div>
                     </div>
+                </div>
+                {/* Refresh Button - more prominent now as it's the only way to fetch new projects */}
+                <div className="flex justify-end">
+                    <button
+                        onClick={handleRefresh}
+                        className={`mt-3 md:mt-0 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 cursor-pointer ${theme === "dark"
+                            ? "bg-purple-700 text-white hover:bg-purple-600"
+                            : "bg-purple-500 text-white hover:bg-purple-600"
+                            } transition-colors duration-200`}
+                        disabled={loading}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        {loading ? 'Loading...' : 'Refresh Projects'}
+                    </button>
                 </div>
 
                 {/* Image & Video Grid */}
                 <div className={`max-w-full mx-auto p-4 sm:p-6 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}>
-                    <h3
-                        className={`text-xl font-semibold border-b-2 pb-2 inline-block min-w-fit px-1 ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}
-                    >
-                        {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
-                    </h3>
+                    <div className="flex justify-between items-center">
+                        <h3
+                            className={`text-xl font-semibold border-b-2 pb-2 inline-block min-w-fit px-1 ${theme === "dark" ? "border-gray-600" : "border-gray-300"}`}
+                        >
+                            {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
+                        </h3>
+
+                        {loading && (
+                            <div className="flex items-center">
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
+                                <span className="ml-2 text-sm text-gray-500">Loading...</span>
+                            </div>
+                        )}
+                    </div>
 
                     {filteredProjects.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-4 sm:mt-6">
@@ -265,9 +290,9 @@ const Dashboard = () => {
                                                 </div>
                                             </div>
 
-                                            {/* Like Count - Simply display the count from project.likeCount */}
+                                            {/* Like Count */}
                                             <div className={`text-xs sm:text-sm flex justify-center items-center gap-1 px-2 py-1 rounded-full ${theme === "dark" ? "bg-blue-900 text-blue-300" : "bg-[#D5E0FF] text-blue-500"}`}>
-                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : "text-blue-500"}`}></i> 
+                                                <i className={`ri-heart-fill ${theme === "dark" ? "text-blue-500" : "text-blue-500"}`}></i>
                                                 {project.likeCount || 0}
                                             </div>
                                         </div>
@@ -277,14 +302,23 @@ const Dashboard = () => {
                         </div>
                     ) : (
                         <div className="flex flex-col items-center justify-center h-40 mt-6">
-                            <p className="text-lg">No projects found</p>
-                            {activeCategory !== "All" && (
-                                <button
-                                    onClick={() => handleCategoryChange("All")}
-                                    className="mt-4 px-4 py-2 bg-purple-500 text-white rounded-full text-sm hover:bg-purple-600"
-                                >
-                                    View All Projects Instead
-                                </button>
+                            {loading ? (
+                                <div className="flex flex-col items-center">
+                                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-500"></div>
+                                    <p className="mt-4 text-lg">Loading projects...</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <p className="text-lg">No projects found</p>
+                                    {activeCategory !== "All" && (
+                                        <button
+                                            onClick={() => handleCategoryChange("All")}
+                                            className="mt-4 px-4 py-2 bg-purple-500 text-white rounded-full text-sm hover:bg-purple-600"
+                                        >
+                                            View All Projects Instead
+                                        </button>
+                                    )}
+                                </>
                             )}
                         </div>
                     )}
