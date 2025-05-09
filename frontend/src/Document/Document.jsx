@@ -54,6 +54,8 @@ export default function Document() {
     { id: "api-docs", name: "API Documentation" }
   ];
 
+  const logoSrc = theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png';
+
   return (
     <>
       <Helmet>
@@ -66,18 +68,23 @@ export default function Document() {
             <div className="flex items-center">
               <button
                 onClick={toggleMenu}
-                className={`md:hidden mr-4 ${styles.secondaryText}`}
+                className={`md:hidden mr-4 cursor-pointer ${styles.secondaryText}`}
               >
                 <Menu size={24} />
               </button>
               <Link to="/landingpage"><div className="ml-3">
-                <h1 className={`text-xl font-bold ${styles.text}`}>DesignDeck Docs</h1>
+              <img
+                        src={logoSrc}
+                        alt="DesignDeck Logo"
+                        width={180}
+                        className="rounded-full"
+                    />
               </div></Link>
             </div>
 
             <button
               onClick={toggleTheme}
-              className={`${styles.secondaryText} hover:opacity-80 p-2 rounded-full`}
+              className={`${styles.secondaryText} hover:opacity-80 p-2 rounded-full cursor-pointer`}
             >
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </button>
@@ -139,7 +146,7 @@ export default function Document() {
                     <li key={section.id}>
                       <button
                         onClick={() => scrollToSection(section.id)}
-                        className={`w-full px-3 py-2 rounded-md text-left ${activeSection === section.id
+                        className={`w-full px-3 py-2 rounded-md text-left cursor-pointer ${activeSection === section.id
                           ? styles.activeSection
                           : `${styles.text} ${styles.hoverSection}`
                           }`}
@@ -1078,32 +1085,6 @@ module.exports = mongoose.model("Notification", NotificationSchema);`}
                         </ul>
                       </div>
                     </div>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <h3 className={`text-xl font-semibold ${styles.text} mb-3`}>Sample Request</h3>
-                  <div className={`${styles.card} shadow-sm rounded-lg border p-4`}>
-                    <pre className="bg-gray-100 p-4 rounded overflow-x-auto">
-                      {`// Example: Creating a new project
-fetch('https://api.designdeck.com/api/projects', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-'Authorization': 'Bearer YOUR_API_TOKEN'
-},
-body: JSON.stringify({
-name: 'Marketing Website Redesign',
-description: 'Refreshing the company marketing site',
-type: 'website',
-teamId: 'team_12345',
-template: 'template_website_basic'
-})
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error:', error));`}
-                    </pre>
                   </div>
                 </div>
 
