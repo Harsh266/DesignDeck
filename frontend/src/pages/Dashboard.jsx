@@ -173,13 +173,6 @@ const Dashboard = () => {
                         >
                             {activeCategory === "All" ? "All Projects" : `${activeCategory} Projects`}
                         </h3>
-
-                        {loading && (
-                            <div className="flex items-center">
-                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
-                                <span className="ml-2 text-sm text-gray-500">Loading...</span>
-                            </div>
-                        )}
                     </div>
 
                     {filteredProjects.length > 0 ? (
