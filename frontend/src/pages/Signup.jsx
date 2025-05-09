@@ -109,12 +109,14 @@ const Signup = () => {
                 {/* Left Content */}
                 <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-6">
                 <div className="flex items-center space-x-2">
-                        <img
-                            src={logoSrc}
-                            alt="DesignDeck Logo"
-                            width={180}
-                            className="rounded-full"
-                        />
+                <h1 className="text-xl font-semibold absolute top-7 left-10">
+                            <img
+                                src={theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png'}
+                                alt="DesignDeck Logo"
+                                width={180} // Adjust the width as needed
+                                className="inline-block mr-2"
+                            />
+                        </h1>
                     </div>
                     <form onSubmit={handleRegister} className="px-6 md:px-16 py-2 flex flex-col justify-center w-full pt-10">
                         <h2 className="text-2xl font-semibold">Create an Account</h2>

@@ -86,8 +86,14 @@ const ResetPassword = () => {
             >
                 {/* Left Section */}
                 <div className="w-full lg:w-1/2 h-full p-6 flex flex-col justify-center items-center">
-                    <h1 className="text-xl font-semibold absolute top-7 left-10">DesignDeck</h1>
-
+                    <h1 className="text-xl font-semibold absolute top-7 left-10">
+                        <img
+                            src={theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png'}
+                            alt="DesignDeck Logo"
+                            width={180} // Adjust the width as needed
+                            className="inline-block mr-2"
+                        />
+                    </h1>
                     <div className="w-full max-w-md px-4 sm:px-6">
                         <div className="flex justify-center mb-4">
                             <div

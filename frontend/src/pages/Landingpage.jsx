@@ -432,7 +432,7 @@ const Landingpage = () => {
                                 />
                             </div>
                             <p className="text-sm text-gray-400 max-w-md">
-                            <span className="text-white font-medium">DesignDeck</span> is a platform that empowers creators to showcase their
+                                <span className={`font-medium ${theme === "dark" ? "text-white" : "text-black"}`}> DesignDeck </span> is a platform that empowers creators to showcase their
                                 designs, upload code, and share their work with a vibrant community.
                             </p>
                         </div>

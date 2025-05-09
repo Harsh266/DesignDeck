@@ -39,7 +39,7 @@ const ChangePassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (password !== confirmPassword) {
       toast("Passwords do not match", {
         position: "top-right",
@@ -53,15 +53,15 @@ const ChangePassword = () => {
       });
       return;
     }
-  
+
     setIsProcessing(true);
-  
+
     try {
       const response = await api.post("/auth/changepasswordwithtoken", {
         password,
         token,
       });
-  
+
       toast(
         "Your password has been reset successfully. Please log in with your new password.",
         {
@@ -75,11 +75,11 @@ const ChangePassword = () => {
           className: theme === "dark" ? "dark-theme" : "light-theme",
         }
       );
-  
+
       setTimeout(() => navigate(`/signin`), 5000);
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "Failed to send request. Please try again";
-  
+
       toast(errorMessage, {
         position: "top-right",
         autoClose: 3000,
@@ -94,7 +94,7 @@ const ChangePassword = () => {
       setIsProcessing(false);
     }
   };
-  
+
 
   return (
     <>
@@ -114,8 +114,13 @@ const ChangePassword = () => {
             }`}
         >
           {/* Logo */}
-          <h1 className={`text-xl font-semibold absolute top-7 left-10 ${theme === "dark" ? "text-white" : "text-black"}`}>
-            DesignDeck
+          <h1 className="text-xl font-semibold absolute top-7 left-10">
+            <img
+              src={theme === 'dark' ? '/public/Frame 3.png' : '/public/Frame 2.png'}
+              alt="DesignDeck Logo"
+              width={180} // Adjust the width as needed
+              className="inline-block mr-2"
+            />
           </h1>
 
           {/* Form Container */}
