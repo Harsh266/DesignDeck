@@ -4,7 +4,7 @@ import axios from "axios";
 import { useContext } from "react";
 import api from "../services/api";
 import { ThemeContext } from "../context/ThemeContext";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import { Sun, Moon, Menu, X, User, LogOut } from "lucide-react";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -215,7 +215,7 @@ const Navbar = () => {
                     <p className="text-sm mt-1 font-semibold">{user.email}</p>
 
                     {/* Social Media Links */}
-                    <div className="flex flex-col mt-2 text-sm">
+                    {/* <div className="flex flex-col mt-2 text-sm">
                       <div className="flex items-center gap-2">
                         <i className="ri-dribbble-line text-lg"></i>
                         <span className="break-words whitespace-normal max-w-[200px]">
@@ -228,7 +228,7 @@ const Navbar = () => {
                           {user.behanceProfile || "@Behanceacc"}
                         </span>
                       </div>
-                    </div>
+                    </div> */}
 
                   </div>
                 </div>
@@ -288,8 +288,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Social Media Links */}
-                <div className="flex gap-4 mt-2">
-                  {/* Instagram */}
+                {/* <div className="flex gap-4 mt-2">
                   <div className="relative group">
                     <div
                       className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full transition-all ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
@@ -297,7 +296,6 @@ const Navbar = () => {
                     >
                       <i className="ri-dribbble-fill text-2xl"></i>
                     </div>
-                    {/* Link on hover */}
                     <span className="absolute bottom-[-35px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all bg-black text-white text-xs py-1 px-2 rounded-md shadow-lg">
                       {user.dribbbleProfile ? (
                         <a href={user.dribbbleProfile} target="_blank" rel="noopener noreferrer" className="underline">
@@ -306,8 +304,6 @@ const Navbar = () => {
                       ) : "No link"}
                     </span>
                   </div>
-
-                  {/* Behance */}
                   <div className="relative group">
                     <div
                       className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full transition-all ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
@@ -315,7 +311,6 @@ const Navbar = () => {
                     >
                       <i className="ri-behance-fill text-2xl"></i>
                     </div>
-                    {/* Link on hover */}
                     <span className="absolute bottom-[-35px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all bg-black text-white text-xs py-1 px-2 rounded-md shadow-lg">
                       {user.behanceProfile ? (
                         <a href={user.behanceProfile} target="_blank" rel="noopener noreferrer" className="underline">
@@ -324,11 +319,10 @@ const Navbar = () => {
                       ) : "No link"}
                     </span>
                   </div>
-                </div>
-
+                </div> */}
 
                 {/* Mobile Menu Actions */}
-                <div className="flex items-center gap-4 mt-0">
+                <div className="grid grid-cols-2 items-center gap-8 mb-6">
                   {/* Notification Icon */}
                   <Link to="/user-notifications"><button
                     className={`p-3 rounded-full cursor-pointer h-12 w-12 flex items-center justify-center ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
@@ -348,28 +342,24 @@ const Navbar = () => {
                     ) : (
                       <Moon className="text-2xl" />
                     )}
+                    
                   </button>
-                </div>
+                    <Link to="/profilepage">
+                      <button
+                        className={`p-3 rounded-full cursor-pointer h-12 w-12 flex items-center justify-center ${theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-[#DCE6FF] text-[#9091FF]'}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <User size={22} />
+                      </button>
+                    </Link>
 
-                {/* Navigation Links */}
-                <div className="w-full mt-6 flex flex-row gap-4 mb-4">
-                  <Link
-                    to="/profilepage"
-                    className={`w-full text-center cursor-pointer p-3 rounded-lg ${theme === 'dark' ? ' text-white' : 'text-blue-600'
-                      }`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    View Profile
-                  </Link>
-                  <button
-                    className={`w-full text-center cursor-pointer p-3 rounded-lg ${theme === 'dark' ? ' text-white' : ' text-red-500'
-                      }`}
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                </div>
-
+                    <button
+                      className={`p-3 rounded-full cursor-pointer h-12 w-12 flex items-center justify-center ${theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-[#DCE6FF] text-[#FF6B6B]'}`}
+                      onClick={handleLogout}
+                    >
+                      <LogOut size={22} />
+                    </button>
+                  </div>
               </>
             ) : (
               <Link
