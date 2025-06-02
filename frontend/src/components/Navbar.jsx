@@ -15,24 +15,6 @@ const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const popupRef = useRef(null);
 
-  const getCustomToastStyle = (theme) => ({
-    borderRadius: "8px",
-    padding: "16px",
-    fontSize: "14px",
-    fontWeight: "500",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    boxShadow: theme === "dark"
-      ? "0px 4px 15px rgba(255, 255, 255, 0.15)"
-      : "0px 4px 15px rgba(0, 0, 0, 0.1)",
-    background: theme === "dark" ? "#222" : "#fff",
-    color: theme === "dark" ? "#fff" : "#333",
-    border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #eaeaea",
-    width: "320px",
-  });
-
   // ✅ Fetch user data
   const fetchUser = async () => {
     console.log("🟡 Fetching user data...");
@@ -188,19 +170,20 @@ const Navbar = () => {
             {showPopup && (
               <div
                 ref={popupRef}
-                className={`fixed top-16 right-5 w-90 shadow-xl rounded-2xl p-5 transition-all duration-200 ease-in-out z-50 ${theme === "dark" ? "bg-[#222] text-white" : "bg-white text-black"
+                className={`fixed top-16 right-5 w-80 max-w-full shadow-2xl rounded-3xl p-6 transition-all duration-300 ease-in-out z-50 ${theme === 'dark' ? 'bg-[#1f1f1f] text-white' : 'bg-white text-black'
                   }`}
+                style={{ width: '350px' }} // explicitly set width
               >
                 {/* Close Button */}
                 <button
-                  className="absolute top-3 right-3 cursor-pointer"
+                  className="absolute top-4 right-4 cursor-pointer transition"
                   onClick={() => setShowPopup(false)}
                 >
-                  <i className="ri-close-line text-lg"></i>
+                  <X size={22} />
                 </button>
 
                 {/* Profile Section */}
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col items-center mb-6">
                   <img
                     src={
                       user.profilePicture
@@ -208,51 +191,36 @@ const Navbar = () => {
                         : `${api.defaults.baseURL}uploads/default-profile.jpg`
                     }
                     alt="User"
-                    className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover object-top"
+                    className="w-24 h-24 rounded-full object-cover object-top shadow-md"
                   />
-                  <div>
-                    <h2 className="font-semibold text-lg">{user.name}</h2>
-                    <p className="text-sm mt-1 font-semibold">{user.email}</p>
-
-                    {/* Social Media Links */}
-                    {/* <div className="flex flex-col mt-2 text-sm">
-                      <div className="flex items-center gap-2">
-                        <i className="ri-dribbble-line text-lg"></i>
-                        <span className="break-words whitespace-normal max-w-[200px]">
-                          {user.dribbbleProfile || "@Dribbbleacc"}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <i className="ri-behance-fill text-lg"></i>
-                        <span className="break-words whitespace-normal max-w-[200px]">
-                          {user.behanceProfile || "@Behanceacc"}
-                        </span>
-                      </div>
-                    </div> */}
-
-                  </div>
+                  <h2 className="font-semibold text-lg mt-3">{user.name}</h2>
+                  <p className="text-sm mt-1 text-gray-400">{user.email}</p>
                 </div>
 
-                {/* Buttons */}
-                <div
-                  className={`flex justify-between items-center mt-4 border-t pt-3 text-sm ${theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                >
+                {/* Icon Buttons Section */}
+                <div className="grid grid-cols-2 gap-4 border-t pt-4">
                   <Link to="/profilepage">
                     <button
-                      className={`font-medium cursor-pointer ${theme === "dark" ? "text-white" : "text-blue-600"
+                      className={`w-full flex flex-col items-center p-3 rounded-xl cursor-pointer  ${theme === 'dark'
+                        ? 'bg-gray-700 text-white'
+                        : 'bg-[#DCE6FF] text-[#4C5FFF]'
                         }`}
                       onClick={() => setShowPopup(false)}
                     >
-                      View Profile
+                      <User size={24} />
+                      <span className="text-xs mt-1">Profile</span>
                     </button>
                   </Link>
+
                   <button
-                    className={`font-medium cursor-pointer ${theme === "dark" ? "text-white" : "text-red-500"
+                    className={`w-full flex flex-col items-center p-3 rounded-xl cursor-pointer ${theme === 'dark'
+                      ? 'bg-gray-700 text-white'
+                      : 'bg-[#FFE0E0] text-[#FF4C4C]'
                       }`}
                     onClick={handleLogout}
                   >
-                    Logout
+                    <LogOut size={24} />
+                    <span className="text-xs mt-1">Logout</span>
                   </button>
                 </div>
               </div>
@@ -267,112 +235,113 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className={`md:hidden fixed top-14 right-0 backdrop-blur-2xl left-0 bottom-0 p-4 z-40 ${theme === "dark" ? "bg-[#000000c3]" : "bg-[#fffffffc3]"
-          }`}>
-          <div className={`flex flex-col w-full items-center gap-6 pt-8 ${theme === "dark" ? "bg-black" : "bg-white"} shadow-lg rounded-lg`}>
-            {user ? (
-              <>
-                {/* User Profile Info */}
-                <div className="flex flex-col items-center gap-2">
-                  <img
-                    src={user.profilePicture || `${api.defaults.baseURL}uploads/default-profile.jpg`}
-                    alt="User"
-                    className="w-20 h-20 rounded-full object-cover object-top"
-                  />
-                  <p className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}>
-                    {user.name}
-                  </p>
-                  <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-500"}`}>
-                    {user.email}
-                  </p>
-                </div>
+  <div
+    className={`md:hidden fixed inset-0 backdrop-blur-2xl z-40 flex justify-center items-start pt-16 ${
+      theme === "dark" ? "bg-[#000000c3]" : "bg-[#ffffffcc]"
+    }`}
+  >
+    <div
+      className={`w-80 max-w-sm rounded-3xl p-6 shadow-2xl ${
+        theme === "dark" ? "bg-[#1f1f1f] text-white" : "bg-white text-black"
+      } flex flex-col items-center gap-6 relative`}
+    >
+      {/* Close Button */}
+      <button
+        className="absolute top-4 right-4 cursor-pointer transition"
+        onClick={() => setMobileMenuOpen(false)}
+        aria-label="Close menu"
+      >
+        <X size={22} />
+      </button>
 
-                {/* Social Media Links */}
-                {/* <div className="flex gap-4 mt-2">
-                  <div className="relative group">
-                    <div
-                      className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full transition-all ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
-                        }`}
-                    >
-                      <i className="ri-dribbble-fill text-2xl"></i>
-                    </div>
-                    <span className="absolute bottom-[-35px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all bg-black text-white text-xs py-1 px-2 rounded-md shadow-lg">
-                      {user.dribbbleProfile ? (
-                        <a href={user.dribbbleProfile} target="_blank" rel="noopener noreferrer" className="underline">
-                          {user.dribbbleProfile}
-                        </a>
-                      ) : "No link"}
-                    </span>
-                  </div>
-                  <div className="relative group">
-                    <div
-                      className={`flex items-center cursor-pointer h-12 w-12 justify-center gap-2 rounded-full transition-all ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
-                        }`}
-                    >
-                      <i className="ri-behance-fill text-2xl"></i>
-                    </div>
-                    <span className="absolute bottom-[-35px] left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all bg-black text-white text-xs py-1 px-2 rounded-md shadow-lg">
-                      {user.behanceProfile ? (
-                        <a href={user.behanceProfile} target="_blank" rel="noopener noreferrer" className="underline">
-                          {user.behanceProfile}
-                        </a>
-                      ) : "No link"}
-                    </span>
-                  </div>
-                </div> */}
+      {user ? (
+        <>
+          {/* Profile Section */}
+          <div className="flex flex-col items-center gap-2">
+            <img
+              src={
+                user.profilePicture ||
+                `${api.defaults.baseURL}uploads/default-profile.jpg`
+              }
+              alt="User"
+              className="w-24 h-24 rounded-full object-cover object-top"
+            />
+            <p className="text-lg font-semibold">{user.name}</p>
+            <p className="text-sm text-gray-400">{user.email}</p>
+          </div>
 
-                {/* Mobile Menu Actions */}
-                <div className="grid grid-cols-2 items-center gap-8 mb-6">
-                  {/* Notification Icon */}
-                  <Link to="/user-notifications"><button
-                    className={`p-3 rounded-full cursor-pointer h-12 w-12 flex items-center justify-center ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
-                      }`}
-                  >
-                    <i className="ri-notification-2-line text-[22px]"></i>
-                  </button></Link>
-
-                  {/* Theme Toggle Button */}
-                  <button
-                    onClick={toggleTheme}
-                    className={`p-3 cursor-pointer rounded-full h-12 w-12 flex items-center justify-center ${theme === "dark" ? "bg-gray-700 text-white" : "bg-[#DCE6FF] text-[#9091FF]"
-                      }`}
-                  >
-                    {theme === "dark" ? (
-                      <Sun className="text-2xl" />
-                    ) : (
-                      <Moon className="text-2xl" />
-                    )}
-                    
-                  </button>
-                    <Link to="/profilepage">
-                      <button
-                        className={`p-3 rounded-full cursor-pointer h-12 w-12 flex items-center justify-center ${theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-[#DCE6FF] text-[#9091FF]'}`}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <User size={22} />
-                      </button>
-                    </Link>
-
-                    <button
-                      className={`p-3 rounded-full cursor-pointer h-12 w-12 flex items-center justify-center ${theme === 'dark' ? 'bg-gray-700 text-white' : 'bg-[#DCE6FF] text-[#FF6B6B]'}`}
-                      onClick={handleLogout}
-                    >
-                      <LogOut size={22} />
-                    </button>
-                  </div>
-              </>
-            ) : (
-              <Link
-                to="/signin"
-                className="text-blue-600 font-semibold text-lg p-3 w-full text-center bg-blue-50 rounded-lg"
+          {/* Icon Buttons */}
+          <div className="grid grid-cols-2 gap-4 border-t pt-4 w-full">
+            <Link to="/user-notifications">
+              <button
+                className={`flex flex-col items-center justify-center h-20 w-32 rounded-xl transition ${
+                  theme === "dark"
+                    ? "bg-gray-700 text-white"
+                    : "bg-[#DCE6FF] text-[#4C5FFF]"
+                }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Sign In
-              </Link>
-            )}
+                <i className="ri-notification-2-line text-2xl"></i>
+                <span className="text-xs mt-1">Alerts</span>
+              </button>
+            </Link>
+
+            <button
+              onClick={toggleTheme}
+              className={`flex flex-col items-center justify-center h-20 w-32 rounded-xl transition ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white"
+                  : "bg-[#DCE6FF] text-[#4C5FFF]"
+              }`}
+            >
+              {theme === "dark" ? (
+                <Sun className="text-2xl" />
+              ) : (
+                <Moon className="text-2xl" />
+              )}
+              <span className="text-xs mt-1">Theme</span>
+            </button>
+
+            <Link to="/profilepage">
+              <button
+                className={`flex flex-col items-center justify-center h-20 w-32 rounded-xl transition ${
+                  theme === "dark"
+                    ? "bg-gray-700 text-white"
+                    : "bg-[#DCE6FF] text-[#4C5FFF]"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <User size={24} />
+                <span className="text-xs mt-1">Profile</span>
+              </button>
+            </Link>
+
+            <button
+              className={`flex flex-col items-center justify-center h-20 w-32 rounded-xl transition ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white"
+                  : "bg-[#FFE0E0] text-[#FF4C4C]"
+              }`}
+              onClick={handleLogout}
+            >
+              <LogOut size={24} />
+              <span className="text-xs mt-1">Logout</span>
+            </button>
           </div>
-        </div>
+        </>
+      ) : (
+        <Link
+          to="/signin"
+          className="text-blue-600 font-semibold text-lg p-3 w-full text-center bg-blue-50 rounded-lg"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          Sign In
+        </Link>
       )}
+    </div>
+  </div>
+)}
+
     </nav>
   );
 };
